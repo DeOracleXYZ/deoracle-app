@@ -1,1 +1,1 @@
-# deoracle
+# deOracle.xyz
