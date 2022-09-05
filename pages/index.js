@@ -3,11 +3,17 @@ import { ethers } from 'ethers';
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector  } from "@web3-react/injected-connector";
 import { abi } from "../constants/abi";
+import RequestCard from './components/RequestCard';
 
 const injected = new InjectedConnector();
 
 export default function Home() {
-  const { activate, active, library: provider, account } = useWeb3React();
+  const { activate, active, library: provider, account, chainId } = useWeb3React();
+  const [lotteryNumber, setLotteryNumber] = useState("5");
+
+  useEffect(() => {
+    setLotteryNumber(prevNumber => prevNumber+1)
+  }, [])
 
   async function connect() {
       try {
@@ -31,19 +37,27 @@ export default function Home() {
 
   }
 
+
   return (
-    <div className="flex items-center justify-center">
+
+    <div className="">
       Hello Frogs!
       {active ? (
         <>
         Connected!
         <button className="px-4 py-1 text-sm text-red-600 font-semibold rounded-full border border-red-200 hover:text-white hover:bg-red-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"onClick={() => execute()}>Execute</button>
         <p className="mt-3 text-2xl">{account}</p>
+        <p className="mt-3 text-2xl">{chainId}</p>
+        <p className="mt-3 text-2xl">{lotteryNumber}</p>
+        <RequestCard color="red"/>
+        <RequestCard />
+        <RequestCard />
         </>
         ) : (
           <button className="px-4 py-1 text-sm text-blue-600 font-semibold rounded-full border border-blue-200 hover:text-white hover:bg-blue-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"onClick={() => connect()}>Connect</button>
         )}
 
     </div>
+  
   )
 }
