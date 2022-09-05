@@ -49,7 +49,7 @@ export default function Home() {
         <p className="mt-3 text-2xl">{account}</p>
         <p className="mt-3 text-2xl">{chainId}</p>
         <p className="mt-3 text-2xl">{lotteryNumber}</p>
-        <RequestCard color="red"/>
+        <RequestCard color="red" handleClick={() => execute()}/>
         <RequestCard />
         <RequestCard />
         </>
