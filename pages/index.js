@@ -1,4 +1,3 @@
-import styles from '../styles/Home.module.css'
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { useWeb3React } from "@web3-react/core";
@@ -33,7 +32,7 @@ export default function Home() {
   }
 
   return (
-    <div className={styles.container}>
+    <div className="flex items-center justify-center">
       Hello Frogs!
       {active ? (
         <>
