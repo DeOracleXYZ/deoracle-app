@@ -8,7 +8,6 @@ import { abi } from "../constants/abi";
 const injected = new InjectedConnector();
 
 export default function Home() {
-  console.log(useWeb3React)
   const { activate, active, library: provider, account } = useWeb3React();
 
   async function connect() {
@@ -39,11 +38,11 @@ export default function Home() {
       {active ? (
         <>
         Connected!
-        <button onClick={() => execute()}>Execute</button>
-        <p>{account}</p>
+        <button className="px-4 py-1 text-sm text-red-600 font-semibold rounded-full border border-red-200 hover:text-white hover:bg-red-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"onClick={() => execute()}>Execute</button>
+        <p className="mt-3 text-2xl">{account}</p>
         </>
         ) : (
-          <button onClick={() => connect()}>Connect</button>
+          <button className="px-4 py-1 text-sm text-blue-600 font-semibold rounded-full border border-blue-200 hover:text-white hover:bg-blue-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"onClick={() => connect()}>Connect</button>
         )}
 
     </div>
