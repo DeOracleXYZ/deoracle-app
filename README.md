@@ -2,11 +2,7 @@
 
 .
 
-One-liner:
-- Decentralized P2P oracles 
-- Transforms any world data to on-chain data via decentralized P2P oracles
-- Brings real-world data on-chain * humanize data
-- Build reputation with your on-chain identity 
+Decentralized P2P oracles to bring real-world data on-chain and build reputation with your on-chain identity.
 
 .
 
@@ -35,7 +31,7 @@ Features:
 - Request details:
   - Free / Bounty
   - Set min. reputation of oracles
-    - # of oracles
+    - No. of oracles
     - Answer: yes / no
     - Disputed: yes / no
     - If yes (optional):
@@ -47,11 +43,11 @@ Features:
   - Expiry date
 
 - Reputation formula for oracle & requester:
-  - # of upvotes vs downvotes
+  - No. of upvotes vs downvotes
   - Total number of votes
   - Account age
   - Activity vs balance ratio
-  - # of disputes
+  - No. of disputes
 
 - Oracle profile & SBT (Soul Bound Token)
 - Requester profile  & SBT (Soul Bound Token)
