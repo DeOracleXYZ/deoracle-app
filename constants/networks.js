@@ -1,4 +1,11 @@
 module.exports = {
+    chainIdsMap: 
+        {
+            "80001": "MATIC",
+            "420" : "OPTIMISM"
+
+        },
+
     mumbai: 
        { 
             chainName: "Mumbai Testnet",
@@ -7,8 +14,8 @@ module.exports = {
             nattiveCurrency: { name: "MATIC", decimals: 18, symbol: "MATIC" },
             blockExplorerUrls: ["https://explorer-mumbai.maticvigil.com"],
             iconUrls: ["https://gateway.ipfs.io/ipfs/QmQzDTTZTUQ1e2ABmbQAH9yGPswkxrWsVEg4idALHayE4U"]
-        }
-    ,
+        },
+
     goerli: 
         { 
              chainName: "Optimism Goerli",

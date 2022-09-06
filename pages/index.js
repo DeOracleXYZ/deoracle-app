@@ -18,7 +18,6 @@ export default function Home() {
     library, library: provider, account, chainId } = useWeb3React();
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState();
-  const [symbol, setSymbol] = useState();
 
 
 
@@ -43,7 +42,6 @@ export default function Home() {
     const fetchAccountData = async () => {
       const data = await provider.getBalance(account);
       setBalance(ethers.utils.formatEther(data));
-      setSymbol(await provider._network.name)
     }
     fetchAccountData().catch(console.error);
   }
@@ -79,7 +77,7 @@ export default function Home() {
         <ConnectHeader active={active}
                        account={account}
                        balance={balance}
-                       symbol={symbol}
+                       chainId={chainId}
                        library={library}
                        handleClickConnect={()=> connect() } />
 
