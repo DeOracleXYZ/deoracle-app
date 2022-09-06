@@ -8,10 +8,11 @@ const getLibrary = (provider) => {
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <Component {...pageProps} />
-    </Web3ReactProvider>
-
+    <div className="container mx-auto px-4">
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <Component {...pageProps} />
+      </Web3ReactProvider>
+    </div>
   );
 }
 

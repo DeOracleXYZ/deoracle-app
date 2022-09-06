@@ -1,7 +1,6 @@
 import { mumbai, goerli } from "/constants/networks";
 import { WorldIDWidget } from "@worldcoin/id";
 
-
 export default function ConnectHeader(props) {
 
     const { active, account, handleClickConnect, library } = props;
@@ -37,7 +36,8 @@ export default function ConnectHeader(props) {
       };
 
     return (
-        <>
+        <header className="sticky top-3 columns-2 px-5 pt-5 bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 nav-border" style={{borderRadius: 16 + 'px'}}>
+          <img src="/logo.svg" className="h-24" /> 
             {active ? (
                 <>
                  
@@ -64,6 +64,6 @@ export default function ConnectHeader(props) {
                     <button className="px-4 py-1 text-sm text-blue-600 font-semibold rounded-full border border-blue-200 hover:text-white hover:bg-blue-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"onClick={() => handleClickConnect()}>Connect</button>
                 </div>
             )}
-        </>
+        </header>
     );
 }
