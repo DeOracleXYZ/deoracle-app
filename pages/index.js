@@ -10,10 +10,24 @@ import ConnectHeader from './components/ConnectHeader';
 const injected = new InjectedConnector();
 
 export default function Home() {
-  const { activate, active, library, library: provider, account, chainId } = useWeb3React();
+  const { activate, active, active: networkActive, error: networkError, activate: activateNetwork, 
+    library, library: provider, account, chainId } = useWeb3React();
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-  }, [])
+    injected
+      .isAuthorized()
+      .then((isAuthorized) => {
+        setLoaded(true)
+        if (isAuthorized && !networkActive && !networkError) {
+          activateNetwork(injected)
+        }
+      })
+      .catch(() => {
+        setLoaded(true)
+      })
+  }, [activateNetwork, networkActive, networkError])
+
 
   async function connect() {
       try {
@@ -49,6 +63,8 @@ export default function Home() {
 
         <div className='flex flex-col m-10 justify-center'>
           <RequestCard color="red" handleClick={() => execute()}/> 
+          <RequestCard color="blue" handleClick={() => execute()}/> 
+          <RequestCard color="green" handleClick={() => execute()}/> 
         </div>   
 
     </div>

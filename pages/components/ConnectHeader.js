@@ -1,7 +1,6 @@
 import { mumbai, goerli } from "/constants/networks"
 
 
-console.log(mumbai[0], goerli)
 export default function ConnectHeader(props) {
 
     const { active, account, handleClickConnect, library } = props;
