@@ -26,7 +26,6 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 .
 
-
 ## Next.js Docs
 
 To learn more about Next.js, take a look at the following resources:
@@ -35,7 +34,6 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 .
-
 
 ## Deploy on Vercel
 
@@ -49,7 +47,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - Storage: IPFS & Filecoin (Spheron, NFT.storage)
 - Blockchains: Polygon, Optimism, Aurora, Cronos, Oasis
-- Auth / DID: Worldcoin (PPPoPP), ENS, Unstoppable Domains, Sismo, Spruce, 
+- Auth / DID: Worldcoin (PPPoPP), ENS, Unstoppable Domains, Sismo, Spruce,
 - Notifications/Messaging: EPNS, XMTP
 - Post Content: Lens
 - Caching Blockchain Data: The Graph, Tableland
@@ -62,14 +60,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - Web 3 Login (Metamask/DID, Worldcoin)
 
 - As a oracle inquirer:
+
   - Post a request
   - See results of other requests
 
 - As an oracle:
+
   - See requests
   - Respond to requests
 
 - Request details:
+
   - Free / Bounty
   - Set min. reputation of oracles
     - No. of oracles
@@ -84,6 +85,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
   - Expiry date
 
 - Reputation formula for oracle & requester:
+
   - No. of upvotes vs downvotes
   - Total number of votes
   - Account age
