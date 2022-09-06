@@ -36,32 +36,29 @@ export default function ConnectHeader(props) {
       };
 
     return (
-        <header className="sticky top-3 columns-2 px-5 pt-5 bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 nav-border grid justify-items-stretch grid-cols-2 gap-4" style={{borderRadius: 16 + 'px'}}>
+        <header className="sticky top-3 grid grid-flow-col auto-cols-max px-5 pt-5 bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 nav-border grid justify-items-stretch grid-cols-2 gap-4" style={{borderRadius: 16 + 'px'}}>
           <div className='justify-self-start'>
-            <img src="/logo.svg" className="h-24 " /> 
+            <img src="/logo.svg" className="h-24" /> 
           </div>
             {active ? (
                 <>
-                 
-                    <div className='mt-5 mr-5 align-middle justify-self-end'>
-                        <WorldIDWidget
-                            actionId="wid_staging_ed5840f20f5c5ac1b07a144005e45d6a" // obtain this from developer.worldcoin.org
-                            signal="my_signal"
-                            enableTelemetry
-                            onSuccess={(verificationResponse) => console.log(verificationResponse)} // you'll actually want to pass the proof to the API or your smart contract
-                            onError={(error) => console.error(error)}
-                        />
-                        <div className='flex flex-col justify-center'>
-                            <p className="text-l font-bold">Connected account:</p>
-                            <p className="text-l">{balance}</p>
-                            <p className="text-l">{symbol}</p>
-                            <p className="text-l">{account.substring(0, 6) + "..." + account.slice(-4)}</p>
-                            <div className='flex gap-2 justify-end'>
-                            <button className="text-purple-500" onClick={() => switchNetwork(mumbai)}>Mumbai</button>
-                            <button className="text-red-500" onClick={() => switchNetwork(goerli)}>Goerli</button>
-                            </div>
-                        </div>
-                    </div>
+                  <div className='my-5 mr-5 align-middle justify-self-center'>
+                    <WorldIDWidget
+                        actionId="wid_staging_ed5840f20f5c5ac1b07a144005e45d6a" // obtain this from developer.worldcoin.org
+                        signal="my_signal"
+                        enableTelemetry
+                        onSuccess={(verificationResponse) => console.log(verificationResponse)} // you'll actually want to pass the proof to the API or your smart contract
+                        onError={(error) => console.error(error)}
+                    />
+                  </div>
+
+                  <div className='my-5 mr-5 align-middle justify-self-end'>
+                      <p className="text-l"><b>Connected account:</b> {account.substring(0, 6) + "..." + account.slice(-4)} ({balance} {symbol})</p>
+                      <div className='flex gap-2 justify-end'>
+                      <button className="text-purple-500" onClick={() => switchNetwork(mumbai)}>Mumbai</button>
+                      <button className="text-red-500" onClick={() => switchNetwork(goerli)}>Goerli</button>
+                      </div>
+                  </div>
                 </>
                 ) : (
                 <div className="mt-5 mr-5 align-middle justify-self-end">
