@@ -45,6 +45,16 @@ export default function Home() {
   }
   }, [account, provider]);
 
+  async function connect() { 
+    try {
+      await activate(injected)
+    } catch(e) {
+      console.log(e)
+    }
+    
+  }
+
+
   async function execute() {
     if (active) {
       const signer = provider.getSigner();
