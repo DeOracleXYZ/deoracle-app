@@ -3,7 +3,7 @@ import { WorldIDWidget } from "@worldcoin/id";
 
 export default function ConnectHeader(props) {
 
-    const { active, account, balance, handleClickConnect, library } = props;
+    const { active, account, balance, symbol, handleClickConnect, library } = props;
 
     const switchNetwork = async (chain) => {
         try {
@@ -54,6 +54,7 @@ export default function ConnectHeader(props) {
                         <div className='flex flex-col justify-center'>
                             <p className="text-l font-bold">Connected account:</p>
                             <p className="text-l">{balance}</p>
+                            <p className="text-l">{symbol}</p>
                             <p className="text-l">{account.substring(0, 6) + "..." + account.slice(-4)}</p>
                             <div className='flex gap-2 justify-end'>
                             <button className="text-purple-500" onClick={() => switchNetwork(mumbai)}>Mumbai</button>
