@@ -9,10 +9,8 @@ const injected = new InjectedConnector();
 
 export default function Home() {
   const { activate, active, library: provider, account, chainId } = useWeb3React();
-  const [lotteryNumber, setLotteryNumber] = useState("5");
 
   useEffect(() => {
-    setLotteryNumber(prevNumber => prevNumber+1)
   }, [])
 
   async function connect() {
@@ -41,20 +39,23 @@ export default function Home() {
   return (
 
     <div className="">
-      Hello Frogs!
       {active ? (
         <>
-        Connected!
-        <button className="px-4 py-1 text-sm text-red-600 font-semibold rounded-full border border-red-200 hover:text-white hover:bg-red-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"onClick={() => execute()}>Execute</button>
-        <p className="mt-3 text-2xl">{account}</p>
-        <p className="mt-3 text-2xl">{chainId}</p>
-        <p className="mt-3 text-2xl">{lotteryNumber}</p>
-        <RequestCard color="red" handleClick={() => execute()}/>
-        <RequestCard />
-        <RequestCard />
+          <div className='flex mt-5 mr-10 justify-end'>
+            <div className='flex flex-col justify-center'>
+              <p className="text-l font-bold">Connected account:</p>
+              <p className="text-l">{account}</p>
+            </div>
+          </div>
+          <div className='flex flex-col m-10 justify-center'>
+            <p className="mt-3 text-2xl">{chainId}</p>
+            <RequestCard color="red" handleClick={() => execute()}/>
+          </div>
         </>
         ) : (
-          <button className="px-4 py-1 text-sm text-blue-600 font-semibold rounded-full border border-blue-200 hover:text-white hover:bg-blue-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"onClick={() => connect()}>Connect</button>
+          <div className='flex mt-5 mr-10 justify-end'>
+            <button className="px-4 py-1 text-sm text-blue-600 font-semibold rounded-full border border-blue-200 hover:text-white hover:bg-blue-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"onClick={() => connect()}>Connect</button>
+          </div>
         )}
 
     </div>
