@@ -10,6 +10,7 @@ class MyDocument extends Document {
             rel="stylesheet"
           /> */}
             <link rel="shortcut icon" href="/favicon.svg" />
+            <title>deOracle.xyz</title>
         </Head>
         <body>
           <div className="absolute w-1/2 h-1/2 top-0 right-0 oracle-gradient"></div>
