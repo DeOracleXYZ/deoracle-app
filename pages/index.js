@@ -17,6 +17,8 @@ export default function Home() {
   const { activate, active, active: networkActive, error: networkError, activate: activateNetwork, 
     library, library: provider, account, chainId } = useWeb3React();
   const [loaded, setLoaded] = useState(false);
+  const [balance, setBalance] = useState("");
+
 
   useEffect(() => {
     injected
@@ -32,20 +34,22 @@ export default function Home() {
       })
   }, [activateNetwork, networkActive, networkError])
 
-
-  async function connect() {
-      try {
-        await activate(injected);
-      } catch(e) {
-        console.log(e);
-      }
+  useEffect(() => {
+    if(provider) {
+    const fetchBalance = async () => {
+      const data = await provider.getBalance(account);
+      setBalance(ethers.utils.formatEther(data));
+    }
+    fetchBalance().catch(console.error);
   }
+  }, [provider]);
 
   async function execute() {
     if (active) {
       const signer = provider.getSigner();
       const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
       const contract = new ethers.Contract(contractAddress, abi, signer)
+
       try {
         await contract.store(9);
       } catch(e) {
@@ -61,6 +65,7 @@ export default function Home() {
     <div className="">
         <ConnectHeader active={active}
                        account={account}
+                       balance={balance}
                        library={library}
                        handleClickConnect={()=> connect() } />
 
