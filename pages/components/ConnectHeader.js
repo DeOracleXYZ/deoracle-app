@@ -1,4 +1,5 @@
-import { mumbai, goerli } from "/constants/networks"
+import { mumbai, goerli } from "/constants/networks";
+import { WorldIDWidget } from "@worldcoin/id";
 
 
 export default function ConnectHeader(props) {
@@ -39,7 +40,15 @@ export default function ConnectHeader(props) {
         <>
             {active ? (
                 <>
+                 
                     <div className='flex mt-5 mr-10 justify-end'>
+                        <WorldIDWidget
+                            actionId="wid_staging_ed5840f20f5c5ac1b07a144005e45d6a" // obtain this from developer.worldcoin.org
+                            signal="my_signal"
+                            enableTelemetry
+                            onSuccess={(verificationResponse) => console.log(verificationResponse)} // you'll actually want to pass the proof to the API or your smart contract
+                            onError={(error) => console.error(error)}
+                        />
                         <div className='flex flex-col justify-center'>
                             <p className="text-l font-bold">Connected account:</p>
                             <p className="text-l">{account}</p>

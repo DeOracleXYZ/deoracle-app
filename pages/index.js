@@ -3,11 +3,15 @@ import { ethers } from 'ethers';
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector  } from "@web3-react/injected-connector";
 
+
+
 import { abi } from "../constants/abi";
 import RequestCard from './components/RequestCard';
 import ConnectHeader from './components/ConnectHeader';
 
 const injected = new InjectedConnector();
+
+
 
 export default function Home() {
   const { activate, active, active: networkActive, error: networkError, activate: activateNetwork, 
@@ -55,7 +59,6 @@ export default function Home() {
   return (
 
     <div className="">
-
         <ConnectHeader active={active}
                        account={account}
                        library={library}
