@@ -19,6 +19,7 @@ export default function Home() {
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState("");
 
+  console.log(provider)
 
   useEffect(() => {
     injected
@@ -42,7 +43,7 @@ export default function Home() {
     }
     fetchBalance().catch(console.error);
   }
-  }, [provider]);
+  }, [account, provider]);
 
   async function execute() {
     if (active) {
