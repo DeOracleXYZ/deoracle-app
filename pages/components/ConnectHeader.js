@@ -1,12 +1,9 @@
 import { chainIdsMap, mumbai, goerli } from "/constants/networks";
-import { WorldIDWidget } from "@worldcoin/id";
 
 export default function ConnectHeader(props) {
 
     const { active, account, balance, chainId, handleClickConnect, library } = props;
 
-
-   
     const switchNetwork = async (chain) => {
         try {
           await library.provider.request({
@@ -44,17 +41,6 @@ export default function ConnectHeader(props) {
           </div>
             {active ? (
                 <>
-                 
-                  <div className='my-5 mr-5 align-middle justify-self-center'>
-                    <WorldIDWidget
-                        actionId="wid_staging_ed5840f20f5c5ac1b07a144005e45d6a" // obtain this from developer.worldcoin.org
-                        signal="my_signal"
-                        enableTelemetry
-                        onSuccess={(verificationResponse) => console.log(verificationResponse)} // you'll actually want to pass the proof to the API or your smart contract
-                        onError={(error) => console.error(error)}
-                    />
-                  </div>
-
                   <div className='my-5 mr-5 align-middle justify-self-end'>
                       <p className="text-l"><b>Connected account:</b> {account.substring(0, 6) + "..." + account.slice(-4)} ({Number(balance).toFixed(2)} {chainIdsMap[chainId]})</p>
                       <div className='flex gap-2 justify-end'>
