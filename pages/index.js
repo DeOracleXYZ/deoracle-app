@@ -198,7 +198,7 @@ export default function Home() {
     const signer = await provider.getSigner();
     const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, signer);
 
-    deOracleContract.verifyAndExecute(account, merkle_root, nullifier_hash, unpackedProof, {gasLimit: 10000000})
+    console.log(deOracleContract.verifyAndExecute(account, merkle_root, nullifier_hash, unpackedProof, {gasLimit: 10000000}))
   }
 
 
