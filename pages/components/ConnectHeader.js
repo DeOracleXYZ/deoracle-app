@@ -2,7 +2,8 @@ import { chainIdsMap, mumbai, goerli } from "/constants/networks";
 
 export default function ConnectHeader(props) {
 
-    const { active, account, balance, chainId, handleClickConnect, library } = props;
+    const { data, handleClickConnect} = props;
+    const { active, account, balance, chainId, library } = data;
 
     const switchNetwork = async (chain) => {
         try {
