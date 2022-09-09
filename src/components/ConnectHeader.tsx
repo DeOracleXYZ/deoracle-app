@@ -37,6 +37,7 @@ export default function ConnectHeader(props) {
         }
       };
 
+    //conditional tailwind styles based on verification
     const worldIdCondition = worldIdVerified ? "hover:cursor-pointer" : "opacity-20 hover:cursor-pointer"
     const ENSCondition = ENSVerified ? "hover:cursor-pointer" : "opacity-20 hover:cursor-pointer"
 
@@ -53,8 +54,8 @@ export default function ConnectHeader(props) {
                         <b>Connected account:</b>
                         {account.substring(0, 6) + "..." + account.slice(-4)} ({Number(balance).toFixed(2)} {chainIdsMap[chainId]})
                         <div className="flex gap-3">
-                          <Image className={worldIdCondition} onClick={() => console.log(worldIdVerified)} src="/world-id.svg" height="30" width="30" alt="World ID verified" />
-                          <Image className={ENSCondition} onClick={() => console.log(ENSVerified)} src="/ens.svg" height="30" width="30" alt="ENS verified" />
+                          <Image className={worldIdCondition} onClick={() => console.log(worldIdVerified ? "World ID verified." : "Not World ID verified.")} src="/world-id.svg" height="30" width="30" alt="World ID verified" />
+                          <Image className={ENSCondition} onClick={() => console.log(ENSVerified ? "ENS verified." : "Not ENS verified.")} src="/ens.svg" height="30" width="30" alt="ENS verified" />
                           
                           
                         </div>
