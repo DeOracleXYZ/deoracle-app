@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector  } from "@web3-react/injected-connector";
-import { WidgetProps } from '@worldcoin/id';
+import { VerificationResponse, VerificationState, WidgetProps } from '@worldcoin/id';
 import dynamic from 'next/dynamic';
-import RequestCard from './components/RequestCard';
-import ConnectHeader from './components/ConnectHeader';
-import fetcher from '/lib/fetcher'
-import { NextApiRequest } from 'next';
+import RequestCard from '../components/RequestCard';
+import ConnectHeader from '../components/ConnectHeader';
+import apiReq from '../lib/fetcher'
+import useSWR from 'swr';
+
 
 const injected = new InjectedConnector();
 
@@ -16,27 +17,46 @@ const WorldIDWidget = dynamic<WidgetProps>(
   { ssr: false }
 );
 
-const widgetProps: WidgetProps = {
-  actionId: "wid_staging_PCNQeDC5CX",
-  signal: "user-id-1",
-  enableTelemetry: true,
-  appName: "ConfCon",
-  signalDescription: "Get your ticket to ConfCon 2023",
-  theme: "dark",
-  debug: true, // Recommended **only** for development
-  onSuccess: (result) => console.log(result),
-  onError: ({ code, detail }) => console.log({ code, detail }),
-  onInitSuccess: () => console.log("Init successful"),
-  onInitError: (error) => console.log("Error while initialization World ID", error),
-};
-
 export default function Home() {
   const { activate, active, active: networkActive, error: networkError, activate: activateNetwork, 
     library, library: provider, account, chainId } = useWeb3React();
 
   const [loaded, setLoaded] = useState(false);
-  const [balance, setBalance] = useState();
-  const [proof, setProof] = useState(null);
+  const [balance, setBalance] = useState("");
+  const [proof, setProof] = useState(null as VerificationResponse | null);
+  const {data, error} = useSWR("/api/claim", apiReq)
+
+  function temp(ver:any) { 
+    const {merkle_root, nullifier_hash, proof} = ver;
+    apiReq("https://developer.worldcoin.org/api/v1/verify", {
+    signal: 'test-user-1',
+    action_id: "wid_staging_9090ad0f7598ba4634bdc979a101cbcc",
+    merkle_root,
+    nullifier_hash,
+    proof, })
+  }
+  
+
+useEffect(() => {
+  
+    console.log(data)
+
+},[proof])
+
+
+  const widgetProps: WidgetProps = {
+    actionId: "wid_staging_9090ad0f7598ba4634bdc979a101cbcc",
+    signal: "test-user-1",
+    enableTelemetry: true,
+    appName: "deOracle",
+    signalDescription: "deOracle verification",
+    theme: "light",
+    debug: true, // Recommended **only** for development
+    onSuccess: (verificationResponse) => {setProof(verificationResponse)},
+    onError: ({ code, detail }) => console.log({ code, detail }),
+    onInitSuccess: () => console.log("Init successful"),
+    onInitError: (error) => console.log("Error while initialization World ID", error),
+  };
 
   useEffect(() => {
     injected
@@ -57,6 +77,7 @@ export default function Home() {
     
     const fetchAccountData = async () => {
       const data = await provider.getBalance(account);
+     
       setBalance(ethers.utils.formatEther(data));
     }
     fetchAccountData().catch(console.error);
@@ -231,19 +252,6 @@ export default function Home() {
   //   deOracleContract.verifyAndExecute(account, merkle_root, nullifier_hash, unpackedProof, {gasLimit: 10000000})
   // }
 
-    async function handler(req: NextApiRequest, res: NextApiRequest) {
-      const {merkle_root, nullifier_hash, proof} = req.body;
-  
-      const verificationResponse = await apiReq("https://developer.worldcoin.org/api/v1/verify", {
-        signal: 'claim',
-        action_id: "wid_staging_9090ad0f7598ba4634bdc979a101cbcc",
-        merkle_root,
-        nullifier_hash,
-        proof,
-      })
-
-      return res.status(400).json({ success: false})
-  }
 
 
 
@@ -254,6 +262,7 @@ export default function Home() {
           
         </div>
         <ConnectHeader data = {useWeb3React()}
+                       balance = {balance}
                        handleClickConnect={()=> connect() } />
 
         <div className='flex flex-col m-10 justify-center'>
@@ -262,7 +271,9 @@ export default function Home() {
           <RequestCard color="green" handleClick={() => console.log("clicked!")}/> 
 
           <WorldIDWidget {...widgetProps}/>
-        </div>   
+        </div>
+
+        <button onClick={()=> (console.log(data),  temp(proof))}>Log Data</button>
 
     </div>
   

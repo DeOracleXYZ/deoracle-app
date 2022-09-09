@@ -1,9 +1,10 @@
-import { chainIdsMap, mumbai, goerli } from "/constants/networks";
+import { chainIdsMap, mumbai, goerli } from "../constants/networks";
+
 
 export default function ConnectHeader(props) {
 
-    const { data, handleClickConnect} = props;
-    const { active, account, balance, chainId, library } = data;
+    const { data, handleClickConnect, balance} = props;
+    const { active, account, chainId, library } = data;
 
     const switchNetwork = async (chain) => {
         try {
@@ -34,6 +35,8 @@ export default function ConnectHeader(props) {
           }
         }
       };
+
+
 
     return (
         <header className="sticky top-3 grid grid-flow-col auto-cols-max px-5 pt-5 bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 nav-border grid justify-items-stretch grid-cols-2 gap-4" style={{borderRadius: 16 + 'px'}}>
