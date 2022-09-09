@@ -7,9 +7,8 @@ function RequestContainer(props) {
     const { account, requestList } = props;
     if(account) console.log(account);
 
-
-    console.log(123);
     console.log(requestList);
+
 
     return(
         <div key={props.id}>
@@ -20,16 +19,22 @@ function RequestContainer(props) {
           <br /><hr /><hr /><hr /><br />
 
           <RequestCard id = "1" 
-                       requestData = {requests.requests[0]} 
+                       requestData = {requestList ? requestList[0] : ""}
                        handleClick={() => console.log("clicked!")} /> 
 
           <br /><hr /><hr /><hr /><br />
 
-          <RequestCard id = "2" 
+         <RequestCard id = "2" 
+                       requestData = {requestList ? requestList[1] : ""} 
+                       handleClick={() => console.log("clicked!")} /> 
+
+          <br /><hr /><hr /><hr /><br />
+
+           {/* <RequestCard id = "3" 
                        requestData = {requests.requests[1]} 
                        handleClick={() => console.log("clicked!")} /> 
 
-          <br /><hr /><hr /><hr /><br />
+          <br /><hr /><hr /><hr /><br /> */}
 
 
         </div>
