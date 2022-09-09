@@ -6,6 +6,7 @@ import { VerificationResponse, VerificationState, WidgetProps } from '@worldcoin
 import dynamic from 'next/dynamic';
 import RequestCard from '../components/RequestCard';
 import ConnectHeader from '../components/ConnectHeader';
+import { deOracleABI } from '../constants/abis'
 
 
 const injected = new InjectedConnector();
@@ -20,9 +21,11 @@ export default function Home() {
     library, library: provider, account, chainId } = useWeb3React();
 
   const [loaded, setLoaded] = useState(false);
-  const [balance, setBalance] = useState("");
+  const [balance, setBalance] = useState(0);
   const [proof, setProof] = useState(null as VerificationResponse | null);
-
+  const [worldIdVerified, setWorldIdVerified] = useState(false);
+  const [ENSVerified, setENSVerified] = useState(false);
+  
 
   const widgetProps: WidgetProps = {
     actionId: "wid_staging_51dfce389298ae2fea0c8d7e8f3d326e",
@@ -54,13 +57,20 @@ export default function Home() {
 
   useEffect(() => {
     if(provider) {
+
+      const checkVerified = async (_account:string) => {
+        const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider);
+        setWorldIdVerified(await deOracleContract.checkVerified(_account));
+
+      }
     
-    const fetchAccountData = async () => {
-      const data = await provider.getBalance(account);
+      const fetchbalance = async () => {
+        const data = await provider.getBalance(account);
+        setBalance(ethers.utils.formatEther(data));
      
-      setBalance(ethers.utils.formatEther(data));
     }
-    fetchAccountData().catch(console.error);
+    checkVerified(account).catch(console.error);
+    fetchbalance().catch(console.error);
   }
   }, [account, provider]);
 
@@ -72,76 +82,20 @@ export default function Home() {
     }
   }
 
+  const deOracleAddress = "0x4222930734AfDdD3c6443078b077e7AdB9E8DA63";
+
+
   async function sendProof(verificationResponse) {
     const {merkle_root, nullifier_hash, proof} = verificationResponse;
     const unpackedProof = ethers.utils.defaultAbiCoder.decode(["uint256[8]"], proof)[0];
     console.log(verificationResponse);
     console.log(unpackedProof)
-    const deOracleAddress = "0xD66404096dD3eAeF6251852741755796d6BEE5E5";
-    const deOracleABI = [
-      {
-        "inputs": [
-          {
-            "internalType": "contract IWorldID",
-            "name": "_worldId",
-            "type": "address"
-          }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-      },
-      {
-        "inputs": [],
-        "name": "InvalidNullifier",
-        "type": "error"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": true,
-            "internalType": "string",
-            "name": "walletAddress",
-            "type": "string"
-          }
-        ],
-        "name": "logId",
-        "type": "event"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "signal",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "root",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "nullifierHash",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256[8]",
-            "name": "proof",
-            "type": "uint256[8]"
-          }
-        ],
-        "name": "verifyAndExecute",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      }
-    ]
-    const signer = await provider.getSigner();
-    const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, signer);
-
+    const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider.getSigner());
+  
     deOracleContract.verifyAndExecute(account, merkle_root, nullifier_hash, unpackedProof, {gasLimit: 10000000})
   }
+
+
 
 
 
@@ -154,6 +108,8 @@ export default function Home() {
         </div>
         <ConnectHeader data = {useWeb3React()}
                        balance = {balance}
+                       worldIdVerified = {worldIdVerified}
+                       ENSVerified = {ENSVerified}
                        handleClickConnect={()=> connect() } />
 
         <div className='flex flex-col m-10 justify-center'>
@@ -161,10 +117,13 @@ export default function Home() {
           <RequestCard color="blue" handleClick={() => console.log("clicked!")}/> 
           <RequestCard color="green" handleClick={() => console.log("clicked!")}/> 
           <div id="world-id-container"></div>
-          <WorldIDWidget {...widgetProps}/>
+          {!worldIdVerified && <WorldIDWidget {...widgetProps}/>}
+          
         </div>
 
-        <button onClick={()=> (console.log(proof), sendProof(proof))}>Log Data</button>
+        <div className="flex flex-col gap-2">
+          <button className="border" onClick={()=> (sendProof(proof))}>SendProof</button>
+        </div>
 
     </div>
   
