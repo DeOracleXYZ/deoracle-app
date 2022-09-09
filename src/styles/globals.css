@@ -4,10 +4,12 @@
 
 .oracle-gradient {
     background: radial-gradient(at top right, rgba(130,71,224, 1) 0%, rgba(130,71,224,0) 50%);
+    z-index: -1;
 }
 
 .oracle-gradient-2 {
     background: radial-gradient(at top left, rgba(71, 145, 224, 1) 0%, rgba(71, 145, 224,0) 50%);
+    z-index: -1;
 }
 
 .nav-border {
