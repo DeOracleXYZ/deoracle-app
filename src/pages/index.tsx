@@ -114,10 +114,9 @@ export default function Home() {
                        handleClickConnect={()=> connect() } />
 
         <div className='flex flex-col m-10 justify-center'>
-    
-          <RequestCard id="1" color="red" handleClick={() => console.log("clicked!")}/> 
-          <RequestCard id="2" color="blue" handleClick={() => console.log("clicked!")}/> 
-          <RequestCard id="3" color="green" handleClick={() => console.log("clicked!")}/> 
+
+          <RequestContainer id="6" color="orange"/>
+
           <div id="world-id-container"></div>
           {!worldIdVerified && <WorldIDWidget {...widgetProps}/>}
           
