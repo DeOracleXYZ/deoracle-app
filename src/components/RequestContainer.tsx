@@ -4,8 +4,12 @@ import RequestCard from './RequestCard';
 function RequestContainer(props) {
 
     //logic
-    const { account } = props;
+    const { account, requestList } = props;
     if(account) console.log(account);
+
+
+    console.log(123);
+    console.log(requestList);
 
     return(
         <div key={props.id}>

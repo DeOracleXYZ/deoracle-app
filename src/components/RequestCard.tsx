@@ -13,7 +13,7 @@ function RequestCard(props) {
     }
 
 
-    console.log(props.requestData);
+    // console.log(props.requestData);
 
     // console.log(requests.requests[0]);
     // console.log(requests.requests[0].requestText);

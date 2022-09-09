@@ -6,7 +6,7 @@ import { VerificationResponse, VerificationState, WidgetProps } from '@worldcoin
 import dynamic from 'next/dynamic';
 import RequestCard from '../components/RequestCard';
 import ConnectHeader from '../components/ConnectHeader';
-import RequestContainer from '../components/requestContainer'
+import RequestContainer from '../components/requestContainer';
 import { deOracleABI } from '../constants/abis'
 
 
@@ -121,7 +121,8 @@ export default function Home() {
         <div className='flex flex-col m-10 justify-center'>
 
           <RequestContainer id = "9009" 
-                            account = {account} />
+                            account = {account}
+                            requestList = {requestList} />
 
 
           <br></br>
