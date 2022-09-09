@@ -26,6 +26,7 @@ export default function Home() {
   const [proof, setProof] = useState(null as VerificationResponse | null);
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
+  const [requestList, setRequestList] = useState();
   
 
   const widgetProps: WidgetProps = {
@@ -62,7 +63,10 @@ export default function Home() {
       const checkVerified = async (_account:string) => {
         const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider);
         setWorldIdVerified(await deOracleContract.checkVerified(_account));
-
+      }
+      const getRequests = async () => {
+        const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider);
+        setRequestList(await deOracleContract.getRequestList());
       }
     
       const fetchbalance = async () => {
@@ -70,6 +74,8 @@ export default function Home() {
         setBalance(ethers.utils.formatEther(data));
      
     }
+
+    getRequests().catch(console.error);
     checkVerified(account).catch(console.error);
     fetchbalance().catch(console.error);
   }
@@ -83,7 +89,7 @@ export default function Home() {
     }
   }
 
-  const deOracleAddress = "0x4222930734AfDdD3c6443078b077e7AdB9E8DA63";
+  const deOracleAddress = "0x6E066eE27B0338abF2Ed9837Efe8C6e8385A021a";
 
 
   async function sendProof(verificationResponse) {
@@ -95,7 +101,6 @@ export default function Home() {
   
     deOracleContract.verifyAndExecute(account, merkle_root, nullifier_hash, unpackedProof, {gasLimit: 10000000})
   }
-
 
 
 
@@ -131,6 +136,7 @@ export default function Home() {
 
         <div className="flex flex-col gap-2">
           <button className="border" onClick={()=> (sendProof(proof))}>SendProof</button>
+          <button className="border" onClick={()=> console.log(requestList)}>PrintList</button>
         </div>
 
     </div>
