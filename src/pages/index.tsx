@@ -102,6 +102,13 @@ export default function Home() {
     deOracleContract.verifyAndExecute(account, merkle_root, nullifier_hash, unpackedProof, {gasLimit: 10000000})
   }
 
+  async function sendRequest() {
+    const request = ["Who is your daddy?", account, 100, 20, 2, [], false,  1662793030, 1667783030];
+    const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider.getSigner());
+  
+    deOracleContract.submitRequest(request);
+  }
+
 
 
 
@@ -138,6 +145,7 @@ export default function Home() {
         <div className="flex flex-col gap-2">
           <button className="border" onClick={()=> (sendProof(proof))}>SendProof</button>
           <button className="border" onClick={()=> console.log(requestList)}>PrintList</button>
+          <button className="border" onClick={()=> sendRequest()}>SendRequest</button>
         </div>
 
     </div>

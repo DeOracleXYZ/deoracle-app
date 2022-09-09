@@ -6,6 +6,7 @@ contract deOracle {
 
     address public owner;
     mapping(address => bool) public worldIdVerified;
+    Request[] public requestList;
 
     struct Request {
         string requestText;
@@ -13,25 +14,32 @@ contract deOracle {
         uint256 bounty; //USDC
         uint256 reputation;
         uint256 maxAnswers;
+        uint256[] submittedAnswers;
+        bool active;
         uint256 timeStampPosted;
         uint256 timeStampDue;
-        AnswerUint[] submittedAnswers;
-        mapping(address => bool) addressToAnswered;
-        bool active;
     }
 
-    struct AnswerUint {
+    struct Answer {
         uint256 answer;
-        address payable answerOrigin;
+        Oracle answerOrigin;
         bool acceptedAnswer;
         uint256 upVotes;
         uint256 downVotes;
     }
 
     struct Oracle {
-        address oracleAddress;
+        address payable oracleAddress;
         bool worldIdVerified;
         uint256 reputation;
+    }
+
+    function submitRequest(Request memory _newRequest) public {
+        requestList.push(_newRequest);
+    }
+
+    function getRequestList() public view returns (Request[] memory) {
+        return requestList;
     }
 
     /// @notice Thrown when attempting to reuse a nullifier
