@@ -6,6 +6,7 @@ import { VerificationResponse, VerificationState, WidgetProps } from '@worldcoin
 import dynamic from 'next/dynamic';
 import RequestCard from '../components/RequestCard';
 import ConnectHeader from '../components/ConnectHeader';
+import RequestContainer from '../components/requestContainer'
 import { deOracleABI } from '../constants/abis'
 
 
@@ -113,9 +114,10 @@ export default function Home() {
                        handleClickConnect={()=> connect() } />
 
         <div className='flex flex-col m-10 justify-center'>
-          <RequestCard color="red" handleClick={() => console.log("clicked!")}/> 
-          <RequestCard color="blue" handleClick={() => console.log("clicked!")}/> 
-          <RequestCard color="green" handleClick={() => console.log("clicked!")}/> 
+    
+          <RequestCard id="1" color="red" handleClick={() => console.log("clicked!")}/> 
+          <RequestCard id="2" color="blue" handleClick={() => console.log("clicked!")}/> 
+          <RequestCard id="3" color="green" handleClick={() => console.log("clicked!")}/> 
           <div id="world-id-container"></div>
           {!worldIdVerified && <WorldIDWidget {...widgetProps}/>}
           
