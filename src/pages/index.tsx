@@ -6,8 +6,6 @@ import { VerificationResponse, VerificationState, WidgetProps } from '@worldcoin
 import dynamic from 'next/dynamic';
 import RequestCard from '../components/RequestCard';
 import ConnectHeader from '../components/ConnectHeader';
-import apiReq from '../lib/fetcher'
-import useSWR from 'swr';
 
 
 const injected = new InjectedConnector();
@@ -24,32 +22,12 @@ export default function Home() {
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState("");
   const [proof, setProof] = useState(null as VerificationResponse | null);
-  const {data, error} = useSWR("/api/claim", apiReq)
-
-  function temp(ver:any) { 
-    const {merkle_root, nullifier_hash, proof} = ver;
-    apiReq("https://developer.worldcoin.org/api/v1/verify", {
-    signal: 'test-user-1',
-    action_id: "wid_staging_9090ad0f7598ba4634bdc979a101cbcc",
-    merkle_root,
-    nullifier_hash,
-    proof, })
-  }
-  
-
-useEffect(() => {
-  
-    console.log(data)
-
-},[proof])
 
 
   const widgetProps: WidgetProps = {
-    actionId: "wid_staging_9090ad0f7598ba4634bdc979a101cbcc",
-    signal: "test-user-1",
+    actionId: "wid_staging_51dfce389298ae2fea0c8d7e8f3d326e",
+    signal: account,
     enableTelemetry: true,
-    appName: "deOracle",
-    signalDescription: "deOracle verification",
     theme: "light",
     debug: true, // Recommended **only** for development
     onSuccess: (verificationResponse) => {setProof(verificationResponse)},
@@ -57,6 +35,8 @@ useEffect(() => {
     onInitSuccess: () => console.log("Init successful"),
     onInitError: (error) => console.log("Error while initialization World ID", error),
   };
+
+
 
   useEffect(() => {
     injected
@@ -92,165 +72,76 @@ useEffect(() => {
     }
   }
 
-  // async function sendProof(verificationResponse) {
-  //   const {merkle_root, nullifier_hash, proof} = verificationResponse;
-  //   const unpackedProof = ethers.utils.defaultAbiCoder.decode(["uint256[8]"], proof)[0];
-  //   console.log(verificationResponse);
-  //   console.log(unpackedProof)
-  //   const deOracleAddress = "0xABB70f7F39035586Da57B3c8136035f87AC0d2Aa";
-  //   const deOracleABI = [
-  //     {
-  //       "inputs": [
-  //         {
-  //           "internalType": "contract IWorldID",
-  //           "name": "_worldId",
-  //           "type": "address"
-  //         }
-  //       ],
-  //       "stateMutability": "nonpayable",
-  //       "type": "constructor"
-  //     },
-  //     {
-  //       "inputs": [],
-  //       "name": "InvalidNullifier",
-  //       "type": "error"
-  //     },
-  //     {
-  //       "anonymous": false,
-  //       "inputs": [
-  //         {
-  //           "indexed": true,
-  //           "internalType": "address",
-  //           "name": "walletAddress",
-  //           "type": "address"
-  //         }
-  //       ],
-  //       "name": "logId",
-  //       "type": "event"
-  //     },
-  //     {
-  //       "inputs": [
-  //         {
-  //           "components": [
-  //             {
-  //               "internalType": "string",
-  //               "name": "data",
-  //               "type": "string"
-  //             },
-  //             {
-  //               "internalType": "uint256",
-  //               "name": "bounty",
-  //               "type": "uint256"
-  //             },
-  //             {
-  //               "internalType": "address",
-  //               "name": "origin",
-  //               "type": "address"
-  //             }
-  //           ],
-  //           "internalType": "struct deOracle.Request",
-  //           "name": "request",
-  //           "type": "tuple"
-  //         }
-  //       ],
-  //       "name": "postRequest",
-  //       "outputs": [],
-  //       "stateMutability": "nonpayable",
-  //       "type": "function"
-  //     },
-  //     {
-  //       "inputs": [
-  //         {
-  //           "internalType": "address",
-  //           "name": "signal",
-  //           "type": "address"
-  //         },
-  //         {
-  //           "internalType": "uint256",
-  //           "name": "root",
-  //           "type": "uint256"
-  //         },
-  //         {
-  //           "internalType": "uint256",
-  //           "name": "nullifierHash",
-  //           "type": "uint256"
-  //         },
-  //         {
-  //           "internalType": "uint256[8]",
-  //           "name": "proof",
-  //           "type": "uint256[8]"
-  //         }
-  //       ],
-  //       "name": "verifyAndExecute",
-  //       "outputs": [],
-  //       "stateMutability": "nonpayable",
-  //       "type": "function"
-  //     },
-  //     {
-  //       "inputs": [],
-  //       "name": "fetchRequests",
-  //       "outputs": [
-  //         {
-  //           "components": [
-  //             {
-  //               "internalType": "string",
-  //               "name": "data",
-  //               "type": "string"
-  //             },
-  //             {
-  //               "internalType": "uint256",
-  //               "name": "bounty",
-  //               "type": "uint256"
-  //             },
-  //             {
-  //               "internalType": "address",
-  //               "name": "origin",
-  //               "type": "address"
-  //             }
-  //           ],
-  //           "internalType": "struct deOracle.Request[]",
-  //           "name": "",
-  //           "type": "tuple[]"
-  //         }
-  //       ],
-  //       "stateMutability": "view",
-  //       "type": "function"
-  //     },
-  //     {
-  //       "inputs": [
-  //         {
-  //           "internalType": "uint256",
-  //           "name": "",
-  //           "type": "uint256"
-  //         }
-  //       ],
-  //       "name": "requestList",
-  //       "outputs": [
-  //         {
-  //           "internalType": "string",
-  //           "name": "data",
-  //           "type": "string"
-  //         },
-  //         {
-  //           "internalType": "uint256",
-  //           "name": "bounty",
-  //           "type": "uint256"
-  //         },
-  //         {
-  //           "internalType": "address",
-  //           "name": "origin",
-  //           "type": "address"
-  //         }
-  //       ],
-  //       "stateMutability": "view",
-  //       "type": "function"
-  //     }
-  //   ]
-  //   const signer = await provider.getSigner();
-  //   const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, signer);
+  async function sendProof(verificationResponse) {
+    const {merkle_root, nullifier_hash, proof} = verificationResponse;
+    const unpackedProof = ethers.utils.defaultAbiCoder.decode(["uint256[8]"], proof)[0];
+    console.log(verificationResponse);
+    console.log(unpackedProof)
+    const deOracleAddress = "0xD66404096dD3eAeF6251852741755796d6BEE5E5";
+    const deOracleABI = [
+      {
+        "inputs": [
+          {
+            "internalType": "contract IWorldID",
+            "name": "_worldId",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+      },
+      {
+        "inputs": [],
+        "name": "InvalidNullifier",
+        "type": "error"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "string",
+            "name": "walletAddress",
+            "type": "string"
+          }
+        ],
+        "name": "logId",
+        "type": "event"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "signal",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "root",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nullifierHash",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256[8]",
+            "name": "proof",
+            "type": "uint256[8]"
+          }
+        ],
+        "name": "verifyAndExecute",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }
+    ]
+    const signer = await provider.getSigner();
+    const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, signer);
 
-  //   deOracleContract.verifyAndExecute(account, merkle_root, nullifier_hash, unpackedProof, {gasLimit: 10000000})
-  // }
+    deOracleContract.verifyAndExecute(account, merkle_root, nullifier_hash, unpackedProof, {gasLimit: 10000000})
+  }
 
 
 
@@ -269,11 +160,11 @@ useEffect(() => {
           <RequestCard color="red" handleClick={() => console.log("clicked!")}/> 
           <RequestCard color="blue" handleClick={() => console.log("clicked!")}/> 
           <RequestCard color="green" handleClick={() => console.log("clicked!")}/> 
-
+          <div id="world-id-container"></div>
           <WorldIDWidget {...widgetProps}/>
         </div>
 
-        <button onClick={()=> (console.log(data),  temp(proof))}>Log Data</button>
+        <button onClick={()=> (console.log(proof), sendProof(proof))}>Log Data</button>
 
     </div>
   
