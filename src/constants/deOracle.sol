@@ -1,33 +1,66 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.10;
 
 contract deOracle {
     using ByteHasher for bytes;
 
-    event logId(address walletAddress);
+    address public owner;
+    mapping(address => bool) public worldIdVerified;
 
-    ///////////////////////////////////////////////////////////////////////////////
-    ///                                  ERRORS                                ///
-    //////////////////////////////////////////////////////////////////////////////
+    struct Request {
+        string requestText;
+        address requestOrigin;
+        uint256 bounty; //USDC
+        uint256 reputation;
+        uint256 maxAnswers;
+        uint256 timeStampPosted;
+        uint256 timeStampDue;
+        AnswerUint[] submittedAnswers;
+        mapping(address => bool) addressToAnswered;
+        bool active;
+    }
+
+    struct AnswerUint {
+        uint256 answer;
+        address payable answerOrigin;
+        bool acceptedAnswer;
+        uint256 upVotes;
+        uint256 downVotes;
+    }
+
+    struct Oracle {
+        address oracleAddress;
+        bool worldIdVerified;
+        uint256 reputation;
+    }
 
     /// @notice Thrown when attempting to reuse a nullifier
     error InvalidNullifier();
-
-    /// @dev The World ID instance that will be used for verifying proofs
-    IWorldID internal immutable worldId;
-
     /// @dev The World ID group ID (always 1)
     uint256 internal immutable groupId = 1;
-
+    /// @dev The World ID instance that will be used for verifying proofs
+    IWorldID internal immutable worldId;
     /// @dev Whether a nullifier hash has been used already. Used to guarantee an action is only performed once by a single person
     mapping(uint256 => bool) internal nullifierHashes;
 
+    event logId(string indexed walletAddress);
+
     /// @param _worldId The WorldID instance that will verify the proofs
+    /// sets owner to contract deployer
     constructor(IWorldID _worldId) {
         worldId = _worldId;
+        owner = msg.sender;
     }
 
-    /// @param signal An arbitrary input from the user, usually the user's wallet address (check README for further details)
+    function checkVerified(address _address) public view returns (bool) {
+        return worldIdVerified[_address] ? true : false;
+    }
+
+    function setVerified(address _address) private {
+        worldIdVerified[_address] = true;
+    }
+
+    ///@param signal An arbitrary input from the user, usually the user's wallet address (check README for further details)
     /// @param root The root of the Merkle tree (returned by the JS widget).
     /// @param nullifierHash The nullifier hash for this proof, preventing double signaling (returned by the JS widget).
     /// @param proof The zero-knowledge proof that demostrates the claimer is registered with World ID (returned by the JS widget).
@@ -47,7 +80,9 @@ contract deOracle {
             groupId,
             abi.encodePacked(signal).hashToField(),
             nullifierHash,
-            abi.encodePacked(address(this)).hashToField(),
+            abi
+                .encodePacked("wid_staging_51dfce389298ae2fea0c8d7e8f3d326e")
+                .hashToField(),
             proof
         );
 
@@ -56,23 +91,14 @@ contract deOracle {
 
         // Finally, execute your logic here, for example issue a token, NFT, etc...
         // Make sure to emit some kind of event afterwards!
-        emit logId(signal);
+        setVerified(signal);
+
+        ///add address to array of verified addresses
     }
 
-    struct Request {
-        string data;
-        uint256 bounty;
-        address origin;
-    }
-
-    Request[] public requestList;
-
-    function postRequest(Request memory request) public {
-        requestList.push(request);
-    }
-
-    function fetchRequests() public view returns (Request[] memory) {
-        return requestList;
+    modifier onlyOwner() {
+        require(msg.sender == address(this));
+        _;
     }
 }
 
