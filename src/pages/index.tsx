@@ -10,7 +10,7 @@ import RequestCreate from '../components/RequestCreate';
 import { deOracleABI } from '../constants/abis'
 
 
-const injected = new InjectedConnector();
+const injected = new InjectedConnector({supportedChainIds: [0x13881]});
 
 const WorldIDWidget = dynamic<WidgetProps>( 
   () => import("@worldcoin/id").then((mod) => mod.WorldIDWidget),
@@ -18,8 +18,12 @@ const WorldIDWidget = dynamic<WidgetProps>(
 );
 
 export default function Home() {
-  const { activate, active, active: networkActive, error: networkError, activate: activateNetwork, 
-    library, library: provider, account, chainId } = useWeb3React();
+  const { activate, active: networkActive, error: networkError, activate: activateNetwork, 
+     account, chainId } = useWeb3React();
+  
+    
+  let provider, active;
+  active ? { library: provider } = useWeb3React() :  (useWeb3React(), provider = new ethers.providers.AlchemyProvider(0x13881, "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"), active = true);
 
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState(0);
@@ -28,7 +32,6 @@ export default function Home() {
   const [ENSVerified, setENSVerified] = useState(false);
   const [requestList, setRequestList] = useState();
   
-
   const widgetProps: WidgetProps = {
     actionId: "wid_staging_51dfce389298ae2fea0c8d7e8f3d326e",
     signal: account,
@@ -42,11 +45,9 @@ export default function Home() {
   };
 
 
-
   useEffect(() => {
-    injected
-      .isAuthorized()
-      .then((isAuthorized) => {
+
+    injected.isAuthorized().then((isAuthorized) => {
         setLoaded(true)
         if (isAuthorized && !networkActive && !networkError) {
           activateNetwork(injected)
@@ -57,25 +58,35 @@ export default function Home() {
       })
   }, [activateNetwork, networkActive, networkError])
 
+  //fetch requestList
   useEffect(() => {
-    if(provider) {
+    if(!requestList) {
+      const getRequests = async () => {
+        const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider);
+        setRequestList(await deOracleContract.getRequestList());
+        console.log("ensss test")
+      }
+  
+      getRequests().catch(console.error);
+    }
+  
+  }, [provider, requestList])
+
+  //fetch accountData
+  useEffect(() => {
+    if(account) {
 
       const checkVerified = async (_account:string) => {
         const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider);
         setWorldIdVerified(await deOracleContract.checkVerified(_account));
       }
-      const getRequests = async () => {
-        const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider);
-        setRequestList(await deOracleContract.getRequestList());
-      }
-    
+  
       const fetchbalance = async () => {
         const data = await provider.getBalance(account);
         setBalance(ethers.utils.formatEther(data));
      
     }
 
-    getRequests().catch(console.error);
     checkVerified(account).catch(console.error);
     fetchbalance().catch(console.error);
   }
@@ -110,12 +121,10 @@ export default function Home() {
   }
 
 
-
-
-
   return (
 
     <div className="">
+
         <div className='my-5 mr-5 align-middle justify-self-center'>
           
         </div>
