@@ -5,12 +5,10 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          {/* <link
-            href="https://fonts.googleapis.com/css2?family=Inter&display=optional"
-            rel="stylesheet"
-          /> */}
-            <link rel="shortcut icon" href="/favicon.svg" />
-            <title>deOracle.xyz</title>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+          <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet" />
+          <link rel="shortcut icon" href="/favicon.svg" />
         </Head>
         <body>
           <div className="absolute w-1/2 h-1/2 top-0 right-0 oracle-gradient"></div>

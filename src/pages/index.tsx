@@ -6,8 +6,8 @@ import { VerificationResponse, VerificationState, WidgetProps } from '@worldcoin
 import dynamic from 'next/dynamic';
 import ConnectHeader from '../components/ConnectHeader';
 import RequestContainer from '../components/RequestContainer';
-import RequestCreate from '../components/RequestCreate';
 import { deOracleABI } from '../constants/abis'
+import Head from 'next/head'
 
 
 const injected = new InjectedConnector({supportedChainIds: [0x13881]});
@@ -30,6 +30,8 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [requestList, setRequestList] = useState();
+
+  const copyrightYear = eval(/\d{4}/.exec(Date())[0]);
   
   const widgetProps: WidgetProps = {
     actionId: "wid_staging_51dfce389298ae2fea0c8d7e8f3d326e",
@@ -58,18 +60,18 @@ export default function Home() {
   }, [activateNetwork, networkActive, networkError])
 
   //fetch requestList
-  useEffect(() => {
-    if(!requestList) {
-      const getRequests = async () => {
-        const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider);
-        setRequestList(await deOracleContract.getRequestList());
+  // useEffect(() => {
+  //   if(!requestList) {
+  //     const getRequests = async () => {
+  //       const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider);
+  //       setRequestList(await deOracleContract.getRequestList());
         
-      }
+  //     }
   
-      getRequests().catch(console.error);
-    }
+  //     getRequests().catch(console.error);
+  //   }
   
-  }, [provider, requestList])
+  // }, [provider, requestList])
 
   //fetch accountData
   useEffect(() => {
@@ -122,44 +124,62 @@ export default function Home() {
 
   return (
 
-    <div className="">
+    <>
+      <Head>
+        <title>deOracle.xyz</title>
+      </Head>
 
-        <div className='my-5 mr-5 align-middle justify-self-center'>
-          
-        </div>
-        <ConnectHeader data = {useWeb3React()}
-                       balance = {balance}
-                       worldIdVerified = {worldIdVerified}
-                       ENSVerified = {ENSVerified}
-                       handleClickConnect={()=> connect() } />
+      <ConnectHeader data = {useWeb3React()}
+                      balance = {balance}
+                      worldIdVerified = {worldIdVerified}
+                      ENSVerified = {ENSVerified}
+                      handleClickConnect={()=> connect() } />
 
-        <div className='flex flex-col m-10 justify-center'>
+      <div className='flex flex-col m-10 justify-center'>
 
-        <RequestCreate id = "8008" 
-                       account = {account} />
+      <RequestContainer id = "9009" 
+                        account = {account}
+                        requestList = {requestList} />
 
-          <RequestContainer id = "9009" 
-                            account = {account}
-                            requestList = {requestList} />
+        <br />
+        <br />
+        <hr />
+        <br />
+        <br />
+        <div id="world-id-container"></div>
+        {!worldIdVerified && <WorldIDWidget {...widgetProps}/>}
+        
+      </div>
+
+      <div className="flex flex-col-3 gap-4 justify-center">
+        <button className="border px-4 py-2 bg-purple-200 border-purple-400" onClick={()=> (sendProof(proof))}>SendProof</button>
+        <button className="border px-4 py-2 bg-purple-200 border-purple-400" onClick={()=> console.log(requestList)}>PrintList</button>
+        <button className="border px-4 py-2 bg-purple-200 border-purple-400" onClick={()=> sendRequest()}>SendRequest</button>
+      </div>
 
 
-          <br></br>
-          <br></br>
-          <hr></hr>
-          <br></br>
-          <br></br>
-          <div id="world-id-container"></div>
-          {!worldIdVerified && <WorldIDWidget {...widgetProps}/>}
-          
-        </div>
+      <br />
+      <br />
+      <hr />
+      <br />
+      <br />
 
-        <div className="flex flex-col gap-2">
-          <button className="border" onClick={()=> (sendProof(proof))}>SendProof</button>
-          <button className="border" onClick={()=> console.log(requestList)}>PrintList</button>
-          <button className="border" onClick={()=> sendRequest()}>SendRequest</button>
-        </div>
+      <footer className="container text-center py-10 px-10">
+            <hr />
+            <br />
+            <br />
+            <p className="mb-1 pt-2 text-slate-400">&copy; {copyrightYear} deOracle.xyz</p>
+            <p className="text-slate-400"><i>Made by <a href="https://twitter.com/0xMarkeljan" target="_blank"><u>@Albo</u></a> and <a href="https://twitter.com/alex_biet" target="_blank"><u>@Alex</u></a></i></p>
 
-    </div>
+            <br />
+            <br />
+
+            <p className="text-slate-400">
+              <a href="#">Back to top</a>
+            </p>
+      </footer>
+
+    </>
   
   )
 }

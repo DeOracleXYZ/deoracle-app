@@ -1,5 +1,6 @@
 import requests from '../constants/requests'
 import RequestCard from './RequestCard';
+import RequestCreate from './RequestCreate';
 
 function RequestContainer(props: any) {
 
@@ -10,8 +11,8 @@ function RequestContainer(props: any) {
     return(
         <div key={props.id}>
 
-
-          <b>{props.account}</b>
+          <RequestCreate id = "8008" 
+                        account = {account} />
 
           <br /><hr /><hr /><hr /><br />
 
