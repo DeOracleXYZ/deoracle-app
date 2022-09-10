@@ -156,26 +156,19 @@ export default function Home() {
         <button className="border px-4 py-2 bg-purple-200 border-purple-400" onClick={()=> sendRequest()}>SendRequest</button>
       </div>
 
+      <footer className="container text-center py-10 px-10 mt-10">
+        <hr />
+        <br />
+        <br />
+        <p className="mb-1 pt-2 text-slate-400">&copy; {copyrightYear} deOracle.xyz</p>
+        <p className="text-slate-400"><i>Made by <a href="https://twitter.com/0xMarkeljan" target="_blank"><u>@Mark</u></a> and <a href="https://twitter.com/alex_biet" target="_blank"><u>@Alex</u></a></i></p>
 
-      <br />
-      <br />
-      <hr />
-      <br />
-      <br />
+        <br />
+        <br />
 
-      <footer className="container text-center py-10 px-10">
-            <hr />
-            <br />
-            <br />
-            <p className="mb-1 pt-2 text-slate-400">&copy; {copyrightYear} deOracle.xyz</p>
-            <p className="text-slate-400"><i>Made by <a href="https://twitter.com/0xMarkeljan" target="_blank"><u>@Mark</u></a> and <a href="https://twitter.com/alex_biet" target="_blank"><u>@Alex</u></a></i></p>
-
-            <br />
-            <br />
-
-            <p className="text-slate-400">
-              <a href="#">Back to top</a>
-            </p>
+        <p className="text-slate-400">
+          <a href="#">Back to top</a>
+        </p>
       </footer>
 
     </>
