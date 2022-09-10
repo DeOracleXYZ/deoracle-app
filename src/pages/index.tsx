@@ -19,11 +19,10 @@ const WorldIDWidget = dynamic<WidgetProps>(
 
 export default function Home() {
   const { activate, active: networkActive, error: networkError, activate: activateNetwork, 
-     account, chainId } = useWeb3React();
-  
-    
-  let provider, active;
-  active ? { library: provider } = useWeb3React() :  (useWeb3React(), provider = new ethers.providers.AlchemyProvider(0x13881, "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"), active = true);
+     library, library: provider, account, chainId } = useWeb3React();
+
+  const mainNetProvider = new ethers.providers.AlchemyProvider(1, "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY");
+  const mumbaiProvider = new ethers.providers.AlchemyProvider(0x13881, "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY")
 
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState(0);
@@ -64,7 +63,7 @@ export default function Home() {
       const getRequests = async () => {
         const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider);
         setRequestList(await deOracleContract.getRequestList());
-        console.log("ensss test")
+        
       }
   
       getRequests().catch(console.error);
