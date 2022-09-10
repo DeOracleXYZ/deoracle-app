@@ -11,8 +11,8 @@ class MyDocument extends Document {
           <link rel="shortcut icon" href="/favicon.svg" />
         </Head>
         <body>
-          <div className="absolute w-1/2 h-1/2 top-0 right-0 oracle-gradient"></div>
-          <div className="absolute w-1/2 h-1/2 top-0 left-0 oracle-gradient-2"></div>
+          <div className="fixed w-1/2 h-1/2 top-0 right-0 oracle-gradient"></div>
+          <div className="fixed w-1/2 h-1/2 top-0 left-0 oracle-gradient-2"></div>
           <Main />
           <NextScript />
         </body>
