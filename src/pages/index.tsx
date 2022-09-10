@@ -161,7 +161,7 @@ export default function Home() {
             <br />
             <br />
             <p className="mb-1 pt-2 text-slate-400">&copy; {copyrightYear} deOracle.xyz</p>
-            <p className="text-slate-400"><i>Made by <a href="https://twitter.com/0xMarkeljan" target="_blank"><u>@Albo</u></a> and <a href="https://twitter.com/alex_biet" target="_blank"><u>@Alex</u></a></i></p>
+            <p className="text-slate-400"><i>Made by <a href="https://twitter.com/0xMarkeljan" target="_blank"><u>@Mark</u></a> and <a href="https://twitter.com/alex_biet" target="_blank"><u>@Alex</u></a></i></p>
 
             <br />
             <br />

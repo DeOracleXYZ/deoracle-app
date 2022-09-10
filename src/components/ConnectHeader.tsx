@@ -10,43 +10,42 @@ export default function ConnectHeader(props: any) {
     const [showMe, setShowMe] = useState(false);
 
 
-    let shortWallet;
+  let shortWallet;
+  if(account) {
+    shortWallet = account.substring(0, 6) + "..." + account.slice(-4);
+  } else {
+    shortWallet = ""; 
+  }
 
-    if(account) {
-      shortWallet = account.substring(0, 6) + "..." + account.slice(-4);
-    } else {
-      shortWallet = ""; 
-    }
-
-    const switchNetwork = async (chain: any) => {
-        try {
-          await library.provider.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: chain.chainId }],
-          });
-        } catch (switchError) {
-          // 4902 error code indicates the chain is missing on the wallet
-          if (switchError.code === 4902) {
-            try {
-              await library.provider.request({
-                method: "wallet_addEthereumChain",
-                params: [
-                  {
-                    chainId: chain.chainId,
-                    rpcUrls: chain.rpcUrls,
-                    chainName: chain.chainName,
-                    nativeCurrency: chain.nativeCurrency,
-                    blockExplorerUrls: chain.blockExplorerUrls,
-                    iconUrls: chain.iconUrls
-                  }
-                ],
-              });
-            } catch (error) {
-               console.error(error)
-            }
+  const switchNetwork = async (chain: any) => {
+      try {
+        await library.provider.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: chain.chainId }],
+        });
+      } catch (switchError) {
+        // 4902 error code indicates the chain is missing on the wallet
+        if (switchError.code === 4902) {
+          try {
+            await library.provider.request({
+              method: "wallet_addEthereumChain",
+              params: [
+                {
+                  chainId: chain.chainId,
+                  rpcUrls: chain.rpcUrls,
+                  chainName: chain.chainName,
+                  nativeCurrency: chain.nativeCurrency,
+                  blockExplorerUrls: chain.blockExplorerUrls,
+                  iconUrls: chain.iconUrls
+                }
+              ],
+            });
+          } catch (error) {
+              console.error(error)
           }
         }
-      };
+      }
+    };
 
 
 
@@ -88,7 +87,7 @@ export default function ConnectHeader(props: any) {
             )}
         </header>
             
-        <div className="container mx-auto px-4" style={{ position: "fixed" }}>
+        <div className="container mx-auto mt-5 px-4" style={{ position: "fixed" }}>
          <div className="nav-dropdown p-5 bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 nav-border" style={{
             display: showMe ? "block" : "none"
           }}>
