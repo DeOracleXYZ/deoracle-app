@@ -83,8 +83,18 @@ export default function Home() {
     getRequests().catch(console.error);
     checkVerified(account).catch(console.error);
     fetchbalance().catch(console.error);
+  } else {
+    ///default RPC provider
+    const getRequestsRPC = async () => {
+      const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, mumbaiProvider);
+      setRequestList(await deOracleContract.getRequestList());
+      
+    }
+   
+      getRequestsRPC().catch(console.error);
   }
-  }, [account, provider]);
+  
+  }, [account, mumbaiProvider, provider]);
 
   async function connect() { 
     try {
