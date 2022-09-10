@@ -132,6 +132,7 @@ export default function Home() {
       <ConnectHeader data = {useWeb3React()}
                       balance = {balance}
                       worldIdVerified = {worldIdVerified}
+                      WorldIDWidget = {<WorldIDWidget {...widgetProps}/>}
                       ENSVerified = {ENSVerified}
                       handleClickConnect={()=> connect() } />
 
@@ -146,7 +147,6 @@ export default function Home() {
         <hr />
         <br />
         <br />
-        {!worldIdVerified && <WorldIDWidget {...widgetProps}/>}
         
       </div>
 
