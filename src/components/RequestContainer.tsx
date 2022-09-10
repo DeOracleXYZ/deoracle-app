@@ -1,7 +1,7 @@
 import requests from '../constants/requests'
 import RequestCard from './RequestCard';
 
-function RequestContainer(props) {
+function RequestContainer(props: any) {
 
     //logic
     const { account, requestList } = props;

@@ -2,7 +2,7 @@
 import { ethers } from 'ethers';
 
 
-function RequestCard(props) {
+function RequestCard(props: any) {
 
 
     const { requestData } = props;

@@ -4,9 +4,9 @@ import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector  } from "@web3-react/injected-connector";
 import { VerificationResponse, VerificationState, WidgetProps } from '@worldcoin/id';
 import dynamic from 'next/dynamic';
-import RequestCard from '../components/RequestCard';
 import ConnectHeader from '../components/ConnectHeader';
-import RequestContainer from '../components/requestContainer';
+import RequestContainer from '../components/RequestContainer';
+import RequestCreate from '../components/RequestCreate';
 import { deOracleABI } from '../constants/abis'
 
 
@@ -92,7 +92,7 @@ export default function Home() {
   const deOracleAddress = "0x6E066eE27B0338abF2Ed9837Efe8C6e8385A021a";
 
 
-  async function sendProof(verificationResponse) {
+  async function sendProof(verificationResponse: any) {
     const {merkle_root, nullifier_hash, proof} = verificationResponse;
     const unpackedProof = ethers.utils.defaultAbiCoder.decode(["uint256[8]"], proof)[0];
     console.log(verificationResponse);
@@ -126,6 +126,9 @@ export default function Home() {
                        handleClickConnect={()=> connect() } />
 
         <div className='flex flex-col m-10 justify-center'>
+
+        <RequestCreate id = "8008" 
+                       account = {account} />
 
           <RequestContainer id = "9009" 
                             account = {account}

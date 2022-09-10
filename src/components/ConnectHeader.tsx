@@ -2,12 +2,12 @@ import { chainIdsMap, mumbai, goerli } from "../constants/networks";
 import Image from 'next/image'
 
 
-export default function ConnectHeader(props) {
+export default function ConnectHeader(props: any) {
 
     const { data, handleClickConnect, balance, worldIdVerified, ENSVerified } = props;
     const { active, account, chainId, library } = data;
 
-    const switchNetwork = async (chain) => {
+    const switchNetwork = async (chain: any) => {
         try {
           await library.provider.request({
             method: "wallet_switchEthereumChain",
