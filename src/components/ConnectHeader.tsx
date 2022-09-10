@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 export default function ConnectHeader(props: any) {
 
-    const { data, handleClickConnect, balance, worldIdVerified, ENSVerified } = props;
+    const { data, handleClickConnect, balance, worldIdVerified, ENSVerified, WorldIDWidget } = props;
     const { active, account, chainId, library } = data;
     const [showMe, setShowMe] = useState(false);
 
@@ -109,6 +109,7 @@ export default function ConnectHeader(props: any) {
               <Image className={worldIdCondition} onClick={() => console.log(worldIdVerified ? "World ID verified." : "Not World ID verified.")} src="/world-id.svg" height="30" width="30" alt="World ID verified" />
 
               <Image className={ENSCondition} onClick={() => console.log(ENSVerified ? "ENS verified." : "Not ENS verified.")} src="/ens.svg" height="30" width="30" alt="ENS verified" />
+              {!worldIdVerified && WorldIDWidget}
             </div>
             <hr />
             <p className="pt-3"><b><a href="#" className="text-red-500 hover:text-red-400">Disconnect</a></b></p>
