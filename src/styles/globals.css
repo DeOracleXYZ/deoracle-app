@@ -15,3 +15,51 @@
 .nav-border {
     border: 2px solid rgba(249, 250, 251, .8);
 }
+
+.profile-button {
+    padding-right: 4rem;
+}
+
+.profile-button:hover,
+.profile-button:active, 
+.profile-button.active {
+    box-sizing: border-box;
+    background: rgba(158, 115, 228, 0.04);
+    background: rgba(241, 27, 27, 0.5);
+    border-radius: 12px;
+}
+
+.profile-button::after {
+    content: " ";
+    width: 0; 
+    height: 0; 
+    position: absolute;
+    top: 40%;
+    right: 1.5rem;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(0, 0, 0, 0.5);
+}
+
+.profile-button.active::after {
+    content: " ";
+    width: 0; 
+    height: 0; 
+    position: absolute;
+    top: 40%;
+    right: 1.5rem;
+    border-top: 0px solid rgba(0, 0, 0, 0.5);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid rgba(0, 0, 0, 0.5);
+}
+
+.nav-dropdown { 
+    position: absolute;
+    right: 0;
+    z-index: 999;
+    min-width: 320px;
+    max-width: 420px;
+    margin-top: 10px;
+    margin-right: 30px;
+}
