@@ -9,7 +9,7 @@ function RequestCard(props: any) {
     const { bounty, requestText, requestOrigin, reputation, maxAnswers, timeStampPosted,timeStampDue, active } = requestData;
 
 
-    console.log(requestData)
+
 
     let requestStatus;
     (active) ? requestStatus = "Active" : requestStatus = "Inactive";
@@ -25,7 +25,7 @@ function RequestCard(props: any) {
 
     var fulldate1 = date1.getMonth() + "." + date1.getDay() + "." + date1.getFullYear();
 
-    console.log(fulldate1);
+  
     var date2 = new Date(timeStampDue * 1000);
     var hours2 = date2.getHours();
     var minutes2 = "0" + date2.getMinutes();

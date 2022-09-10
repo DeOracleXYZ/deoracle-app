@@ -5,11 +5,6 @@ function RequestCreate(props: any) {
     //logic
     const { account, requestList } = props;
 
-    
-    if(account) console.log(account);
-    console.log(requestList);
-
-
     return(
         <div key={props.id}>
 
