@@ -59,24 +59,16 @@ export default function Home() {
       })
   }, [activateNetwork, networkActive, networkError])
 
-  //fetch requestList
-  // useEffect(() => {
-  //   if(!requestList) {
-  //     const getRequests = async () => {
-  //       const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider);
-  //       setRequestList(await deOracleContract.getRequestList());
-        
-  //     }
-  
-  //     getRequests().catch(console.error);
-  //   }
-  
-  // }, [provider, requestList])
 
   //fetch accountData
   useEffect(() => {
     if(account) {
 
+      const getRequests = async () => {
+        const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider);
+        setRequestList(await deOracleContract.getRequestList());
+        
+      }
       const checkVerified = async (_account:string) => {
         const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider);
         setWorldIdVerified(await deOracleContract.checkVerified(_account));
@@ -87,7 +79,8 @@ export default function Home() {
         setBalance(ethers.utils.formatEther(data));
      
     }
-
+    
+    getRequests().catch(console.error);
     checkVerified(account).catch(console.error);
     fetchbalance().catch(console.error);
   }
