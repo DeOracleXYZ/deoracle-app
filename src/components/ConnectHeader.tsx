@@ -62,8 +62,8 @@ export default function ConnectHeader(props: any) {
     return (
       <>
         <header className="sticky top-3 py-1 px-1 grid grid-flow-col auto-cols-max bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 nav-border grid justify-items-stretch grid-cols-2 gap-4" style={{borderRadius: 16 + 'px'}}>
-          <div className='justify-self-start'>
-            <image src="/logo.svg" className="h-24 px-5 pt-4" /> 
+          <div className='justify-self-start h-24 pt-4'>
+            <Image src="/logo.svg" alt="deOracle.xyz Logo" width={342} height={80} style={{textAlign: "left"}} /> 
           </div>
             {active ? (
                 <>
