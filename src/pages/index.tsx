@@ -134,13 +134,7 @@ export default function Home() {
       <RequestContainer id = "9009" 
                         account = {account}
                         requestList = {requestList} />
-
-        <br />
-        <br />
-        <hr />
-        <br />
-        <br />
-        
+ 
       </div>
 
       <div className="flex flex-col-3 gap-4 justify-center">
