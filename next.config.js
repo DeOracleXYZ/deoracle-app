@@ -9,7 +9,7 @@ const nextConfig = {
   },
   images: {
     loader: 'akamai',
-    path: '/_next/image',
+    path: '',
   },
   trailingSlash: true,
 
@@ -21,6 +21,7 @@ const nextConfig = {
       '/': { page: '/' },
     }
   },
+  
 }
 
 module.exports = nextConfig
