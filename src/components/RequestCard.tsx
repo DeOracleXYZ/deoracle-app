@@ -32,7 +32,7 @@ function RequestCard(props: any) {
         setDueDateFinal(fulldate2 + " - " + hours2 + ':' + minutes2.substr(-2) + ':' + seconds2.substr(-2));
         
     }, [active, requestOrigin, timeStampDue, timeStampPosted])
-    
+  
 
     return(
         <>

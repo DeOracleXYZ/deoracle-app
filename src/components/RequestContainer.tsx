@@ -19,18 +19,11 @@ function RequestContainer(props: any) {
   return requestEls;
 }
 
-
     return(
         <div>
-
-          <RequestCreate  
-                        account = {account} />
-
+          <RequestCreate account = {account} />
           <br /><hr /><hr /><hr /><br />
-
           {requestList && requestCardList()}
-
-        
         </div>
     )
 }

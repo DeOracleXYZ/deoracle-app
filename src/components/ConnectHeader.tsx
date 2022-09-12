@@ -6,9 +6,8 @@ import Image from 'next/image'
 export default function ConnectHeader(props: any) {
 
     const { data, handleClickConnect, balance, worldIdVerified, ENSVerified, WorldIDWidget } = props;
-    const { active, account, chainId, library } = data;
+    const { active, account, chainId, library }: {active: any; account: string; chainId: number; library: any} = data;
     const [showMe, setShowMe] = useState(false);
-
 
   let shortWallet;
   if(account) {
@@ -23,7 +22,7 @@ export default function ConnectHeader(props: any) {
           method: "wallet_switchEthereumChain",
           params: [{ chainId: chain.chainId }],
         });
-      } catch (switchError) {
+      } catch (switchError: any) {
         // 4902 error code indicates the chain is missing on the wallet
         if (switchError.code === 4902) {
           try {
@@ -46,9 +45,6 @@ export default function ConnectHeader(props: any) {
         }
       }
     };
-
-
-
     
     function toggle(){
       setShowMe(!showMe);

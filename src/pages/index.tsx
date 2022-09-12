@@ -20,23 +20,21 @@ const WorldIDWidget = dynamic<WidgetProps>(
 export default function Home() {
   const { activate, active: networkActive, error: networkError, activate: activateNetwork, 
      library, library: provider, account, chainId } = useWeb3React();
-
-  const mainNetProvider = new ethers.providers.AlchemyProvider(1, "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY");
-  const mumbaiProvider = new ethers.providers.AlchemyProvider(0x13881, "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY")
-  
+ 
+  const mainNetProvider = new ethers.providers.AlchemyProvider(1, "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY");  
   const id = useId();
   const [loaded, setLoaded] = useState(false);
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState("");
   const [proof, setProof] = useState(null as VerificationResponse | null);
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [requestList, setRequestList] = useState();
 
-  const copyrightYear = eval(/\d{4}/.exec(Date())[0]);
+  const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
   
   const widgetProps: WidgetProps = {
     actionId: "wid_staging_51dfce389298ae2fea0c8d7e8f3d326e",
-    signal: account,
+    signal: account! ,
     enableTelemetry: true,
     theme: "light",
     debug: true, // Recommended **only** for development
@@ -86,6 +84,7 @@ export default function Home() {
     fetchbalance().catch(console.error);
   } else {
     ///default RPC provider
+    const mumbaiProvider = new ethers.providers.AlchemyProvider(0x13881, "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY")
     const getRequestsRPC = async () => {
       const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, mumbaiProvider);
       setRequestList(await deOracleContract.getRequestList());
@@ -95,7 +94,7 @@ export default function Home() {
       getRequestsRPC().catch(console.error);
   }
   
-  }, [account, mumbaiProvider, provider]);
+  }, [account, provider]);
 
   async function connect() { 
     try {
