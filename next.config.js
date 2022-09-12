@@ -7,6 +7,11 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: false,
   },
+  images: {
+    loader: 'akamai',
+    path: '',
+  },
+  trailingSlash: true,
 }
 
 module.exports = nextConfig
