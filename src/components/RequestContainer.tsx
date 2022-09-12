@@ -1,4 +1,3 @@
-import requests from '../constants/requests'
 import RequestCard from './RequestCard';
 import RequestCreate from './RequestCreate';
 
@@ -11,7 +10,7 @@ function RequestContainer(props: any) {
 
   
     if (requestList) {
-      requestCardList = requestList.map(card => {
+      requestCardList = requestList.map((card: any) => {
         let i = requestList.indexOf(card);
         return (
           <div key={i}>

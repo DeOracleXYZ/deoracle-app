@@ -1,40 +1,41 @@
-
 import { ethers } from 'ethers';
-
+import { useEffect, useState, useId } from 'react';
 
 function RequestCard(props: any) {
 
     const { requestData } = props;
-    const { id, bounty, requestText, requestOrigin, reputation, maxAnswers, timeStampPosted,timeStampDue, active } = requestData;
+    const { id, bounty, requestText, requestOrigin, reputation, maxAnswers, active } = requestData;
 
-    let requestStatus;
-    (active) ? requestStatus = "Active" : requestStatus = "Inactive";
+    const [postedOnFinal, setPostedOnFinal] = useState("");
+    const [dueDateFinal, setDueDateFinal] = useState("");
+    const [requestStatus, setRequestStatus] = useState("Inactive")
+    const [shortWallet, setShortWallet] = useState("")
+    const [timeStampDue, setTimeStampDue] = useState(requestData.timeStampDue);
+    const [timeStampPosted, setTimeStampPosted] = useState(requestData.timeStampPosted);
 
+    useEffect(() => {
+        active ? setRequestStatus("Active") : setRequestStatus("Inactive");
+        console.log("running")
+        requestOrigin ? setShortWallet(requestOrigin.substring(0, 6) + "..." + requestOrigin.slice(-4))
+          : setShortWallet(""); 
+        
+        let date1 = new Date(timeStampPosted * 1000);
+        let hours1 = date1.getHours();
+        let minutes1 = "0" + date1.getMinutes();
+        let seconds1 = "0" + date1.getSeconds();
+        let fulldate1 = date1.getMonth() + "." + date1.getDay() + "." + date1.getFullYear();
 
-
-    let shortWallet;
-    if(requestOrigin) {
-        shortWallet = requestOrigin.substring(0, 6) + "..." + requestOrigin.slice(-4);
-    } else {
-        shortWallet = ""; 
-    }
-
-    var date1 = new Date(timeStampPosted * 1000);
-    var hours1 = date1.getHours();
-    var minutes1 = "0" + date1.getMinutes();
-    var seconds1 = "0" + date1.getSeconds();
-    var fulldate1 = date1.getMonth() + "." + date1.getDay() + "." + date1.getFullYear();
-
-    var date2 = new Date(timeStampDue * 1000);
-    var hours2 = date2.getHours();
-    var minutes2 = "0" + date2.getMinutes();
-    var seconds2 = "0" + date2.getSeconds();
-    var fulldate2 = date2.getMonth() + "." + date2.getDay() + "." + date2.getFullYear();
-
-    var postedOnFinal = fulldate1 + " - " + hours1 + ':' + minutes1.substr(-2) + ':' + seconds1.substr(-2);
-    var dueDateFinal = fulldate2 + " - " + hours2 + ':' + minutes2.substr(-2) + ':' + seconds2.substr(-2);
-
-    console.log(id);
+        let date2 = new Date(timeStampDue * 1000);
+        let hours2 = date2.getHours();
+        let minutes2 = "0" + date2.getMinutes();
+        let seconds2 = "0" + date2.getSeconds();
+        let fulldate2 = date2.getMonth() + "." + date2.getDay() + "." + date2.getFullYear();
+    
+        setPostedOnFinal(fulldate1 + " - " + hours1 + ':' + minutes1.substr(-2) + ':' + seconds1.substr(-2));
+        setDueDateFinal(fulldate2 + " - " + hours2 + ':' + minutes2.substr(-2) + ':' + seconds2.substr(-2));
+        
+    }, [active, requestOrigin, timeStampDue, timeStampPosted])
+    
 
     return(
         <>
