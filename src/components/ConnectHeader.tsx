@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { chainIdsMap, mumbai, goerli } from "../constants/networks";
 import Image from 'next/image'
 
@@ -8,13 +8,11 @@ export default function ConnectHeader(props: any) {
     const { data, handleClickConnect, balance, worldIdVerified, ENSVerified, WorldIDWidget } = props;
     const { active, account, chainId, library }: {active: any; account: string; chainId: number; library: any} = data;
     const [showMe, setShowMe] = useState(false);
+    const [shortWallet, setShortWallet] = useState("");
 
-  let shortWallet;
-  if(account) {
-    shortWallet = account.substring(0, 6) + "..." + account.slice(-4);
-  } else {
-    shortWallet = ""; 
-  }
+    useEffect(() => {
+      account && setShortWallet(account.substring(0, 6) + "..." + account.slice(-4));
+    }, [setShortWallet, account])
 
   const switchNetwork = async (chain: any) => {
       try {

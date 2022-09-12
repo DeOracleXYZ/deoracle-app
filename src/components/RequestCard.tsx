@@ -13,9 +13,10 @@ function RequestCard(props: any) {
 
     useEffect(() => {
         active ? setRequestStatus("Active") : setRequestStatus("Inactive");
+
         requestOrigin ? setShortWallet(requestOrigin.substring(0, 6) + "..." + requestOrigin.slice(-4))
           : setShortWallet(""); 
-        
+          
         let date1 = new Date(timeStampPosted * 1000);
         let hours1 = date1.getHours();
         let minutes1 = "0" + date1.getMinutes();
@@ -28,8 +29,8 @@ function RequestCard(props: any) {
         let seconds2 = "0" + date2.getSeconds();
         let fulldate2 = date2.getMonth() + "." + date2.getDay() + "." + date2.getFullYear();
     
-        setPostedOnFinal(fulldate1 + " - " + hours1 + ':' + minutes1.substr(-2) + ':' + seconds1.substr(-2));
-        setDueDateFinal(fulldate2 + " - " + hours2 + ':' + minutes2.substr(-2) + ':' + seconds2.substr(-2));
+        setPostedOnFinal(fulldate1 + " - " + hours1 + ':' + minutes1.substring(1) + ':' + seconds1.substring(1));
+        setDueDateFinal(fulldate2 + " - " + hours2 + ':' + minutes2.substring(1) + ':' + seconds2.substring(1));
         
     }, [active, requestOrigin, timeStampDue, timeStampPosted])
   

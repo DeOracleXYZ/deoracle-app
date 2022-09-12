@@ -34,7 +34,7 @@ export default function Home() {
   
   const widgetProps: WidgetProps = {
     actionId: "wid_staging_51dfce389298ae2fea0c8d7e8f3d326e",
-    signal: account! ,
+    signal: account ? account : "",
     enableTelemetry: true,
     theme: "light",
     debug: true, // Recommended **only** for development
@@ -62,7 +62,7 @@ export default function Home() {
   //fetch accountData
   useEffect(() => {
     if(account) {
-
+      
       const getRequests = async () => {
         const deOracleContract = new ethers.Contract(deOracleAddress, deOracleABI, provider);
         setRequestList(await deOracleContract.getRequestList());
