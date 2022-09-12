@@ -60,33 +60,34 @@ function RequestCard(props: any) {
   return (
     <>
       {requestData ? (
-        <div>
-          <p className="text-2xl">
+        <div className="request-box mb-3">
+          <p className="text-2xl pt-5 pb-3 px-5">
             <b>{requestText}</b>
           </p>
           <hr className="my-2" />
-          <p>
-            <b>Posted by</b> {shortWallet}
-          </p>
-          <p>
-            <b>Bounty:</b> {ethers.utils.formatUnits(bounty, 0)} USDC
-          </p>
-          <p>
-            <b>Req. Reputation:</b> {ethers.utils.formatUnits(reputation, 0)} RP
-          </p>
-          <p>
-            <b>Answers:</b> 0 / {ethers.utils.formatUnits(maxAnswers, 0)}
-          </p>
-          <p>
-            <b>Posted on:</b> {postedOnFinal}
-          </p>
-          <p>
-            <b>Due date:</b> {dueDateFinal}
-          </p>
-          <p>
-            <b>Status:</b> {requestStatus}
-          </p>
-          <br />
+          <div className="flex gap-5 justify-between text-purple-500 text-sm px-5 pt-2 pb-3">
+            <p>
+                <b>Posted by</b><br /> {shortWallet}
+            </p>
+            <p>
+                <b>Bounty:</b><br /> {ethers.utils.formatUnits(bounty, 0)} USDC
+            </p>
+            <p>
+                <b>Req. Reputation:</b><br /> {ethers.utils.formatUnits(reputation, 0)} RP
+            </p>
+            <p>
+                <b>Answers:</b><br /> 0 / {ethers.utils.formatUnits(maxAnswers, 0)}
+            </p>
+            <p>
+                <b>Posted on:</b><br /> {postedOnFinal}
+            </p>
+            <p>
+                <b>Due date:</b><br /> {dueDateFinal}
+            </p>
+            <p>
+                <b>Status:</b><br /> {requestStatus}
+            </p>
+          </div>
           <hr />
           <br />
           {/* <p className="text-xl"><b>Answers:</b></p>
@@ -102,14 +103,15 @@ function RequestCard(props: any) {
             <p><b>Upvotes:</b> {requestData.answers[1].upVotes}</p>
             <p><b>Downvotes:</b> {requestData.answers[1].downVotes}</p> 
             <hr />*/}
-
-          <button
-            className="px-4 py-1 text-sm text-red-600 font-semibold rounded-full border border-red-200 hover:text-white hover:bg-red-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
-            onClick={() => handleClick()}
-          >
-            {" "}
-            Test Click
-          </button>
+            <div className="text-center">
+                <button
+                    className="mx-5 px-4 py-1 text-sm text-red-600 font-semibold rounded-full border border-red-200 hover:text-white hover:bg-red-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
+                    onClick={() => handleClick()}
+                >
+                    {" "}
+                    Test Click
+                </button>
+          </div>
 
           <br />
           <br />

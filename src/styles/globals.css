@@ -69,3 +69,14 @@
     cursor: pointer;
     font-family: 'Audiowide', cursive;
 }
+
+.request-box {
+    box-sizing: border-box;
+    background: transparent;
+    border: 1px solid #8CB7E6;
+    border-radius: 16px;
+}
+
+hr {
+    border-color: rgba(0,0,0,0.08);
+}

@@ -68,15 +68,17 @@ export default function ConnectHeader(props: any) {
                         <p><span className="text-xl"><b>{shortWallet}</b> - {Number(balance).toFixed(2)}</span> <small>{chainIdsMap[chainId]}</small></p>
                         <div className="flex place-content-end gap-3 mt-1 ">
                           <p className="text-slate-600 text-sm">200 REP</p>
-                          <p className="text-slate-600 text-sm"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="inline-block w-4 h-4 mb-1"><path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg> Unverified (0 / 3)</p>
+                          <p className="text-slate-600 text-sm"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="inline-block w-4 h-4 mb-1"><path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg> Unverified (0/3)</p>
                         </div>
 
                       </div>
                   </div>
                 </>
                 ) : (
-                <div className="mt-5 mr-5 align-middle justify-self-end">
-                    <button className="align-middle px-4 py-1 text-md text-blue-600 font-semibold rounded-full border border-blue-200 bg-gradient-to-r from-indigo-100 from-indigo-300 hover:bg-gradient-to-l hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2" onClick={() => handleClickConnect()}>Connect</button>
+                <div className="mr-5 grid align-middle justify-self-end content-center">
+                    <div>
+                      <button className="align-middle px-6 py-3 py-1 text-xl text-purple-600 font-semibold rounded-full border-2 border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2" onClick={() => handleClickConnect()}>Connect</button>
+                    </div>
                 </div>
             )}
         </header>
@@ -97,7 +99,7 @@ export default function ConnectHeader(props: any) {
               <button className="text-red-500 hover:text-red-400" onClick={() => switchNetwork(goerli)}>Goerli</button></b>
             </div>
             <hr />
-            <p className="pt-3 pb-1"><b>Verification (0 / 3):</b></p>
+            <p className="pt-3 pb-1"><b>Verification (0/3):</b></p>
             <div className="flex gap-3 pb-3">
               <Image className={worldIdCondition} onClick={() => console.log(worldIdVerified ? "World ID verified." : "Not World ID verified.")} src="/world-id.svg" height="30" width="30" alt="World ID verified" />
 
