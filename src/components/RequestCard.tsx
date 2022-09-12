@@ -1,21 +1,18 @@
 import { ethers } from 'ethers';
-import { useEffect, useState, useId } from 'react';
+import { useEffect, useState } from 'react';
 
 function RequestCard(props: any) {
-
-    const { requestData } = props;
-    const { id, bounty, requestText, requestOrigin, reputation, maxAnswers, active } = requestData;
-
-    const [postedOnFinal, setPostedOnFinal] = useState("");
-    const [dueDateFinal, setDueDateFinal] = useState("");
+    const { requestData, handleClick } = props;
+    const { bounty, requestText, requestOrigin, reputation, maxAnswers, active } = requestData;
     const [requestStatus, setRequestStatus] = useState("Inactive")
     const [shortWallet, setShortWallet] = useState("")
     const [timeStampDue, setTimeStampDue] = useState(requestData.timeStampDue);
     const [timeStampPosted, setTimeStampPosted] = useState(requestData.timeStampPosted);
+    const [postedOnFinal, setPostedOnFinal] = useState("");
+    const [dueDateFinal, setDueDateFinal] = useState("");
 
     useEffect(() => {
         active ? setRequestStatus("Active") : setRequestStatus("Inactive");
-        console.log("running")
         requestOrigin ? setShortWallet(requestOrigin.substring(0, 6) + "..." + requestOrigin.slice(-4))
           : setShortWallet(""); 
         
@@ -40,7 +37,7 @@ function RequestCard(props: any) {
     return(
         <>
         {requestData ? (
-        <div key={id+id}>
+        <div>
 
             <p className="text-2xl"><b>{requestText}</b></p>
             <hr className="my-2" />
@@ -68,7 +65,7 @@ function RequestCard(props: any) {
             <p><b>Downvotes:</b> {requestData.answers[1].downVotes}</p> 
             <hr />*/}
 
-            <button className="px-4 py-1 text-sm text-red-600 font-semibold rounded-full border border-red-200 hover:text-white hover:bg-red-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2" onClick={() => console.log("clicked")}> Test Click</button>
+            <button className="px-4 py-1 text-sm text-red-600 font-semibold rounded-full border border-red-200 hover:text-white hover:bg-red-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2" onClick={() => handleClick()}> Test Click</button>
             
             <br /><br /><hr /><hr /><hr /><br /><br />
 

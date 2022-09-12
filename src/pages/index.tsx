@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useId } from 'react';
 import { ethers } from 'ethers';
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector  } from "@web3-react/injected-connector";
@@ -23,7 +23,8 @@ export default function Home() {
 
   const mainNetProvider = new ethers.providers.AlchemyProvider(1, "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY");
   const mumbaiProvider = new ethers.providers.AlchemyProvider(0x13881, "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY")
-
+  
+  const id = useId();
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState(0);
   const [proof, setProof] = useState(null as VerificationResponse | null);
@@ -141,7 +142,7 @@ export default function Home() {
 
       <div className='flex flex-col m-10 justify-center'>
 
-      <RequestContainer id = "9009" 
+      <RequestContainer id = {id} 
                         account = {account}
                         requestList = {requestList} />
  

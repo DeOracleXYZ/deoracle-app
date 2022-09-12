@@ -3,35 +3,32 @@ import RequestCreate from './RequestCreate';
 
 
 function RequestContainer(props: any) {
+  const { account, requestList, id } = props;
 
-    //logic
-    const { account, requestList, id } = props;
-    let requestCardList;
-
-  
-    if (requestList) {
-      requestCardList = requestList.map((card: any) => {
-        let i = requestList.indexOf(card);
-        return (
-          <div key={i}>
-            <RequestCard id = {i}
-                         requestData = {card}
-                         handleClick = {() => console.log("clicked!")} /> 
-          </div>
-        )
-      });
+  const requestCardList = () => {
+    const requestEls = 
+    requestList.map((card: any) => {
+      let i = requestList.indexOf(card);
+      return (
+        <RequestCard key={id + i}
+                      requestData = {card}
+                      handleClick = {() => console.log("clicked!")} /> 
+      )
     }
+  );
+  return requestEls;
+}
 
 
     return(
-        <div key={id}>
+        <div>
 
-          <RequestCreate id = "8008" 
+          <RequestCreate  
                         account = {account} />
 
           <br /><hr /><hr /><hr /><br />
 
-          {requestCardList ? requestCardList : "" }
+          {requestList && requestCardList()}
 
         
         </div>
