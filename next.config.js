@@ -9,9 +9,18 @@ const nextConfig = {
   },
   images: {
     loader: 'akamai',
-    path: '',
+    path: '/_next/image',
   },
   trailingSlash: true,
+
+  exportPathMap: async function (
+    defaultPathMap,
+    { dev, dir, outDir, distDir, buildId }
+  ) {
+    return {
+      '/': { page: '/' },
+    }
+  },
 }
 
 module.exports = nextConfig
