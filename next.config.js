@@ -8,8 +8,8 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
   images: {
-    loader: 'akamai',
-    path: '',
+    loader: "akamai",
+    path: "",
   },
   trailingSlash: true,
 
@@ -18,10 +18,9 @@ const nextConfig = {
     { dev, dir, outDir, distDir, buildId }
   ) {
     return {
-      '/': { page: '/' },
-    }
+      "/": { page: "/" },
+    };
   },
-  
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
