@@ -32,6 +32,7 @@ export default function Home() {
     1,
     "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
   );
+
   const id = useId();
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState("");

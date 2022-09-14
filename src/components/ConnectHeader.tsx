@@ -104,11 +104,11 @@ export default function ConnectHeader(props: any) {
                   <p className="text-slate-600 text-sm">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
+                      fill={verificationCount ? "#f7eb02" : "none"}
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="inline-block w-4 h-4 mb-1"
+                      className="inline-block w-5 h-5 mb-1"
                     >
                       <path
                         strokeLinecap="round"
