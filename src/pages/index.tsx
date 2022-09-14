@@ -32,6 +32,7 @@ export default function Home() {
     1,
     "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
   );
+
   const id = useId();
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState("");
@@ -39,6 +40,7 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [requestList, setRequestList] = useState();
+  const [verificationCount, setVerficationCount] = useState(0);
 
   const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
 
@@ -71,7 +73,6 @@ export default function Home() {
       });
   }, [activateNetwork, networkActive, networkError]);
 
-  //fetch accountData
   useEffect(() => {
     if (account) {
       const getRequests = async () => {
@@ -82,13 +83,20 @@ export default function Home() {
         );
         setRequestList(await deOracleContract.getRequestList());
       };
-      const checkVerified = async (_account: string) => {
+      const checkVerified = async () => {
         const deOracleContract = new ethers.Contract(
           deOracleAddress,
           deOracleABI,
           provider
         );
-        setWorldIdVerified(await deOracleContract.checkVerified(_account));
+        setWorldIdVerified(await deOracleContract.checkVerified(account));
+      };
+
+      const updateVerifiedCount = () => {
+        let verifCount = 0;
+        worldIdVerified && verifCount++;
+        ENSVerified && verifCount++;
+        setVerficationCount(verifCount);
       };
 
       const fetchbalance = async () => {
@@ -96,9 +104,10 @@ export default function Home() {
         setBalance(ethers.utils.formatEther(data));
       };
 
-      getRequests().catch(console.error);
-      checkVerified(account).catch(console.error);
-      fetchbalance().catch(console.error);
+      getRequests();
+      checkVerified();
+      fetchbalance();
+      updateVerifiedCount();
     } else {
       ///default RPC provider
       const mumbaiProvider = new ethers.providers.AlchemyProvider(
@@ -116,7 +125,7 @@ export default function Home() {
 
       getRequestsRPC().catch(console.error);
     }
-  }, [account, provider]);
+  }, [account, provider, worldIdVerified]);
 
   async function connect() {
     try {
@@ -184,6 +193,7 @@ export default function Home() {
         worldIdVerified={worldIdVerified}
         WorldIDWidget={<WorldIDWidget {...widgetProps} />}
         ENSVerified={ENSVerified}
+        verificationCount={verificationCount}
         handleClickConnect={() => connect()}
       />
 
