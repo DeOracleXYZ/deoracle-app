@@ -27,7 +27,7 @@ function RequestCreate(props: any) {
         </div>
 
         <div className="col-1 text-right">
-            <button onClick={toggle} className="px-4 pt-5 pb-3"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#c690ff" className="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
+            <button onClick={toggle} className="px-4 pt-5 pb-3"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#c690ff" className="w-8 h-8"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
         </div>
 
         <div className="col-span-2"><hr /></div>
