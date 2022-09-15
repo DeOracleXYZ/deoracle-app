@@ -95,7 +95,7 @@ function RequestCreate(props: any) {
                     id="newBounty"
                     name="newBounty"
                     required
-                    placeholder="i.e. 100 USDC"
+                    placeholder="i.e. 100"
                     minLength={1}
                     className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg  mb-5"
                   />
@@ -111,7 +111,7 @@ function RequestCreate(props: any) {
                     id="newMinReputation"
                     name="newMinReputation"
                     required
-                    placeholder="i.e. 100 RP"
+                    placeholder="i.e. 100"
                     minLength={1}
                     className="w-full mt-1 border border-purple-300 px-4 py-3  rounded-lg border-purple-300 mb-5"
                   />
