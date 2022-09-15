@@ -50,12 +50,12 @@ function RequestCreate(props: any) {
                 <div className="col-1">
                     <div className="col-1">
                         <label className="pl-2"><b>Bounty (USDC):</b></label><br />
-                        <input type="number" id="newBounty" name="newBounty" required placeholder="i.e. 100 USDC" minLength={1} className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg  mb-5" />
+                        <input type="number" id="newBounty" name="newBounty" required placeholder="i.e. 100" minLength={1} className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg  mb-5" />
                     </div>
 
                     <div className="col-1">
                         <label className="pl-2"><b>Min. Reputation (RP):</b></label><br />
-                        <input type="number" id="newMinReputation" name="newMinReputation" required placeholder="i.e. 100 RP" minLength={1} className="w-full mt-1 border border-purple-300 px-4 py-3  rounded-lg border-purple-300 mb-5" />
+                        <input type="number" id="newMinReputation" name="newMinReputation" required placeholder="i.e. 100" minLength={1} className="w-full mt-1 border border-purple-300 px-4 py-3  rounded-lg border-purple-300 mb-5" />
                     </div>
                 </div>
 
