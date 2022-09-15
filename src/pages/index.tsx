@@ -149,6 +149,7 @@ export default function Home() {
         try {
           const ENS = await mainNetProvider.lookupAddress(account);
           ENS && setENSName(ENS);
+          ENS && setENSVerified(true);
           console.log(ethers.utils.namehash(ENSName));
         } catch (err) {
           console.log(err);
