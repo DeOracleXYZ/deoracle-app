@@ -8,6 +8,7 @@ import ConnectHeader from "../components/ConnectHeader";
 import RequestContainer from "../components/RequestContainer";
 import { deOracleABI } from "../constants/abis";
 import Head from "next/head";
+import RequestCreate from "../components/RequestCreate";
 
 const injected = new InjectedConnector({ supportedChainIds: [0x13881] });
 
@@ -181,17 +182,27 @@ export default function Home() {
     );
   }
 
-  async function sendRequest() {
+  async function sendRequest(
+    requestText,
+    requestOrigin,
+    bounty,
+    reputation,
+    maxAnswers,
+    submittedAnswers,
+    active,
+    timeStampPosted,
+    timeStampDue
+  ) {
     const request = [
-      "Who is your daddy?",
-      account,
-      100,
-      20,
-      2,
-      [],
-      false,
-      1662793030,
-      1667783030,
+      requestText,
+      requestOrigin,
+      bounty,
+      reputation,
+      maxAnswers,
+      submittedAnswers,
+      active,
+      timeStampPosted,
+      timeStampDue,
     ];
     const deOracleContract = new ethers.Contract(
       deOracleAddress,
@@ -219,6 +230,12 @@ export default function Home() {
       />
 
       <div className="flex flex-col my-6 mx-3 md:m-10 justify-center">
+        <RequestCreate
+          account={account}
+          handleClick={() => {
+            sendRequest();
+          }}
+        />
         <RequestContainer id={id} account={account} requestList={requestList} />
       </div>
 
