@@ -72,7 +72,7 @@ export default function ConnectHeader(props: any) {
     <>
       <header
         className="sticky top-3 py-1 px-1 grid grid-flow-col auto-cols-max bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 nav-border grid justify-items-stretch grid-cols-2 gap-4"
-        style={{ borderRadius: 16 + "px" }}
+        style={{ borderRadius: 16 + "px", zIndex: 99999 }}
       >
         <div className="justify-self-start h-24 pt-4">
           <Image
@@ -140,7 +140,7 @@ export default function ConnectHeader(props: any) {
 
       <div
         className="container mx-auto mt-5 px-4"
-        style={{ position: "fixed" }}
+        style={{ position: "fixed", zIndex: 99999 }}
       >
         <div
           className="nav-dropdown p-5 bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 nav-border"
