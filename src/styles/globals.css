@@ -70,6 +70,10 @@
     font-family: 'Audiowide', cursive;
 }
 
+.new-request-header {
+    font-family: 'Audiowide', cursive;
+}
+
 .request-box {
     box-sizing: border-box;
     background: transparent;

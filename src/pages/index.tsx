@@ -218,7 +218,7 @@ export default function Home() {
         handleClickConnect={() => connect()}
       />
 
-      <div className="flex flex-col m-10 justify-center">
+      <div className="flex flex-col my-6 mx-3 md:m-10 justify-center">
         <RequestContainer id={id} account={account} requestList={requestList} />
       </div>
 

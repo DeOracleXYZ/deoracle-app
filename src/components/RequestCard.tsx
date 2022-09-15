@@ -13,6 +13,11 @@ function RequestCard(props: any) {
   );
   const [postedOnFinal, setPostedOnFinal] = useState("");
   const [dueDateFinal, setDueDateFinal] = useState("");
+  const [showMe, setShowMe] = useState(false);
+
+    function toggle(){
+        setShowMe(!showMe);
+    }
 
   useEffect(() => {
     active ? setRequestStatus("Active") : setRequestStatus("Inactive");
@@ -65,61 +70,52 @@ function RequestCard(props: any) {
             <b>{requestText}</b>
           </p>
           <hr className="my-2" />
-          <div className="flex gap-5 justify-between text-purple-500 text-sm px-5 pt-2 pb-3">
-            <p>
-                <b>Posted by</b><br /> {shortWallet}
-            </p>
-            <p>
-                <b>Bounty:</b><br /> {ethers.utils.formatUnits(bounty, 0)} USDC
-            </p>
-            <p>
-                <b>Req. Reputation:</b><br /> {ethers.utils.formatUnits(reputation, 0)} RP
-            </p>
-            <p>
-                <b>Answers:</b><br /> 0 / {ethers.utils.formatUnits(maxAnswers, 0)}
-            </p>
-            <p>
-                <b>Posted on:</b><br /> {postedOnFinal}
-            </p>
-            <p>
-                <b>Due date:</b><br /> {dueDateFinal}
-            </p>
-            <p>
-                <b>Status:</b><br /> {requestStatus}
-            </p>
+          <div className="flex flex-nowrap overflow-scroll gap-5 justify-between text-purple-500 text-sm px-5 pt-2 pb-3">
+            <p className="whitespace-nowrap"><b>Posted by</b><br /> {shortWallet}</p>
+            <p className="whitespace-nowrap"><b>Bounty:</b><br /> {ethers.utils.formatUnits(bounty, 0)} USDC</p>
+            <p className="whitespace-nowrap"><b>Req. Reputation:</b><br /> {ethers.utils.formatUnits(reputation, 0)} RP</p>
+            <p className="whitespace-nowrap"><b>Answers:</b><br /> 0 / {ethers.utils.formatUnits(maxAnswers, 0)}</p>
+            <p className="whitespace-nowrap"><b>Posted on:</b><br /> {postedOnFinal}</p>
+            <p className="whitespace-nowrap"><b>Due date:</b><br /> {dueDateFinal}</p>
+            <p className="whitespace-nowrap"><b>Status:</b><br /> {requestStatus}</p>
           </div>
-          <hr />
-          <br />
-          {/* <p className="text-xl"><b>Answers:</b></p>
-            <p className="text-lg">{requestData.answers[0].answer}</p>
-            <p><b>Answered by:</b> {requestData.answers[0].answerOrigin}</p>
-            <p><b>Accepted Answer:</b> {requestData.answers[0].acceptedAnswer}</p>
-            <p><b>Upvotes:</b> {requestData.answers[0].upVotes}</p>
-            <p><b>Downvotes:</b> {requestData.answers[0].downVotes}</p>
-            <hr />
-            <p className="text-lg">{requestData.answers[1].answer}</p>
-            <p><b>Answered by:</b> {requestData.answers[1].answerOrigin}</p>
-            <p><b>Accepted Answer:</b> {requestData.answers[1].acceptedAnswer}</p>
-            <p><b>Upvotes:</b> {requestData.answers[1].upVotes}</p>
-            <p><b>Downvotes:</b> {requestData.answers[1].downVotes}</p> 
-            <hr />*/}
-            <div className="text-center">
-                <button
-                    className="mx-5 px-4 py-1 text-sm text-red-600 font-semibold rounded-full border border-red-200 hover:text-white hover:bg-red-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
-                    onClick={() => handleClick()}
-                >
-                    {" "}
-                    Test Click
-                </button>
-          </div>
+          
+            <div className="w-full bg-slate-100 border-t border-purple-200 shadow-inner" style={{borderRadius: "0 0 15px 15px"}}>
 
-          <br />
-          <br />
-          <hr />
-          <hr />
-          <hr />
-          <br />
-          <br />
+                <div className={`${ !showMe ? "hidden" : "" }` + " px-5 py-5"}>
+
+                    <div className="border-b border-slate-200 flex gap-5 text-sm py-3 items-center">
+                        <p><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="inline w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> <b>Accepted Answer</b></p>
+                        <p className="text-lg font-bold grow">10.000</p>
+                        <p className="justify-self-end font-bold">
+                            <button className="rounded-l-xl px-3 py-1 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">+11</button>
+                            <button className="rounded-r-xl px-3 py-1 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">-2</button>
+                        </p>
+                        <p className="justify-self-end"><b>Answered by:</b> 0x45x9...45b9</p>
+                    </div>
+
+                    <div className="border-b border-slate-200 flex gap-5 text-sm py-3 items-center">
+                        <p className="invisible"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="inline w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> <b>Accepted Answer</b></p>
+                        <p className="text-lg font-bold grow">1.000</p>
+                        <p className="justify-self-end font-bold">
+                            <button className="rounded-l-xl px-3 py-1 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">+11</button>
+                            <button className="rounded-r-xl px-3 py-1 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">-2</button>
+                        </p>
+                        <p className="justify-self-end"><b>Answered by:</b> 0x11b1...39c3</p>
+                    </div>
+
+                    <div className="flex gap-0 justify-between text-purple-500 py-3 relative">
+                        <input type="text" id="newAnswer1" name="newAnswer1" required placeholder="Your answer..." className="w-full border border-purple-300 pl-4 pr-24 py-3 hover:border-purple-400 outline-purple-500 rounded-full" /> 
+                        <button type="submit" className="absolute right-0 border px-5 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700">Send</button>
+                    </div>
+
+                </div>
+
+                <div className="text-center">
+                    <button className={"w-full py-5 px-5 text-sm text-black font-semibold underline-offset-4 underline decoration-1 hover:text-slate-700 border-t border-transparent hover:no-underline hover:bg-slate-50 " + `${ showMe ? " hover:border-slate-200" : "" }`} style={{borderRadius: "0 0 15px 15px"}} onClick={toggle}><span className={`${ showMe ? "hidden" : "" }`}>Show</span> <span className={`${ !showMe ? "hidden" : "" }`}>Hide</span> answers (2)</button>
+                </div>
+            </div>
+            
         </div>
       ) : (
         <></>
