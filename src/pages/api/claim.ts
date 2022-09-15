@@ -16,13 +16,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     action_id: "wid_staging_9090ad0f7598ba4634bdc979a101cbcc",
     merkle_root,
     nullifier_hash,
-    proof, })
+    proof,
+  })
 
-    if (verificationResponse.ok) {
-      return res.status(200).json({ success: true })
-    }
-    console.log(res)
-   return res.status(400).json({ success: false})
+  if (verificationResponse.ok) {
+    return res.status(200).json({ success: true })
+  }
+  console.log(res)
+  return res.status(400).json({ success: false })
 }
 
 export default handler

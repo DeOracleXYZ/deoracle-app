@@ -266,7 +266,7 @@ export default function Home() {
         </button>
         <button
           className="border px-4 py-2 bg-purple-200 border-purple-400"
-          onClick={() => sendRequest()}
+          onClick={() => console.log(requestList)}
         >
           SendRequest
         </button>

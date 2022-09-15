@@ -8,12 +8,12 @@ function RequestCreate(props: any) {
 
 
   useEffect( () => {
-    updateFormData(prevFormData => {
+    updateFormData((prevFormData: any) => {
         return {
             ...prevFormData,
             requestOrigin: account,
             postedDate: unixStamp,
-            dueDate: date.addDays(5).toISOString().split(":", 2).join(":") // 2002-11-11T11:01
+            dueDate: addDays(date, 5).toISOString().split(":", 2).join(":") // 2002-11-11T11:01
         }
     })
   }, [account])
@@ -22,7 +22,7 @@ function RequestCreate(props: any) {
   function handleChange(event: any) {
     const {name, value, type, checked} = event.target
     
-    updateFormData(prevFormData => {
+    updateFormData((prevFormData: any) => {
         return {
             ...prevFormData,
             [name]: type === "checkbox" ? checked : value
@@ -49,19 +49,14 @@ function RequestCreate(props: any) {
   const humanReadableDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'long', timeZone: timezone }).format(dateObject);
   // console.log(humanReadableDate);
 
-  // Add days to data (due date)
-  Date.prototype.addDays = function(days: any) {
-    var date = new Date(this.valueOf());
-    date.setDate(date.getDate() + days);
-    return date;
+  function addDays(date: string | number | Date, days: number) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
   }
 
   // console.log(date);
-  console.log(date.addDays(5).toISOString().split(":", 2).join(":")); // 2002-11-11T11:01
-
-
-
-
+  //console.log(addDays(date, 5).toISOString().split(":", 2).join(":")); // 2002-11-11T11:01
   function handleSubmit(event: any) {
     event.preventDefault()
      handleClick(formData)
