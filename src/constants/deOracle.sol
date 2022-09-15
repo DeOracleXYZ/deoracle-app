@@ -6,6 +6,7 @@ contract deOracle {
 
     address public owner;
     mapping(address => bool) public worldIdVerified;
+    mapping(address => bool) public ENSVerified;
     Request[] public requestList;
 
     struct Request {
@@ -42,6 +43,19 @@ contract deOracle {
         return requestList;
     }
 
+    //Verify worldId with worldId contract
+    function checkVerified(address _address) public view returns (bool) {
+        return worldIdVerified[_address] ? true : false;
+    }
+
+    function setVerified(address _address) private {
+        worldIdVerified[_address] = true;
+    }
+
+    function setENSVerified(address _address) public {
+        ENSVerified[_address] = true;
+    }
+
     /// @notice Thrown when attempting to reuse a nullifier
     error InvalidNullifier();
     /// @dev The World ID group ID (always 1)
@@ -58,14 +72,6 @@ contract deOracle {
     constructor(IWorldID _worldId) {
         worldId = _worldId;
         owner = msg.sender;
-    }
-
-    function checkVerified(address _address) public view returns (bool) {
-        return worldIdVerified[_address] ? true : false;
-    }
-
-    function setVerified(address _address) private {
-        worldIdVerified[_address] = true;
     }
 
     ///@param signal An arbitrary input from the user, usually the user's wallet address (check README for further details)
@@ -130,8 +136,6 @@ interface IWorldID {
         uint256[8] calldata proof
     ) external view;
 }
-
-pragma solidity ^0.8.10;
 
 library ByteHasher {
     /// @dev Creates a keccak256 hash of a bytestring.
