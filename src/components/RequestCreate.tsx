@@ -74,28 +74,17 @@ function RequestCreate(props: any) {
 
 
   return (
-    <div 
-        className="w-full rounded-2xl mb-3 border-2 border-purple-300 text-black hover:border-purple-400">
-      <button 
-        className={
-          `${showMe ? "hidden" : ""}` +
+    <div className="w-full rounded-2xl mb-3 border-2 border-purple-300 text-black hover:border-purple-400">
+      <button className={`${showMe ? "hidden" : ""}` +
           " new-request-button w-full px-5 py-5 text-center text-purple-400 hover:text-purple-500 hover:bg-purple-100"
-        }
-        onClick={toggle}
-      >
-        NEW REQUEST
-      </button>
+        } onClick={toggle}> NEW REQUEST</button>
 
-      <header
-        className={
+      <header className={
           `${!showMe ? "hidden" : ""}` +
           " w-full px-5 text-left grid grid-cols-2"
-        }
-      >
+        } >
         <div className="col-1">
-          <p className="new-request-header text-purple-500 text-2xl px-4 py-5">
-            New Request
-          </p>
+          <p className="new-request-header text-purple-500 text-2xl px-4 py-5">New Request</p>
         </div>
 
         <div className="col-1 text-right">
@@ -108,11 +97,9 @@ function RequestCreate(props: any) {
               stroke="#c690ff"
               className="w-8 h-8"
             >
-              <path
-                strokeLinecap="round"
+              <path strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
+                d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
@@ -122,11 +109,7 @@ function RequestCreate(props: any) {
         </div>
       </header>
 
-      <div
-        className={
-          `${!showMe ? "hidden" : ""}` + " grid grid-cols-2 grid-flow-col gap-4"
-        }
-      >
+      <div className={`${!showMe ? "hidden" : ""}` + " grid grid-cols-2 grid-flow-col gap-4"}>
         <div className="col-1 px-8 py-8">
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4">
