@@ -1,63 +1,94 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 function RequestCreate(props: any) {
+  
   const { handleClick, account } = props;
-
   const [showMe, setShowMe] = useState(false);
-  const ref = useRef(null);
-  const [formValue, setFormValue] = useState();
+  const [formData, setFormData] = useState(
+    {
+        requestText: "", 
+        requestOrigin: account,
+        bounty: 0, 
+        reputation: 0, 
+        maxAnswers: 0, 
+        submittedAnswers: 0,
+        active: true,
+        postedDate: "",
+        dueDate: "",
+    }
+  )
 
-  useEffect(() => { 
-    const el = ref.current;
-    setFormValue(el.value);
+  useEffect( () => {
+    setFormData(prevFormData => {
+        return {
+            ...prevFormData,
+            requestOrigin: account,
+            postedDate: unixStamp,
+            dueDate: date.addDays(5).toISOString().split(":", 2).join(":") // 2002-11-11T11:01
+        }
+    })
+  }, [account])
 
-    console.log(formValue);
-}, [formValue])
+
+  function handleChange(event: any) {
+    const {name, value, type, checked} = event.target
+    
+    setFormData(prevFormData => {
+        return {
+            ...prevFormData,
+            [name]: type === "checkbox" ? checked : value
+        }
+    })
+  }
+
+
+  // Get local timezone
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  var zone = new Date().toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2]
+
+  // Get local date
+  const date = new Date( Date.now() );
+  
+  // convert to unix stamp
+  const unixStamp = Math.floor(date.getTime() / 1000);
+
+  // reconstruct date from unix stamp
+  const dateObject = new Date(unixStamp * 1000)
+
+  // print date based on local timezone
+  const humanReadableDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'long', timeZone: timezone }).format(dateObject);
+  // console.log(humanReadableDate);
+
+  // Add days to data (due date)
+  Date.prototype.addDays = function(days: any) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+  }
+
+  // console.log(date);
+  console.log(date.addDays(5).toISOString().split(":", 2).join(":")); // 2002-11-11T11:01
+
+
+
+
+  function handleSubmit(event: any) {
+    event.preventDefault()
+    // handleClick(formData)
+    console.log(formData)
+  } 
 
   function toggle() {
     setShowMe(!showMe);
   }
 
-  type requestSubmission = [
-    requestText: string,
-    requestOrigin: string,
-    bounty: number,
-    reputation: number,
-    maxAnswers: number,
-    submittedAnswers: number,
-    active: boolean,
-    timeStampPosted: number,
-    timeStampDue: number
-  ];
-
-  function onSubmit(event) {
-    event.preventDefault();
-    
-
-    console.log(formValue);
-    // let newRequestText = document.getElementById("newRequestText").value;
-    // let newBounty = document.getElementById("newBounty").value;
-    // let newMinReputation = document.getElementById("newMinReputation").value;
-    // let newNoOfAnswers = document.getElementById("newNoOfAnswers").value;
-    // let postDate = document.getElementById("newDueDate").value;
-    // let newDueDate = document.getElementById("newDueDate").value;
-
-    // console.log(
-    //   newRequestText + " " +
-    //     newBounty + " " +
-    //     newMinReputation + " " +
-    //     newNoOfAnswers + " " +
-    //     newNoOfAnswers + " " +
-    //     newDueDate
-    // );
-
-    // handleClick(newRequestText, account, newBounty, newMinReputation, newNoOfAnswers, 0, true, postDate, newDueDate);
-  }
 
   return (
-    <div className="w-full rounded-2xl mb-3 border-2 border-purple-300 text-black hover:border-purple-400">
-      <button
+    <div 
+        className="w-full rounded-2xl mb-3 border-2 border-purple-300 text-black hover:border-purple-400">
+      <button 
         className={
           `${showMe ? "hidden" : ""}` +
           " new-request-button w-full px-5 py-5 text-center text-purple-400 hover:text-purple-500 hover:bg-purple-100"
@@ -109,7 +140,7 @@ function RequestCreate(props: any) {
         }
       >
         <div className="col-1 px-8 py-8">
-          <form action="/send-data-here" method="post">
+          <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
                 <div className="mb-2">
@@ -118,7 +149,9 @@ function RequestCreate(props: any) {
                   </label>
                   <br />
                   <textarea
-                    ref={ref}
+                    name="requestText"
+                    value={formData.requestText}
+                    onChange={handleChange}
                     placeholder="Type in your request..."
                     required
                     minLength={10}
@@ -136,7 +169,9 @@ function RequestCreate(props: any) {
                   <br />
                   <input
                     type="number"
-                    id="newBounty"
+                    name="bounty"
+                    value={formData.bounty}
+                    onChange={handleChange}
                     required
                     placeholder="i.e. 100"
                     minLength={1}
@@ -151,7 +186,9 @@ function RequestCreate(props: any) {
                   <br />
                   <input
                     type="number"
-                    id="newMinReputation"
+                    name="reputation"
+                    value={formData.reputation}
+                    onChange={handleChange}
                     required
                     placeholder="i.e. 100"
                     minLength={1}
@@ -163,12 +200,14 @@ function RequestCreate(props: any) {
               <div className="col-1">
                 <div className="col-1">
                   <label className="pl-2">
-                    <b>Min. No. of Answers:</b>
+                    <b>Max. No. of Answers:</b>
                   </label>
                   <br />
                   <input
                     type="number"
-                    id="newNoOfAnswers"
+                    name="maxAnswers"
+                    value={formData.maxAnswers}
+                    onChange={handleChange}
                     required
                     placeholder="i.e. 1"
                     minLength={1}
@@ -178,14 +217,15 @@ function RequestCreate(props: any) {
 
                 <div className="col-1">
                   <label className="pl-2">
-                    <b>Due Date (CET):</b>
+                    <b>Due Date ({zone}):</b>
                   </label>
                   <br />
                   <input
                     type="datetime-local"
-                    id="newDueDate"
+                    name="dueDate"
+                    value={formData.dueDate}
+                    onChange={handleChange}
                     required
-                    placeholder="09.09.2029"
                     className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5"
                   />
                 </div>
@@ -193,7 +233,6 @@ function RequestCreate(props: any) {
 
               <div className="col-span-2">
                 <button
-                  onClick={() => onSubmit()}
                   type="submit"
                   className="border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700 rounded-lg"
                 >
