@@ -5,6 +5,7 @@ function RequestCreate(props: any) {
   const { handleClick, account } = props;
 
   const [showMe, setShowMe] = useState(false);
+  const [formValue, setFormValue] = useState();
 
   function toggle() {
     setShowMe(!showMe);
@@ -12,11 +13,11 @@ function RequestCreate(props: any) {
 
   function onSubmit() {
     // val1 ,va2
-    let newRequestText = document.getElementById("newRequestText").value;
-    let newBounty = document.getElementById("newBounty").value;
-    let newMinReputation = document.getElementById("newMinReputation").value;
-    let newNoOfAnswers = document.getElementById("newNoOfAnswers").value;
-    let newDueDate = document.getElementById("newDueDate").value;
+    let newRequestText = formValue;
+    // let newBounty = "document.getElementById("newBounty").value;"
+    // let newMinReputation = document.getElementById("newMinReputation").value;
+    // let newNoOfAnswers = document.getElementById("newNoOfAnswers").value;
+    // let newDueDate = document.getElementById("newDueDate").value;
 
     console.log(
       newRequestText +
@@ -31,6 +32,11 @@ function RequestCreate(props: any) {
     );
 
     // handleClick(newRequestText, newBounty, newMinReputation, newNoOfAnswers, newDueDate);
+  }
+
+  function handleChange(event) {
+    setFormValue(event.target.value);
+    console.log(formValue);
   }
 
   return (
@@ -98,6 +104,7 @@ function RequestCreate(props: any) {
                   <textarea
                     id="newRequestText"
                     name="newRequestText"
+                    onChange={handleChange}
                     placeholder="Type in your request..."
                     required
                     minLength={10}
