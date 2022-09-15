@@ -10,19 +10,40 @@ function RequestCreate(props: any) {
     setShowMe(!showMe);
   }
 
-  function onSubmit () {
+  type requestSubmission = [
+    requestText: string,
+    requestOrigin: string,
+    bounty: number,
+    reputation: number,
+    maxAnswers: number,
+    submittedAnswers: number,
+    active: boolean,
+    timeStampPosted: number,
+    timeStampDue: number
+  ];
+
+  function onSubmit() {
     // val1 ,va2
     let newRequestText = document.getElementById("newRequestText").value;
     let newBounty = document.getElementById("newBounty").value;
     let newMinReputation = document.getElementById("newMinReputation").value;
     let newNoOfAnswers = document.getElementById("newNoOfAnswers").value;
     let newDueDate = document.getElementById("newDueDate").value;
-    
-    console.log(newRequestText + " " + newBounty + " " + newMinReputation + " " + newNoOfAnswers + " " + newDueDate);
+
+    console.log(
+      newRequestText +
+        " " +
+        newBounty +
+        " " +
+        newMinReputation +
+        " " +
+        newNoOfAnswers +
+        " " +
+        newDueDate
+    );
 
     // handleClick(newRequestText, newBounty, newMinReputation, newNoOfAnswers, newDueDate);
   }
-  
 
   return (
     <div className="w-full rounded-2xl mb-3 border-2 border-purple-300 text-black hover:border-purple-400">
