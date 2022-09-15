@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 
 function RequestCreate(props: any) {
   const { handleClick, account } = props;
 
   const [showMe, setShowMe] = useState(false);
+  const ref = useRef(null);
+  const [formValue, setFormValue] = useState();
+
+  useEffect(() => { 
+    const el = ref.current;
+    setFormValue(el.value);
+
+    console.log(formValue);
+}, [formValue])
 
   function toggle() {
     setShowMe(!showMe);
@@ -22,27 +31,28 @@ function RequestCreate(props: any) {
     timeStampDue: number
   ];
 
-  function onSubmit() {
-    // val1 ,va2
-    let newRequestText = document.getElementById("newRequestText").value;
-    let newBounty = document.getElementById("newBounty").value;
-    let newMinReputation = document.getElementById("newMinReputation").value;
-    let newNoOfAnswers = document.getElementById("newNoOfAnswers").value;
-    let newDueDate = document.getElementById("newDueDate").value;
+  function onSubmit(event) {
+    event.preventDefault();
+    
 
-    console.log(
-      newRequestText +
-        " " +
-        newBounty +
-        " " +
-        newMinReputation +
-        " " +
-        newNoOfAnswers +
-        " " +
-        newDueDate
-    );
+    console.log(formValue);
+    // let newRequestText = document.getElementById("newRequestText").value;
+    // let newBounty = document.getElementById("newBounty").value;
+    // let newMinReputation = document.getElementById("newMinReputation").value;
+    // let newNoOfAnswers = document.getElementById("newNoOfAnswers").value;
+    // let postDate = document.getElementById("newDueDate").value;
+    // let newDueDate = document.getElementById("newDueDate").value;
 
-    // handleClick(newRequestText, newBounty, newMinReputation, newNoOfAnswers, newDueDate);
+    // console.log(
+    //   newRequestText + " " +
+    //     newBounty + " " +
+    //     newMinReputation + " " +
+    //     newNoOfAnswers + " " +
+    //     newNoOfAnswers + " " +
+    //     newDueDate
+    // );
+
+    // handleClick(newRequestText, account, newBounty, newMinReputation, newNoOfAnswers, 0, true, postDate, newDueDate);
   }
 
   return (
@@ -108,13 +118,12 @@ function RequestCreate(props: any) {
                   </label>
                   <br />
                   <textarea
-                    id="newRequestText"
-                    name="newRequestText"
+                    ref={ref}
                     placeholder="Type in your request..."
                     required
                     minLength={10}
                     rows={4}
-                    className="w-full mt-1 border border-purple-300 px-4 py-3  rounded-lg"
+                    className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg"
                   />
                 </div>
               </div>
@@ -128,7 +137,6 @@ function RequestCreate(props: any) {
                   <input
                     type="number"
                     id="newBounty"
-                    name="newBounty"
                     required
                     placeholder="i.e. 100"
                     minLength={1}
@@ -144,7 +152,6 @@ function RequestCreate(props: any) {
                   <input
                     type="number"
                     id="newMinReputation"
-                    name="newMinReputation"
                     required
                     placeholder="i.e. 100"
                     minLength={1}
@@ -162,7 +169,6 @@ function RequestCreate(props: any) {
                   <input
                     type="number"
                     id="newNoOfAnswers"
-                    name="newNoOfAnswers"
                     required
                     placeholder="i.e. 1"
                     minLength={1}
@@ -178,7 +184,6 @@ function RequestCreate(props: any) {
                   <input
                     type="datetime-local"
                     id="newDueDate"
-                    name="newDueDate"
                     required
                     placeholder="09.09.2029"
                     className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5"
