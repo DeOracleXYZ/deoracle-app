@@ -156,7 +156,7 @@ function RequestCreate(props: any) {
                     required
                     minLength={10}
                     rows={4}
-                    className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg"
+                    className="w-full mt-1 border border-purple-300 px-4 py-3  rounded-lg"
                   />
                 </div>
               </div>
