@@ -10,18 +10,6 @@ function RequestCreate(props: any) {
     setShowMe(!showMe);
   }
 
-  type requestSubmission = [
-    requestText: string,
-    requestOrigin: string,
-    bounty: number,
-    reputation: number,
-    maxAnswers: number,
-    submittedAnswers: number,
-    active: boolean,
-    timeStampPosted: number,
-    timeStampDue: number
-  ];
-
   function onSubmit() {
     // val1 ,va2
     let newRequestText = document.getElementById("newRequestText").value;
