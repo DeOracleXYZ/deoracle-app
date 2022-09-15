@@ -17,12 +17,7 @@ function RequestContainer(props: any) {
     return requestEls;
   };
 
-  return (
-    <div>
-      <RequestCreate account={account} />
-      {requestList && requestCardList()}
-    </div>
-  );
+  return <div>{requestList && requestCardList()}</div>;
 }
 
 export default RequestContainer;

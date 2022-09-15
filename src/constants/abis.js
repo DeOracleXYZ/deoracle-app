@@ -32,89 +32,20 @@ module.exports = {
     {
       inputs: [
         {
-          components: [
-            {
-              internalType: "string",
-              name: "requestText",
-              type: "string",
-            },
-            {
-              internalType: "address",
-              name: "requestOrigin",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "bounty",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "reputation",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "maxAnswers",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256[]",
-              name: "submittedAnswers",
-              type: "uint256[]",
-            },
-            {
-              internalType: "bool",
-              name: "active",
-              type: "bool",
-            },
-            {
-              internalType: "uint256",
-              name: "timeStampPosted",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "timeStampDue",
-              type: "uint256",
-            },
-          ],
-          internalType: "struct deOracle.Request",
-          name: "_newRequest",
-          type: "tuple",
-        },
-      ],
-      name: "submitRequest",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
           internalType: "address",
-          name: "signal",
+          name: "",
           type: "address",
         },
+      ],
+      name: "ENSVerified",
+      outputs: [
         {
-          internalType: "uint256",
-          name: "root",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "nullifierHash",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256[8]",
-          name: "proof",
-          type: "uint256[8]",
+          internalType: "bool",
+          name: "",
+          type: "bool",
         },
       ],
-      name: "verifyAndExecute",
-      outputs: [],
-      stateMutability: "nonpayable",
+      stateMutability: "view",
       type: "function",
     },
     {
@@ -261,6 +192,107 @@ module.exports = {
         },
       ],
       stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_address",
+          type: "address",
+        },
+      ],
+      name: "setENSVerified",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          components: [
+            {
+              internalType: "string",
+              name: "requestText",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "requestOrigin",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "bounty",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "reputation",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "maxAnswers",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256[]",
+              name: "submittedAnswers",
+              type: "uint256[]",
+            },
+            {
+              internalType: "bool",
+              name: "active",
+              type: "bool",
+            },
+            {
+              internalType: "uint256",
+              name: "timeStampPosted",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "timeStampDue",
+              type: "uint256",
+            },
+          ],
+          internalType: "struct deOracle.Request",
+          name: "_newRequest",
+          type: "tuple",
+        },
+      ],
+      name: "submitRequest",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "signal",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "root",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "nullifierHash",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256[8]",
+          name: "proof",
+          type: "uint256[8]",
+        },
+      ],
+      name: "verifyAndExecute",
+      outputs: [],
+      stateMutability: "nonpayable",
       type: "function",
     },
     {
