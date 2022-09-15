@@ -3,24 +3,12 @@ import Image from "next/image";
 
 function RequestCreate(props: any) {
   
-  const { handleClick, account } = props;
+  const { handleClick, account, formData, updateFormData } = props;
   const [showMe, setShowMe] = useState(false);
-  const [formData, setFormData] = useState(
-    {
-        requestText: "", 
-        requestOrigin: account,
-        bounty: 0, 
-        reputation: 0, 
-        maxAnswers: 0, 
-        submittedAnswers: 0,
-        active: true,
-        postedDate: "",
-        dueDate: "",
-    }
-  )
+
 
   useEffect( () => {
-    setFormData(prevFormData => {
+    updateFormData(prevFormData => {
         return {
             ...prevFormData,
             requestOrigin: account,
@@ -34,7 +22,7 @@ function RequestCreate(props: any) {
   function handleChange(event: any) {
     const {name, value, type, checked} = event.target
     
-    setFormData(prevFormData => {
+    updateFormData(prevFormData => {
         return {
             ...prevFormData,
             [name]: type === "checkbox" ? checked : value
@@ -76,8 +64,8 @@ function RequestCreate(props: any) {
 
   function handleSubmit(event: any) {
     event.preventDefault()
-    // handleClick(formData)
-    console.log(formData)
+     handleClick(formData)
+    //console.log(formData)
   } 
 
   function toggle() {
