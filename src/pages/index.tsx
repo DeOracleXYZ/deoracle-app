@@ -156,7 +156,7 @@ export default function Home() {
     const namehash = ENSName ? ethers.utils.namehash(ENSName) : "";
   }
   //worldcoin proof addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
-  const deOracleAddress = "0x6E066eE27B0338abF2Ed9837Efe8C6e8385A021a";
+  const deOracleAddress = "0x8310257A3c519abEE1bF1339452497faeCd57091";
 
   async function sendProof(verificationResponse: any) {
     const { merkle_root, nullifier_hash, proof } = verificationResponse;
