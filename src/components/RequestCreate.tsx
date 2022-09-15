@@ -10,6 +10,20 @@ function RequestCreate(props: any) {
     setShowMe(!showMe);
   }
 
+  function onSubmit () {
+    // val1 ,va2
+    let newRequestText = document.getElementById("newRequestText").value;
+    let newBounty = document.getElementById("newBounty").value;
+    let newMinReputation = document.getElementById("newMinReputation").value;
+    let newNoOfAnswers = document.getElementById("newNoOfAnswers").value;
+    let newDueDate = document.getElementById("newDueDate").value;
+    
+    console.log(newRequestText + " " + newBounty + " " + newMinReputation + " " + newNoOfAnswers + " " + newDueDate);
+
+    // handleClick(newRequestText, newBounty, newMinReputation, newNoOfAnswers, newDueDate);
+  }
+  
+
   return (
     <div className="w-full rounded-2xl mb-3 border-2 border-purple-300 text-black hover:border-purple-400">
       <button
@@ -151,19 +165,9 @@ function RequestCreate(props: any) {
                 </div>
               </div>
 
-              {/* <input
-                    type="text"
-                    id="roll"
-                    name="roll"
-                    required
-                    minlength="10"
-                    maxlength="20"
-                    required
-                /> */}
-
               <div className="col-span-2">
                 <button
-                  onClick={() => handleClick()}
+                  onClick={() => onSubmit()}
                   type="submit"
                   className="border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700 rounded-lg"
                 >
