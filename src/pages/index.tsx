@@ -182,28 +182,19 @@ export default function Home() {
     );
   }
 
-  async function sendRequest(
-    requestText,
-    requestOrigin,
-    bounty,
-    reputation,
-    maxAnswers,
-    submittedAnswers,
-    active,
-    timeStampPosted,
-    timeStampDue
-  ) {
-    const request = [
-      requestText,
-      requestOrigin,
-      bounty,
-      reputation,
-      maxAnswers,
-      submittedAnswers,
-      active,
-      timeStampPosted,
-      timeStampDue,
-    ];
+  type requestSubmission = [
+    requestText: string,
+    requestOrigin: string,
+    bounty: number,
+    reputation: number,
+    maxAnswers: number,
+    submittedAnswers: number,
+    active: boolean,
+    timeStampPosted: number,
+    timeStampDue: number
+  ];
+
+  async function sendRequest(request: requestSubmission) {
     const deOracleContract = new ethers.Contract(
       deOracleAddress,
       deOracleABI,
