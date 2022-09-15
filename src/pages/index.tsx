@@ -1,5 +1,5 @@
 import { useEffect, useState, useId } from "react";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { VerificationResponse, WidgetProps } from "@worldcoin/id";
@@ -38,6 +38,19 @@ export default function Home() {
   const [ENSName, setENSName] = useState("");
   const [requestList, setRequestList] = useState();
   const [verificationCount, setVerficationCount] = useState(0);
+  const [formData, setFormData] = useState(
+    {
+        requestText: "", 
+        requestOrigin: account,
+        bounty: 0, 
+        reputation: 0, 
+        maxAnswers: 0, 
+        submittedAnswers: [],
+        active: true,
+        postedDate: "",
+        dueDate: "",
+    }
+  )
 
   const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
 
@@ -86,7 +99,7 @@ export default function Home() {
           deOracleABI,
           provider
         );
-        setWorldIdVerified(await deOracleContract.checkVerified(account));
+        setWorldIdVerified(await deOracleContract.checkWorldIdVerified(account));
       };
 
       const updateVerifiedCount = () => {
@@ -157,7 +170,7 @@ export default function Home() {
     const namehash = ENSName ? ethers.utils.namehash(ENSName) : "";
   }
   //worldcoin proof addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
-  const deOracleAddress = "0x8310257A3c519abEE1bF1339452497faeCd57091";
+  const deOracleAddress = "0x13879b673b8787b031c263520A92d630b73F8C2F";
 
   async function sendProof(verificationResponse: any) {
     const { merkle_root, nullifier_hash, proof } = verificationResponse;
@@ -194,14 +207,19 @@ export default function Home() {
     timeStampDue: number
   ];
 
-  async function sendRequest(request: requestSubmission) {
+  async function sendRequest(request: any) {
+
+    let newReq = Object.values(request)
+    newReq[8] = 1693276087
+    console.log(newReq)
+
     const deOracleContract = new ethers.Contract(
       deOracleAddress,
       deOracleABI,
       provider.getSigner()
     );
 
-    deOracleContract.submitRequest(request);
+    deOracleContract.submitRequest(newReq);
   }
 
   return (
@@ -224,8 +242,11 @@ export default function Home() {
         <RequestCreate
           account={account}
           handleClick={() => {
-            sendRequest();
-          }}
+            sendRequest(formData);
+          }
+        }
+        formData = {formData}
+        updateFormData = {setFormData}
         />
         <RequestContainer id={id} account={account} requestList={requestList} />
       </div>

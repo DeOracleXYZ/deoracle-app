@@ -1,318 +1,511 @@
 module.exports = {
   deOracleABI: [
     {
-      inputs: [
+      "inputs": [
         {
-          internalType: "contract IWorldID",
-          name: "_worldId",
-          type: "address",
-        },
+          "internalType": "contract IWorldID",
+          "name": "_worldId",
+          "type": "address"
+        }
       ],
-      stateMutability: "nonpayable",
-      type: "constructor",
+      "stateMutability": "nonpayable",
+      "type": "constructor"
     },
     {
-      inputs: [],
-      name: "InvalidNullifier",
-      type: "error",
+      "inputs": [],
+      "name": "InvalidNullifier",
+      "type": "error"
     },
     {
-      anonymous: false,
-      inputs: [
+      "anonymous": false,
+      "inputs": [
         {
-          indexed: true,
-          internalType: "string",
-          name: "walletAddress",
-          type: "string",
-        },
+          "indexed": true,
+          "internalType": "string",
+          "name": "testMessage",
+          "type": "string"
+        }
       ],
-      name: "logId",
-      type: "event",
+      "name": "ENSEvent",
+      "type": "event"
     },
     {
-      inputs: [
+      "anonymous": false,
+      "inputs": [
         {
-          internalType: "address",
-          name: "",
-          type: "address",
+          "indexed": false,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
         },
-      ],
-      name: "ENSVerified",
-      outputs: [
         {
-          internalType: "bool",
-          name: "",
-          type: "bool",
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "leaf",
+          "type": "uint256"
         },
+        {
+          "indexed": false,
+          "internalType": "bytes",
+          "name": "message",
+          "type": "bytes"
+        }
       ],
-      stateMutability: "view",
-      type: "function",
+      "name": "Received",
+      "type": "event"
     },
     {
-      inputs: [
+      "anonymous": false,
+      "inputs": [
         {
-          internalType: "address",
-          name: "_address",
-          type: "address",
+          "indexed": true,
+          "internalType": "uint32",
+          "name": "origin",
+          "type": "uint32"
         },
-      ],
-      name: "checkVerified",
-      outputs: [
         {
-          internalType: "bool",
-          name: "",
-          type: "bool",
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "sender",
+          "type": "bytes32"
         },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "message",
+          "type": "string"
+        }
       ],
-      stateMutability: "view",
-      type: "function",
+      "name": "ReceivedMessage",
+      "type": "event"
     },
     {
-      inputs: [],
-      name: "getRequestList",
-      outputs: [
+      "anonymous": false,
+      "inputs": [
         {
-          components: [
+          "indexed": true,
+          "internalType": "string",
+          "name": "walletAddress",
+          "type": "string"
+        }
+      ],
+      "name": "logId",
+      "type": "event"
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "fallback"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "ENSVerified",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "checkENSVerified",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "checkWorldIdVerified",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "deOracleFuji",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "deOracleMumbai",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getRequestList",
+      "outputs": [
+        {
+          "components": [
             {
-              internalType: "string",
-              name: "requestText",
-              type: "string",
+              "internalType": "string",
+              "name": "requestText",
+              "type": "string"
             },
             {
-              internalType: "address",
-              name: "requestOrigin",
-              type: "address",
+              "internalType": "address",
+              "name": "requestOrigin",
+              "type": "address"
             },
             {
-              internalType: "uint256",
-              name: "bounty",
-              type: "uint256",
+              "internalType": "uint256",
+              "name": "bounty",
+              "type": "uint256"
             },
             {
-              internalType: "uint256",
-              name: "reputation",
-              type: "uint256",
+              "internalType": "uint256",
+              "name": "reputation",
+              "type": "uint256"
             },
             {
-              internalType: "uint256",
-              name: "maxAnswers",
-              type: "uint256",
+              "internalType": "uint256",
+              "name": "maxAnswers",
+              "type": "uint256"
             },
             {
-              internalType: "uint256[]",
-              name: "submittedAnswers",
-              type: "uint256[]",
+              "internalType": "uint256[]",
+              "name": "submittedAnswers",
+              "type": "uint256[]"
             },
             {
-              internalType: "bool",
-              name: "active",
-              type: "bool",
+              "internalType": "bool",
+              "name": "active",
+              "type": "bool"
             },
             {
-              internalType: "uint256",
-              name: "timeStampPosted",
-              type: "uint256",
+              "internalType": "uint256",
+              "name": "timeStampPosted",
+              "type": "uint256"
             },
             {
-              internalType: "uint256",
-              name: "timeStampDue",
-              type: "uint256",
-            },
+              "internalType": "uint256",
+              "name": "timeStampDue",
+              "type": "uint256"
+            }
           ],
-          internalType: "struct deOracle.Request[]",
-          name: "",
-          type: "tuple[]",
-        },
+          "internalType": "struct deOracle.Request[]",
+          "name": "",
+          "type": "tuple[]"
+        }
       ],
-      stateMutability: "view",
-      type: "function",
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      inputs: [],
-      name: "owner",
-      outputs: [
+      "inputs": [
         {
-          internalType: "address",
-          name: "",
-          type: "address",
+          "internalType": "uint32",
+          "name": "_origin",
+          "type": "uint32"
         },
+        {
+          "internalType": "bytes32",
+          "name": "_sender",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_message",
+          "type": "bytes"
+        }
       ],
-      stateMutability: "view",
-      type: "function",
+      "name": "handle",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-      inputs: [
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
         {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
       ],
-      name: "requestList",
-      outputs: [
-        {
-          internalType: "string",
-          name: "requestText",
-          type: "string",
-        },
-        {
-          internalType: "address",
-          name: "requestOrigin",
-          type: "address",
-        },
-        {
-          internalType: "uint256",
-          name: "bounty",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "reputation",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "maxAnswers",
-          type: "uint256",
-        },
-        {
-          internalType: "bool",
-          name: "active",
-          type: "bool",
-        },
-        {
-          internalType: "uint256",
-          name: "timeStampPosted",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "timeStampDue",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      inputs: [
+      "inputs": [
         {
-          internalType: "address",
-          name: "_address",
-          type: "address",
-        },
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
       ],
-      name: "setENSVerified",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
+      "name": "requestList",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "requestText",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "requestOrigin",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "bounty",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "reputation",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "maxAnswers",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "active",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "timeStampPosted",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "timeStampDue",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      inputs: [
+      "inputs": [
         {
-          components: [
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "setENSVerified",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "setFuji",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "setMumbai",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "setWorldIdVerified",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
             {
-              internalType: "string",
-              name: "requestText",
-              type: "string",
+              "internalType": "string",
+              "name": "requestText",
+              "type": "string"
             },
             {
-              internalType: "address",
-              name: "requestOrigin",
-              type: "address",
+              "internalType": "address",
+              "name": "requestOrigin",
+              "type": "address"
             },
             {
-              internalType: "uint256",
-              name: "bounty",
-              type: "uint256",
+              "internalType": "uint256",
+              "name": "bounty",
+              "type": "uint256"
             },
             {
-              internalType: "uint256",
-              name: "reputation",
-              type: "uint256",
+              "internalType": "uint256",
+              "name": "reputation",
+              "type": "uint256"
             },
             {
-              internalType: "uint256",
-              name: "maxAnswers",
-              type: "uint256",
+              "internalType": "uint256",
+              "name": "maxAnswers",
+              "type": "uint256"
             },
             {
-              internalType: "uint256[]",
-              name: "submittedAnswers",
-              type: "uint256[]",
+              "internalType": "uint256[]",
+              "name": "submittedAnswers",
+              "type": "uint256[]"
             },
             {
-              internalType: "bool",
-              name: "active",
-              type: "bool",
+              "internalType": "bool",
+              "name": "active",
+              "type": "bool"
             },
             {
-              internalType: "uint256",
-              name: "timeStampPosted",
-              type: "uint256",
+              "internalType": "uint256",
+              "name": "timeStampPosted",
+              "type": "uint256"
             },
             {
-              internalType: "uint256",
-              name: "timeStampDue",
-              type: "uint256",
-            },
+              "internalType": "uint256",
+              "name": "timeStampDue",
+              "type": "uint256"
+            }
           ],
-          internalType: "struct deOracle.Request",
-          name: "_newRequest",
-          type: "tuple",
-        },
+          "internalType": "struct deOracle.Request",
+          "name": "_newRequest",
+          "type": "tuple"
+        }
       ],
-      name: "submitRequest",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
+      "name": "submitRequest",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-      inputs: [
+      "inputs": [
         {
-          internalType: "address",
-          name: "signal",
-          type: "address",
-        },
-        {
-          internalType: "uint256",
-          name: "root",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "nullifierHash",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256[8]",
-          name: "proof",
-          type: "uint256[8]",
-        },
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
       ],
-      name: "verifyAndExecute",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
+      "name": "verifiyENS",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-      inputs: [
+      "inputs": [
         {
-          internalType: "address",
-          name: "",
-          type: "address",
+          "internalType": "address",
+          "name": "signal",
+          "type": "address"
         },
-      ],
-      name: "worldIdVerified",
-      outputs: [
         {
-          internalType: "bool",
-          name: "",
-          type: "bool",
+          "internalType": "uint256",
+          "name": "root",
+          "type": "uint256"
         },
+        {
+          "internalType": "uint256",
+          "name": "nullifierHash",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256[8]",
+          "name": "proof",
+          "type": "uint256[8]"
+        }
       ],
-      stateMutability: "view",
-      type: "function",
+      "name": "verifyAndExecute",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "worldIdVerified",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
   ],
 };
