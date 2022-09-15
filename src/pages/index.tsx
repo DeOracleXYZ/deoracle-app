@@ -28,17 +28,13 @@ export default function Home() {
     chainId,
   } = useWeb3React();
 
-  const mainNetProvider = new ethers.providers.AlchemyProvider(
-    1,
-    "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
-  );
-
   const id = useId();
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState("");
   const [proof, setProof] = useState(null as VerificationResponse | null);
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
+  const [ENSName, setENSName] = useState("");
   const [requestList, setRequestList] = useState();
   const [verificationCount, setVerficationCount] = useState(0);
 
@@ -125,7 +121,28 @@ export default function Home() {
 
       getRequestsRPC().catch(console.error);
     }
-  }, [account, provider, worldIdVerified]);
+  }, [ENSVerified, account, provider, worldIdVerified]);
+
+  //ENSVerification
+  useEffect(() => {
+    const mainNetProvider = new ethers.providers.AlchemyProvider(
+      1,
+      "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
+    );
+
+    const resolveAddress = async () => {
+      if (account) {
+        try {
+          const ENS = await mainNetProvider.lookupAddress(account);
+          ENS && setENSName(ENS);
+          console.log(ethers.utils.namehash(ENSName));
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    };
+    resolveAddress();
+  }, [ENSName, account]);
 
   async function connect() {
     try {
@@ -135,6 +152,10 @@ export default function Home() {
     }
   }
 
+  async function verifyENS() {
+    const namehash = ENSName ? ethers.utils.namehash(ENSName) : "";
+  }
+  //worldcoin proof addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
   const deOracleAddress = "0x6E066eE27B0338abF2Ed9837Efe8C6e8385A021a";
 
   async function sendProof(verificationResponse: any) {
