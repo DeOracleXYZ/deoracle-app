@@ -9,7 +9,9 @@ function RequestCard(props: any) {
     handleClickAnswer,
     answerFormData,
     updateAnswerFormData,
+    requestIdToAnswerIds,
   } = props;
+
   const {
     id,
     bounty,
@@ -20,6 +22,7 @@ function RequestCard(props: any) {
     timeStampDue,
     timeStampPosted,
   } = requestData;
+
   const [requestStatus, setRequestStatus] = useState("Inactive");
   const [shortWallet, setShortWallet] = useState("");
   const [datePosted, setDatePosted] = useState("");
@@ -53,7 +56,9 @@ function RequestCard(props: any) {
 
     setDatePosted(datePosted);
     setDateDue(dateDue);
-  }, [active, origin, timeStampDue, timeStampPosted]);
+
+
+  }, [active, origin, timeStampDue, timeStampPosted, id]);
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
@@ -70,7 +75,22 @@ function RequestCard(props: any) {
     });
   };
 
-  console.log(answerList);
+
+  if (answerList) {
+    let filteredArray = []
+    for(let i=0; i > answerList.length; i++ ) {
+
+      
+      filteredArray = answerList[i].filter(function(item: any){
+        console.log(123123);
+        return item.indexOf(id.toNumber()) > -1;
+      });
+    }
+    // console.log(filteredArray.length);
+    // console.log(answerList[0]);
+  }
+
+  console.log(requestIdToAnswerIds)
 
   return (
     <>
@@ -129,56 +149,49 @@ function RequestCard(props: any) {
             style={{ borderRadius: "0 0 15px 15px" }}
           >
             <div className={`${!showMe ? "hidden" : ""}` + " px-5 py-5"}>
-              <div className="border-b border-slate-200 flex gap-5 text-sm py-3 items-center">
+
+            {answerList && answerList.map(function(answer: any){
+
+              if (answer.requestId.toNumber() == id.toNumber()) {
+
+                // setCountAnswersForRequest(countAnswersForRequest+1)
+
+                return (
+
+                <div key={answer.id.toNumber()} className="border-b border-slate-200 flex gap-5 text-sm py-3 items-center">
                 {/* <p><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="inline w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> <b>Accepted Answer</b></p> */}
                 <p className="justify-self-end font-bold">
                   <button className="rounded-l-xl px-3 py-1 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">
-                    +11
+                    +11{answer.downVotes.toNumber()}
                   </button>
                   <button className="rounded-r-xl px-3 py-1 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">
-                    -2
+                    -1{answer.upVotes.toNumber()}
                   </button>
                 </p>
-                <p className="text-base md:text-lg font-bold grow">10.000</p>
-                <p className="justify-self-end text-xs md:text-sm text-slate-400">
+                <p className="text-base md:text-lg font-bold grow">{answer.answerText}</p>
+                <p className="justify-self-end text-xs text-slate-400">
                   <b>Answered by:</b>{" "}
                   <a
-                    href="https://mumbai.polygonscan.com/address/"
+                    href={"https://mumbai.polygonscan.com/address/" + `${answer.origin}`}
                     className="underline hover:no-underline hover:text-slate-500"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    0x45x9...45b9
+                    {answer.origin.substring(0, 6) + "..." + answer.origin.slice(-4)}
                   </a>
                 </p>
               </div>
+                
+                )
 
-              <div className="border-b border-slate-200 flex gap-5 text-sm py-3 items-center">
-                {/* <p className="invisible"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="inline w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> <b>Accepted Answer</b></p> */}
-                <p className="justify-self-end font-bold">
-                  <button className="rounded-l-xl px-3 py-1 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">
-                    +11
-                  </button>
-                  <button className="rounded-r-xl px-3 py-1 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">
-                    -2
-                  </button>
-                </p>
-                <p className="text-base md:text-lg font-bold grow">1.000</p>
-                <p className="justify-self-end text-xs md:text-sm text-slate-400">
-                  <b>Answered by:</b>{" "}
-                  <a
-                    href="https://mumbai.polygonscan.com/address/"
-                    className="underline hover:no-underline hover:text-slate-500"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    0x11b1...39c3
-                  </a>
-                </p>
-              </div>
+              }
 
-              <div className="flex gap-0 justify-between text-purple-500 py-3 relative">
-                <form onSubmit={handleSubmit}>
+            })}
+
+              
+              
+              <form onSubmit={handleSubmit}>
+                <div className="flex gap-0 justify-between text-purple-500 py-3 relative">
                   <input
                     type="text"
                     name="newAnswer1"
@@ -186,15 +199,15 @@ function RequestCard(props: any) {
                     required
                     placeholder="Your answer..."
                     className="w-full border border-purple-300 pl-4 pr-24 py-3 hover:border-purple-400 outline-purple-500 rounded-full"
-                  />
+                  /> 
                   <button
                     type="submit"
                     className="absolute right-0 border px-5 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700"
                   >
                     Send
                   </button>
-                </form>
-              </div>
+                </div>
+              </form>
             </div>
 
             <div className="text-center">
@@ -208,7 +221,7 @@ function RequestCard(props: any) {
               >
                 <span className={`${showMe ? "hidden" : ""}`}>Show</span>{" "}
                 <span className={`${!showMe ? "hidden" : ""}`}>Hide</span>{" "}
-                answers (2)
+                answers (0)
               </button>
             </div>
           </div>

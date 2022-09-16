@@ -9,6 +9,7 @@ function RequestContainer(props: any) {
     handleClickAnswer,
     answerFormData,
     updateAnswerFormData,
+    getAnswerCount,
   } = props;
 
   const requestCardList = () => {
@@ -23,6 +24,7 @@ function RequestContainer(props: any) {
           answerFormData={answerFormData}
           updateAnswerFormData={updateAnswerFormData}
           answerList={answerList}
+          getAnswerCount={() => getAnswerCount(id.toNumber())}
         />
       );
     });
