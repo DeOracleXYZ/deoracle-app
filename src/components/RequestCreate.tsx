@@ -5,8 +5,10 @@ function RequestCreate(props: any) {
   
   const { handleClick, account, formData, updateFormData } = props;
   const [showMe, setShowMe] = useState(false);
-  const [dueDate, setDueDate] = useState( addDays(new Date( Date.now() ), 2) );
-
+  const daysAfterDueDate = 5;
+  const [dueDate, setDueDate] = useState( addDays(new Date( Date.now() ), daysAfterDueDate) );
+  const [dueDateUnix, setDueDateUnix] = useState(timeToUnix(dueDate));
+  
 
   useEffect( () => {
     updateFormData((prevFormData: any) => {
@@ -15,20 +17,26 @@ function RequestCreate(props: any) {
             requestOrigin: account,
             postedDate: unixStamp,
             dueDate: dueDate,
+            dueDateUnix: dueDateUnix,
         }
     })
-  }, [account])
+  }, [account, dueDateUnix])
 
+  useEffect( () => {
+    setDueDateUnix( timeToUnix(dueDate) );
+
+  }, [dueDate])
 
   function handleChange(event: any) {
     const {name, value, type, checked} = event.target
-    
     updateFormData((prevFormData: any) => {
         return {
             ...prevFormData,
             [name]: type === "checkbox" ? checked : value
         }
     })
+
+    setDueDate( formData['dueDate'] )
   }
 
 
@@ -54,35 +62,29 @@ function RequestCreate(props: any) {
 
   function addDays(date: string | number | Date, days: number) {
     let result = new Date(date)
-    result.setDate(result.getDate() + days);
-    let z = result.getTimezoneOffset() * 60 * 1000;
-    let tLocal = new Date( result - z ).toISOString().slice(0, 16);
+    result.setDate(result.getDate() + days)
+    let tLocal = result.toLocaleString('sv').replace(' ', 'T').slice(0, 16)
     return tLocal
   }
 
-  // console.log(date);
-  // BUG: toISOString ignores timezone
+  function timeToUnix (date: any) {
+    let dueDateUnix = new Date( date + ":00" ); // "2011-10-10T14:48:00"
+    let dueDateUnixFinal = Math.floor( dueDateUnix.getTime() / 1000);
+    return dueDateUnixFinal;
+  }
 
-  console.log(addDays(date, 5));
-
-  //console.log(addDays(date, 5).toISOString().split(":", 2).join(":")); // 2002-11-11T11:01
+  console.log(addDays(date, daysAfterDueDate)); // 2002-11-11T11:01
 
 
 
   function handleSubmit(event: any) {
-
-    let dueDateUnix = new Date( "2011-10-10T14:48:00.000+09:00" );
-    let dueDateUnixFinal = Math.floor( dueDateUnix.getTime() / 1000);
-    // console.log("Time Unix " + dueDateUnixFinal);
-    setDueDate( dueDateUnixFinal.toString() ); // 2002-11-11T11:01
-
     event.preventDefault()
-    // handleClick(formData)
+    handleClick(formData)
     console.log(formData)
   } 
 
   function toggle() {
-    setShowMe(!showMe);
+    setShowMe(!showMe)
   }
 
 

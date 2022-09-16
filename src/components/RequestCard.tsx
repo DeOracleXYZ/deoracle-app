@@ -5,6 +5,7 @@ function RequestCard(props: any) {
   const { requestData, handleClick } = props;
   const { bounty, requestText, requestOrigin, reputation, maxAnswers, active } =
     requestData;
+    console.log(requestData);
   const [requestStatus, setRequestStatus] = useState("Inactive");
   const [shortWallet, setShortWallet] = useState("");
   const [timeStampDue, setTimeStampDue] = useState(requestData.timeStampDue);
@@ -28,6 +29,8 @@ function RequestCard(props: any) {
         )
       : setShortWallet("");
 
+
+    // TODO: Fix display of due date
     let date1 = new Date(timeStampPosted * 1000);
     let hours1 = date1.getHours();
     let minutes1 = "0" + date1.getMinutes();

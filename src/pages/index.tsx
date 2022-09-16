@@ -49,6 +49,7 @@ export default function Home() {
         active: true,
         postedDate: "",
         dueDate: "",
+        dueDateUnix: "",
     }
   )
 
@@ -211,8 +212,8 @@ export default function Home() {
   async function sendRequest(request: any) {
 
     let newReq = Object.values(request)
-    newReq[8] = 1693276087
-    console.log(newReq)
+    newReq.splice(8,1);
+    // console.log(newReq)
 
     const deOracleContract = new ethers.Contract(
       deOracleAddress,
