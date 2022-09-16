@@ -16,45 +16,84 @@ contract deOracle {
     using ByteHasher for bytes;
 
     address public owner;
-    Request[] public requestList;
 
-    mapping(address => bool) public worldIdVerified;
-    mapping(address => bool) public ENSVerified;
+    //requestIdCounter AnswerIdCounter
+    uint256 requestCount = 0;
+    uint256 answerCount = 0;
 
     struct Request {
         uint256 id;
         string requestText;
-        address requestOrigin;
+        address origin;
         uint256 bounty; //USDC
         uint256 reputation;
-        uint256 maxAnswers;
-        uint256[] submittedAnswers;
         bool active;
         uint256 timeStampPosted;
         uint256 timeStampDue;
     }
-
     struct Answer {
+        uint256 id;
         uint256 requestId;
-        uint256 answer;
-        Oracle answerOrigin;
-        bool acceptedAnswer;
+        string answerText;
+        address origin;
+        bool rewarded;
         uint256 upVotes;
         uint256 downVotes;
     }
 
-    struct Oracle {
-        address payable oracleAddress;
-        bool worldIdVerified;
-        uint256 reputation;
-    }
+    mapping(address => bool) public worldIdVerified;
+    mapping(address => bool) public ENSVerified;
+
+    // ID's to opposite ID answer -> request vice versa
+    mapping(uint256 => uint256[]) public requestIdToAnswerIds;
+    mapping(uint256 => uint256) public answerIdToRequestId;
+    // ID's to structs id -> Request/Answer
+    mapping(uint256 => Request) public requestIdToRequest;
+    mapping(uint256 => Answer) public answerIdToAnswer;
+
+    Request[] public requestList;
+
+    Answer[] public answerList;
 
     constructor() {
         owner = msg.sender;
     }
 
-    function submitRequest(Request memory _newRequest) public {
-        requestList.push(_newRequest);
+    function submitRequest(
+        string memory _requestText,
+        uint256 _bounty, //USDC
+        uint256 _reputation,
+        uint256 _timeStampDue
+    ) public {
+        Request memory newRequest = Request({
+            id: requestCount,
+            requestText: _requestText,
+            origin: msg.sender,
+            bounty: _bounty,
+            reputation: _reputation,
+            active: true,
+            timeStampPosted: block.timestamp,
+            timeStampDue: _timeStampDue
+        });
+        requestList.push(newRequest);
+        requestIdToRequest[requestCount] = requestList[requestCount];
+        requestCount++;
+    }
+
+    function postAnswer(uint256 _requestId, string memory _answerText) public {
+        Answer memory newAnswer = Answer({
+            id: answerCount,
+            requestId: _requestId,
+            answerText: _answerText,
+            origin: msg.sender,
+            rewarded: false,
+            upVotes: 0,
+            downVotes: 0
+        });
+        answerList.push(newAnswer);
+        answerIdToAnswer[answerCount] = answerList[answerCount];
+        requestIdToAnswerIds[_requestId] = answerCount;
+        answerCount++;
     }
 
     function getRequestList() public view returns (Request[] memory) {
