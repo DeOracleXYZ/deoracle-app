@@ -5,7 +5,7 @@ function RequestCreate(props: any) {
   
   const { handleClick, account, formData, updateFormData } = props;
   const [showMe, setShowMe] = useState(false);
-  const [dueDate, setDueDate] = useState( addDays(new Date( Date.now() ), 365).toISOString().split(":", 2).join(":") );
+  const [dueDate, setDueDate] = useState( addDays(new Date( Date.now() ), 2) );
 
 
   useEffect( () => {
@@ -53,14 +53,19 @@ function RequestCreate(props: any) {
   console.log(humanReadableDate);
 
   function addDays(date: string | number | Date, days: number) {
-    var result = new Date(date)
+    let result = new Date(date)
     result.setDate(result.getDate() + days);
-    return new Date(result)
+    let z = result.getTimezoneOffset() * 60 * 1000;
+    let tLocal = new Date( result - z ).toISOString().slice(0, 16);
+    return tLocal
   }
 
   // console.log(date);
   // BUG: toISOString ignores timezone
-  console.log(addDays(date, 5).toISOString().split(":", 2).join(":")); // 2002-11-11T11:01
+
+  console.log(addDays(date, 5));
+
+  //console.log(addDays(date, 5).toISOString().split(":", 2).join(":")); // 2002-11-11T11:01
 
 
 
