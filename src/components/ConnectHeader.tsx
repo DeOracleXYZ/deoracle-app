@@ -157,6 +157,7 @@ export default function ConnectHeader(props: any) {
               href={"https://mumbai.polygonscan.com/address/" + account}
               className="underline hover:no-underline hover:text-slate-700"
               target="_blank"
+              rel="noreferrer"
             >
               {shortWallet}
             </a>

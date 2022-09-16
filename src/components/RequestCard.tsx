@@ -70,7 +70,7 @@ function RequestCard(props: any) {
     });
   };
 
-  console.log(answerList);
+  console.log(answerList[id].length);
 
   return (
     <>

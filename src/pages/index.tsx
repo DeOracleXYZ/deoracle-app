@@ -1,5 +1,5 @@
 import { useEffect, useState, useId } from "react";
-import { Contract, ContractInterface, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { VerificationResponse, WidgetProps } from "@worldcoin/id";
@@ -183,7 +183,7 @@ export default function Home() {
 
   // const deOracleAddress = "0x13879b673b8787b031c263520A92d630b73F8C2F";
   //hardhat TEMP:
-  const deOracleAddress = "0x948Cf9a57336783b8A2679B0621a578Bbdac70C9";
+  const deOracleAddress = "0xaab7899C52A2d427cF01938da4D2F4CD63f8d29D";
 
   async function sendProof(verificationResponse: any) {
     const { merkle_root, nullifier_hash, proof } = verificationResponse;

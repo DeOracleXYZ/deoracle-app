@@ -1,14 +1,22 @@
 module.exports = {
   deOracleABI: [
     {
-      inputs: [],
+      inputs: [
+        {
+          internalType: "address",
+          name: "_address",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "_amount",
+          type: "uint256",
+        },
+      ],
+      name: "addREP",
+      outputs: [],
       stateMutability: "nonpayable",
-      type: "constructor",
-    },
-    {
-      inputs: [],
-      name: "InvalidNullifier",
-      type: "error",
+      type: "function",
     },
     {
       inputs: [
@@ -40,6 +48,16 @@ module.exports = {
       outputs: [],
       stateMutability: "nonpayable",
       type: "function",
+    },
+    {
+      inputs: [],
+      stateMutability: "nonpayable",
+      type: "constructor",
+    },
+    {
+      inputs: [],
+      name: "InvalidNullifier",
+      type: "error",
     },
     {
       inputs: [
@@ -108,6 +126,25 @@ module.exports = {
       name: "verifyAndExecute",
       outputs: [],
       stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+      ],
+      name: "addressToREP",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
       type: "function",
     },
     {
@@ -310,6 +347,38 @@ module.exports = {
           internalType: "struct deOracle.Answer[]",
           name: "",
           type: "tuple[]",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "getREP",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "_requestId",
+          type: "uint256",
+        },
+      ],
+      name: "getRequestIdToAnswerIds",
+      outputs: [
+        {
+          internalType: "uint256[]",
+          name: "",
+          type: "uint256[]",
         },
       ],
       stateMutability: "view",
