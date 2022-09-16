@@ -75,24 +75,6 @@ function RequestCard(props: any) {
     });
   };
 
-
-  if (answerList) {
-    let filteredArray = []
-    for(let i=0; i > answerList.length; i++ ) {
-
-      
-      filteredArray = answerList[i].filter(function(item: any){
-        console.log(123123);
-        return item.indexOf(id.toNumber()) > -1;
-      });
-    }
-    // console.log(filteredArray.length);
-    // console.log(answerList[0]);
-  }
-
-  console.log(requestIdToAnswerIds)
-  console.log(answerList[id].length);
-
   return (
     <>
       {requestData ? (
