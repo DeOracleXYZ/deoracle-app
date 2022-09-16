@@ -29,6 +29,14 @@
     border-radius: 12px;
 }
 
+.green {
+    background-color: green;
+}
+
+.red {
+    background-color: red;
+}
+
 .profile-button::after {
     content: " ";
     width: 0; 
