@@ -91,6 +91,7 @@ function RequestCard(props: any) {
   }
 
   console.log(requestIdToAnswerIds)
+  console.log(answerList[id].length);
 
   return (
     <>
