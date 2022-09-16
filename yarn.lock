@@ -2488,7 +2488,7 @@ grapheme-splitter@^1.0.4:
 
 hardhat@^2.11.2:
   version "2.11.2"
-  resolved "https://registry.npmjs.org/hardhat/-/hardhat-2.11.2.tgz"
+  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-2.11.2.tgz#c81388630255823bb1717ec07c4ee651b1fbe97f"
   integrity sha512-BdsXC1CFJQDJKmAgCwpmGhFuVU6dcqlgMgT0Kg/xmFAFVugkpYu6NRmh4AaJ3Fah0/BR9DOR4XgQGIbg4eon/Q==
   dependencies:
     "@ethersproject/abi" "^5.1.2"
