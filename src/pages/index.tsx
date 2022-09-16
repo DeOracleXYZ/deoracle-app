@@ -1,5 +1,5 @@
 import { useEffect, useState, useId } from "react";
-import { ethers } from "ethers";
+import { Contract, ContractInterface, ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { VerificationResponse, WidgetProps } from "@worldcoin/id";
@@ -10,7 +10,9 @@ import { deOracleABI } from "../constants/abis";
 import Head from "next/head";
 import RequestCreate from "../components/RequestCreate";
 
-const injected = new InjectedConnector({ supportedChainIds: [0x13881, 0x7a69] });
+const injected = new InjectedConnector({
+  supportedChainIds: [0x13881, 0x7a69],
+});
 
 const WorldIDWidget = dynamic<WidgetProps>(
   () => import("@worldcoin/id").then((mod) => mod.WorldIDWidget),
@@ -36,8 +38,11 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
+  const [deOracleContract, setDeOracleContract] = useState();
   const [requestList, setRequestList] = useState();
+  const [answerList, setAnswerList] = useState();
   const [verificationCount, setVerficationCount] = useState(0);
+  const [answerFormData, setAnswerFormData] = useState();
   const [formData, setFormData] = useState(
     {
         requestText: "", 
@@ -50,6 +55,8 @@ export default function Home() {
         dueDateUnix: "",
     }
   )
+
+ 
 
   const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
 
@@ -84,13 +91,14 @@ export default function Home() {
 
   useEffect(() => {
     if (account) {
-      const getRequests = async () => {
+      const readContractData = async () => {
         const deOracleContract = new ethers.Contract(
           deOracleAddress,
           deOracleABI,
           provider
         );
         setRequestList(await deOracleContract.getRequestList());
+        setAnswerList(await deOracleContract.getAnswerList());
       };
       const checkVerified = async () => {
         const deOracleContract = new ethers.Contract(
@@ -98,7 +106,9 @@ export default function Home() {
           deOracleABI,
           provider
         );
-        setWorldIdVerified(await deOracleContract.checkWorldIdVerified(account));
+        setWorldIdVerified(
+          await deOracleContract.checkWorldIdVerified(account)
+        );
       };
 
       const updateVerifiedCount = () => {
@@ -113,7 +123,7 @@ export default function Home() {
         setBalance(ethers.utils.formatEther(data));
       };
 
-      getRequests();
+      readContractData();
       checkVerified();
       fetchbalance();
       updateVerifiedCount();
@@ -169,8 +179,12 @@ export default function Home() {
   async function verifyENS() {
     const namehash = ENSName ? ethers.utils.namehash(ENSName) : "";
   }
+
   //worldcoin proof addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
-  const deOracleAddress = "0x13879b673b8787b031c263520A92d630b73F8C2F";
+
+  // const deOracleAddress = "0x13879b673b8787b031c263520A92d630b73F8C2F";
+  //hardhat TEMP:
+  const deOracleAddress = "0x948Cf9a57336783b8A2679B0621a578Bbdac70C9";
 
   async function sendProof(verificationResponse: any) {
     const { merkle_root, nullifier_hash, proof } = verificationResponse;
@@ -196,19 +210,30 @@ export default function Home() {
   }
 
   async function sendRequest(request: any) {
+    const { requestText, bounty, reputation, dueDateUnix } = request;
+    const deOracleContract = new ethers.Contract(
+      deOracleAddress,
+      deOracleABI,
+      provider.getSigner()
+    );
 
-    let newReq = Object.values(request)
-    newReq.splice(6,1);
+    deOracleContract.submitRequest(
+      requestText,
+      bounty,
+      reputation,
+      dueDateUnix
+    );
+  }
 
-    console.log(newReq)
+  async function sendAnswer(answerData: any) {
+    const { requestId, answerText } = answerData;
+    const deOracleContract = new ethers.Contract(
+      deOracleAddress,
+      deOracleABI,
+      provider.getSigner()
+    );
 
-    // const deOracleContract = new ethers.Contract(
-    //   deOracleAddress,
-    //   deOracleABI,
-    //   provider.getSigner()
-    // );
-
-    // deOracleContract.submitRequest(newReq);
+    deOracleContract.postAnswer(requestId, answerText);
   }
 
   return (
@@ -232,12 +257,21 @@ export default function Home() {
           account={account}
           handleClick={() => {
             sendRequest(formData);
-          }
-        }
-        formData = {formData}
-        updateFormData = {setFormData}
+          }}
+          formData={formData}
+          updateFormData={setFormData}
         />
-        <RequestContainer id={id} account={account} requestList={requestList} />
+        <RequestContainer
+          id={id}
+          account={account}
+          requestList={requestList}
+          answerList={answerList}
+          handleClick={() => {
+            sendAnswer(answerFormData);
+          }}
+          answerFormData={answerFormData}
+          updateAnswerFormData={setAnswerFormData}
+        />
       </div>
 
       <div className="flex flex-col-3 gap-4 justify-center">
