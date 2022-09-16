@@ -34,3 +34,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+yarn.lock
+package.json
+package-lock.json
+hardhat/tsconfig.json
+hardhat/test/Lock.ts
+hardhat/scripts/deploy.ts
+hardhat/README.md
+hardhat/hardhat.config.ts
+hardhat/contracts/Lock.sol
+hardhat/contracts/deOracle.sol
+package.json
+yarn.lock
