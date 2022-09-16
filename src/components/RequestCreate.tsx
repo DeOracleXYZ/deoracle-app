@@ -5,6 +5,7 @@ function RequestCreate(props: any) {
   
   const { handleClick, account, formData, updateFormData } = props;
   const [showMe, setShowMe] = useState(false);
+  const [dueDate, setDueDate] = useState( addDays(new Date( Date.now() ), 365).toISOString().split(":", 2).join(":") );
 
 
   useEffect( () => {
@@ -13,7 +14,7 @@ function RequestCreate(props: any) {
             ...prevFormData,
             requestOrigin: account,
             postedDate: unixStamp,
-            dueDate: addDays(date, 5).toISOString().split(":", 2).join(":") // 2002-11-11T11:01
+            dueDate: dueDate,
         }
     })
   }, [account])
@@ -31,36 +32,48 @@ function RequestCreate(props: any) {
   }
 
 
-  // Get local timezone
+  // Get local timezone (long and short)
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-  var zone = new Date().toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2]
+  var zone = new Date().toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
 
   // Get local date
   const date = new Date( Date.now() );
-  
+
   // convert to unix stamp
   const unixStamp = Math.floor(date.getTime() / 1000);
 
+  // convert date string to Data object
+  // console.log(parseInt( Date.parse("2011-10-10T14:48:00.000+09:00").toString() ));
+
   // reconstruct date from unix stamp
-  const dateObject = new Date(unixStamp * 1000)
+  const dateObject = new Date(unixStamp * 1000);
 
   // print date based on local timezone
   const humanReadableDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'long', timeZone: timezone }).format(dateObject);
-  // console.log(humanReadableDate);
+  console.log(humanReadableDate);
 
   function addDays(date: string | number | Date, days: number) {
-    var result = new Date(date);
+    var result = new Date(date)
     result.setDate(result.getDate() + days);
-    return result;
+    return new Date(result)
   }
 
   // console.log(date);
-  //console.log(addDays(date, 5).toISOString().split(":", 2).join(":")); // 2002-11-11T11:01
+  // BUG: toISOString ignores timezone
+  console.log(addDays(date, 5).toISOString().split(":", 2).join(":")); // 2002-11-11T11:01
+
+
+
   function handleSubmit(event: any) {
+
+    let dueDateUnix = new Date( "2011-10-10T14:48:00.000+09:00" );
+    let dueDateUnixFinal = Math.floor( dueDateUnix.getTime() / 1000);
+    // console.log("Time Unix " + dueDateUnixFinal);
+    setDueDate( dueDateUnixFinal.toString() ); // 2002-11-11T11:01
+
     event.preventDefault()
-     handleClick(formData)
-    //console.log(formData)
+    // handleClick(formData)
+    console.log(formData)
   } 
 
   function toggle() {
