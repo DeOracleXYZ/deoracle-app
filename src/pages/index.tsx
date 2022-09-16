@@ -43,6 +43,7 @@ export default function Home() {
   const [answerList, setAnswerList] = useState();
   const [requestIdToAnswerIds, setRequestIdToAnswerIds] = useState(0);
   const [verificationCount, setVerficationCount] = useState(0);
+  const [REP, setREP] = useState(0);
   const [answerFormData, setAnswerFormData] = useState({
     answerText: "",
     requestId: -1,
@@ -92,8 +93,11 @@ export default function Home() {
         const deOracleContract = new ethers.Contract(
           deOracleAddress,
           deOracleABI,
-          provider
+          provider.getSigner()
         );
+
+        setREP((await deOracleContract.getREP()).toNumber());
+
         setRequestList(await deOracleContract.getRequestList());
         setAnswerList(await deOracleContract.getAnswerList());
       };
@@ -115,14 +119,14 @@ export default function Home() {
         setVerficationCount(verifCount);
       };
 
-      const fetchbalance = async () => {
+      const fetchbalanceAndREP = async () => {
         const data = await provider.getBalance(account);
         setBalance(ethers.utils.formatEther(data));
       };
 
       readContractData();
       checkVerified();
-      fetchbalance();
+      fetchbalanceAndREP();
       updateVerifiedCount();
     } else {
       ///default RPC provider
@@ -157,13 +161,14 @@ export default function Home() {
           ENS && setENSName(ENS);
           ENS && setENSVerified(true);
           console.log(ethers.utils.namehash(ENSName));
+          console.log(ENSVerified);
         } catch (err) {
           console.log(err);
         }
       }
     };
     resolveAddress();
-  }, [ENSName, account]);
+  }, [ENSName, ENSVerified, account]);
 
   async function connect() {
     try {
@@ -173,9 +178,19 @@ export default function Home() {
     }
   }
 
-  async function verifyENS() {
-    const namehash = ENSName ? ethers.utils.namehash(ENSName) : "";
-  }
+  // async function verifyENS() {
+  //   if (ENSVerified)
+  //     try {
+  //       const deOracleContract = new ethers.Contract(
+  //         deOracleAddress,
+  //         deOracleABI,
+  //         provider.getSigner()
+  //       );
+  //       deOracleContract.setENSVerified(account);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  // }
 
   //worldcoin proof addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
 
@@ -223,7 +238,7 @@ export default function Home() {
   }
 
   async function sendAnswer(answerData: any) {
-    console.log(answerData, "inside functionnn");
+    // console.log(answerData, "inside functionnn");
     const { requestId, answerText } = answerData;
     const deOracleContract = new ethers.Contract(
       deOracleAddress,
@@ -241,7 +256,7 @@ export default function Home() {
       provider
     );
     setRequestIdToAnswerIds(await deOracleContract.getRequestIdToAnswerIds(id));
-  };
+  }
 
   return (
     <>
@@ -255,6 +270,7 @@ export default function Home() {
         worldIdVerified={worldIdVerified}
         WorldIDWidget={<WorldIDWidget {...widgetProps} />}
         ENSVerified={ENSVerified}
+        REP={REP}
         verificationCount={verificationCount}
         handleClickConnect={() => connect()}
       />
@@ -287,18 +303,6 @@ export default function Home() {
           onClick={() => sendProof(proof)}
         >
           SendProof
-        </button>
-        <button
-          className="border px-4 py-2 bg-purple-200 border-purple-400 hover:bg-purple-100 hover:border-purple-300"
-          onClick={() => console.log(requestList)}
-        >
-          PrintList
-        </button>
-        <button
-          className="border px-4 py-2 bg-purple-200 border-purple-400 hover:bg-purple-100 hover:border-purple-300"
-          onClick={() => console.log(requestList)}
-        >
-          SendRequest
         </button>
       </div>
 

@@ -11,6 +11,7 @@ export default function ConnectHeader(props: any) {
     ENSVerified,
     WorldIDWidget,
     verificationCount,
+    REP,
   } = props;
   const {
     active,
@@ -103,7 +104,9 @@ export default function ConnectHeader(props: any) {
                   </span>
                 </p>
                 <div className="grid place-content-end md:place-items-center grid-cols-1 md:grid-cols-2 gap-1 md:gap-3 mt-1 text-right">
-                  <p className="text-slate-600 text-xs md:text-sm">200 REP</p>
+                  <p className="text-slate-600 text-xs md:text-sm">
+                    {ENSVerified ? REP + 50 : REP} REP
+                  </p>
                   <p className="text-slate-600 text-xs md:text-sm">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
