@@ -30,11 +30,11 @@
 }
 
 .green {
-    background-color: green;
+    background-color: #49de80;
 }
 
 .red {
-    background-color: red;
+    background-color: #f87171;
 }
 
 .profile-button::after {
