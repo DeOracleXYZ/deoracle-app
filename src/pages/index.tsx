@@ -42,21 +42,20 @@ export default function Home() {
   const [requestList, setRequestList] = useState();
   const [answerList, setAnswerList] = useState();
   const [verificationCount, setVerficationCount] = useState(0);
-  const [answerFormData, setAnswerFormData] = useState();
-  const [formData, setFormData] = useState(
-    {
-        requestText: "", 
-        requestOrigin: account,
-        bounty: 0, 
-        reputation: 0,
-        submittedAnswers: [],
-        active: true,
-        dueDate: "",
-        dueDateUnix: "",
-    }
-  )
-
- 
+  const [answerFormData, setAnswerFormData] = useState({
+    answerText: "",
+    requestId: -1,
+  });
+  const [formData, setFormData] = useState({
+    requestText: "",
+    requestOrigin: account,
+    bounty: 0,
+    reputation: 0,
+    submittedAnswers: [],
+    active: true,
+    dueDate: "",
+    dueDateUnix: "",
+  });
 
   const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
 
@@ -226,6 +225,7 @@ export default function Home() {
   }
 
   async function sendAnswer(answerData: any) {
+    console.log(answerData, "inside functionnn");
     const { requestId, answerText } = answerData;
     const deOracleContract = new ethers.Contract(
       deOracleAddress,
@@ -266,7 +266,7 @@ export default function Home() {
           account={account}
           requestList={requestList}
           answerList={answerList}
-          handleClick={() => {
+          handleClickAnswer={() => {
             sendAnswer(answerFormData);
           }}
           answerFormData={answerFormData}

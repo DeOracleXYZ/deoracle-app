@@ -85,11 +85,22 @@ export default function ConnectHeader(props: any) {
         </div>
         {active ? (
           <>
-            <div className={`${showMe ? "active" : ""}` + " profile-button py-5 pl-2 md:pl-5 pr-8 md:pr-16 h-full align-middle justify-self-end"} onClick={toggle}>
+            <div
+              className={
+                `${showMe ? "active" : ""}` +
+                " profile-button py-5 pl-2 md:pl-5 pr-8 md:pr-16 h-full align-middle justify-self-end"
+              }
+              onClick={toggle}
+            >
               <div className="text-l flex flex-col">
                 <p>
-                  <span className="text-sm md:text-xl"><b>{shortWallet}</b> </span>
-                  <span className="text-xs md:text-lg"> - {Number(balance).toFixed(2)} {chainIdsMap[chainId]}</span>
+                  <span className="text-sm md:text-xl">
+                    <b>{shortWallet}</b>{" "}
+                  </span>
+                  <span className="text-xs md:text-lg">
+                    {" "}
+                    - {Number(balance).toFixed(2)} {chainIdsMap[chainId]}
+                  </span>
                 </p>
                 <div className="grid place-content-end md:place-items-center grid-cols-1 md:grid-cols-2 gap-1 md:gap-3 mt-1 text-right">
                   <p className="text-slate-600 text-xs md:text-sm">200 REP</p>
@@ -141,7 +152,14 @@ export default function ConnectHeader(props: any) {
           }}
         >
           <p className="pb-3">
-            <b>My Wallet:</b> <a href={"https://mumbai.polygonscan.com/address/" +  account}className="underline hover:no-underline hover:text-slate-700" target="_blank">{shortWallet}</a>
+            <b>My Wallet:</b>{" "}
+            <a
+              href={"https://mumbai.polygonscan.com/address/" + account}
+              className="underline hover:no-underline hover:text-slate-700"
+              target="_blank"
+            >
+              {shortWallet}
+            </a>
           </p>
           <hr />
           <p className="pt-3 text-slate-500">

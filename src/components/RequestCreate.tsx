@@ -2,78 +2,89 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 function RequestCreate(props: any) {
-  
   const { handleClick, account, formData, updateFormData } = props;
   const [showMe, setShowMe] = useState(false);
   const daysAfterDueDate = 5;
-  const [dueDate, setDueDate] = useState( addDays(new Date( Date.now() ), daysAfterDueDate) );
+  const [dueDate, setDueDate] = useState(
+    addDays(new Date(Date.now()), daysAfterDueDate)
+  );
   const [dueDateUnix, setDueDateUnix] = useState(timeToUnix(dueDate));
-  const zone = new Date().toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
+  const zone = new Date()
+    .toLocaleTimeString("en-us", { timeZoneName: "short" })
+    .split(" ")[2];
 
-  useEffect( () => {
+  useEffect(() => {
     updateFormData((prevFormData: any) => {
-        return {
-            ...prevFormData,
-            requestOrigin: account,
-            dueDate: dueDate,
-            dueDateUnix: dueDateUnix,
-        }
-    })
-  }, [account, dueDateUnix])
+      return {
+        ...prevFormData,
+        requestOrigin: account,
+        dueDate: dueDate,
+        dueDateUnix: dueDateUnix,
+      };
+    });
+  }, [account, dueDate, dueDateUnix, updateFormData]);
 
-  useEffect( () => {
-    setDueDateUnix( timeToUnix(dueDate) );
-
-  }, [dueDate])
+  useEffect(() => {
+    setDueDateUnix(timeToUnix(dueDate));
+  }, [dueDate]);
 
   function handleChange(event: any) {
-    const {name, value, type, checked} = event.target
+    const { name, value, type, checked } = event.target;
     updateFormData((prevFormData: any) => {
-        return {
-            ...prevFormData,
-            [name]: value
-        }
-    })
+      return {
+        ...prevFormData,
+        [name]: value,
+      };
+    });
 
-    setDueDate( formData['dueDate'] )
+    setDueDate(formData["dueDate"]);
   }
 
   function addDays(date: string | number | Date, days: number) {
-    let result = new Date(date)
-    result.setDate(result.getDate() + days)
-    let tLocal = result.toLocaleString('sv').replace(' ', 'T').slice(0, 16)
-    return tLocal
+    let result = new Date(date);
+    result.setDate(result.getDate() + days);
+    let tLocal = result.toLocaleString("sv").replace(" ", "T").slice(0, 16);
+    return tLocal;
   }
 
-  function timeToUnix (date: any) {
-    let dueDateUnix = new Date( date + ":00" ); // "2011-10-10T14:48:00"
-    let dueDateUnixFinal = Math.floor( dueDateUnix.getTime() / 1000);
+  function timeToUnix(date: any) {
+    let dueDateUnix = new Date(date + ":00"); // "2011-10-10T14:48:00"
+    let dueDateUnixFinal = Math.floor(dueDateUnix.getTime() / 1000);
     return dueDateUnixFinal;
   }
 
   function handleSubmit(event: any) {
-    event.preventDefault()
-    console.log(formData)
-    handleClick(formData)
-  } 
-
-  function toggle() {
-    setShowMe(!showMe)
+    event.preventDefault();
+    handleClick(formData);
   }
 
+  function toggle() {
+    setShowMe(!showMe);
+  }
 
   return (
     <div className="w-full rounded-2xl mb-3 border-2 border-purple-300 text-black hover:border-purple-400">
-      <button className={`${showMe ? "hidden" : ""}` +
+      <button
+        className={
+          `${showMe ? "hidden" : ""}` +
           " new-request-button w-full px-5 py-5 text-center text-purple-400 hover:text-purple-500 hover:bg-purple-100"
-        } onClick={toggle}> NEW REQUEST</button>
+        }
+        onClick={toggle}
+      >
+        {" "}
+        NEW REQUEST
+      </button>
 
-      <header className={
+      <header
+        className={
           `${!showMe ? "hidden" : ""}` +
           " w-full px-5 text-left grid grid-cols-2"
-        } >
+        }
+      >
         <div className="col-1">
-          <p className="new-request-header text-purple-500 text-xl md:text-2xl px-4 py-5">New Request</p>
+          <p className="new-request-header text-purple-500 text-xl md:text-2xl px-4 py-5">
+            New Request
+          </p>
         </div>
 
         <div className="col-1 text-right">
@@ -86,9 +97,11 @@ function RequestCreate(props: any) {
               stroke="#c690ff"
               className="w-8 h-8"
             >
-              <path strokeLinecap="round"
+              <path
+                strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12" />
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -98,7 +111,12 @@ function RequestCreate(props: any) {
         </div>
       </header>
 
-      <div className={`${!showMe ? "hidden" : ""}` + " grid grid-cols-1 md:grid-cols-2 gap-4"}>
+      <div
+        className={
+          `${!showMe ? "hidden" : ""}` +
+          " grid grid-cols-1 md:grid-cols-2 gap-4"
+        }
+      >
         <div className="order-2 md:order-none col-1 px-8 pt-0 pb-8 md:pt-8">
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4">
@@ -121,42 +139,41 @@ function RequestCreate(props: any) {
                 </div>
               </div>
 
-                <div className="col-1">
-                  <label className="pl-2">
-                    <b>Bounty (USDC):</b>
-                  </label>
-                  <br />
-                  <input
-                    type="number"
-                    name="bounty"
-                    value={formData.bounty}
-                    onChange={handleChange}
-                    required
-                    placeholder="i.e. 100"
-                    minLength={1}
-                    className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5"
-                  />
-                </div>
+              <div className="col-1">
+                <label className="pl-2">
+                  <b>Bounty (USDC):</b>
+                </label>
+                <br />
+                <input
+                  type="number"
+                  name="bounty"
+                  value={formData.bounty}
+                  onChange={handleChange}
+                  required
+                  placeholder="i.e. 100"
+                  minLength={1}
+                  className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5"
+                />
+              </div>
 
-                <div className="col-1">
-                  <label className="pl-2">
-                    <b>Min. Reputation (RP):</b>
-                  </label>
-                  <br />
-                  <input
-                    type="number"
-                    name="reputation"
-                    value={formData.reputation}
-                    onChange={handleChange}
-                    required
-                    placeholder="i.e. 100"
-                    minLength={1}
-                    className="w-full mt-1 border border-purple-300 px-4 py-3  rounded-lg border-purple-300 mb-5"
-                  />
-                </div>
+              <div className="col-1">
+                <label className="pl-2">
+                  <b>Min. Reputation (RP):</b>
+                </label>
+                <br />
+                <input
+                  type="number"
+                  name="reputation"
+                  value={formData.reputation}
+                  onChange={handleChange}
+                  required
+                  placeholder="i.e. 100"
+                  minLength={1}
+                  className="w-full mt-1 border border-purple-300 px-4 py-3  rounded-lg border-purple-300 mb-5"
+                />
+              </div>
 
               <div className="col-span-2">
-
                 <div className="col-1">
                   <label className="pl-2">
                     <b>Due Date ({zone}):</b>
