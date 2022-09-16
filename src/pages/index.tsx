@@ -10,7 +10,9 @@ import { deOracleABI } from "../constants/abis";
 import Head from "next/head";
 import RequestCreate from "../components/RequestCreate";
 
-const injected = new InjectedConnector({ supportedChainIds: [0x13881, 0x7a69] });
+const injected = new InjectedConnector({
+  supportedChainIds: [0x13881, 0x7a69],
+});
 
 const WorldIDWidget = dynamic<WidgetProps>(
   () => import("@worldcoin/id").then((mod) => mod.WorldIDWidget),
@@ -38,20 +40,18 @@ export default function Home() {
   const [ENSName, setENSName] = useState("");
   const [requestList, setRequestList] = useState();
   const [verificationCount, setVerficationCount] = useState(0);
-  const [formData, setFormData] = useState(
-    {
-        requestText: "", 
-        requestOrigin: account,
-        bounty: 0, 
-        reputation: 0, 
-        maxAnswers: 0, 
-        submittedAnswers: [],
-        active: true,
-        postedDate: "",
-        dueDate: "",
-        dueDateUnix: "",
-    }
-  )
+  const [formData, setFormData] = useState({
+    requestText: "",
+    requestOrigin: account,
+    bounty: 0,
+    reputation: 0,
+    maxAnswers: 0,
+    submittedAnswers: [],
+    active: true,
+    postedDate: "",
+    dueDate: "",
+    dueDateUnix: "",
+  });
 
   const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
 
@@ -100,7 +100,9 @@ export default function Home() {
           deOracleABI,
           provider
         );
-        setWorldIdVerified(await deOracleContract.checkWorldIdVerified(account));
+        setWorldIdVerified(
+          await deOracleContract.checkWorldIdVerified(account)
+        );
       };
 
       const updateVerifiedCount = () => {
@@ -171,8 +173,12 @@ export default function Home() {
   async function verifyENS() {
     const namehash = ENSName ? ethers.utils.namehash(ENSName) : "";
   }
+
   //worldcoin proof addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
-  const deOracleAddress = "0x13879b673b8787b031c263520A92d630b73F8C2F";
+
+  // const deOracleAddress = "0x13879b673b8787b031c263520A92d630b73F8C2F";
+  //hardhat TEMP:
+  const deOracleAddress = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318";
 
   async function sendProof(verificationResponse: any) {
     const { merkle_root, nullifier_hash, proof } = verificationResponse;
@@ -197,23 +203,12 @@ export default function Home() {
     );
   }
 
-  type requestSubmission = [
-    requestText: string,
-    requestOrigin: string,
-    bounty: number,
-    reputation: number,
-    maxAnswers: number,
-    submittedAnswers: number,
-    active: boolean,
-    timeStampPosted: number,
-    timeStampDue: number
-  ];
-
   async function sendRequest(request: any) {
-
-    let newReq = Object.values(request)
-    newReq.splice(8,1);
-    // console.log(newReq)
+    let newReq = Object.values(request);
+    //remove string formatted date
+    newReq.splice(8, 1);
+    //add an id of 0 to the requestObj (gets overwritten / indexed by contract)
+    newReq.unshift(0);
 
     const deOracleContract = new ethers.Contract(
       deOracleAddress,
@@ -245,10 +240,9 @@ export default function Home() {
           account={account}
           handleClick={() => {
             sendRequest(formData);
-          }
-        }
-        formData = {formData}
-        updateFormData = {setFormData}
+          }}
+          formData={formData}
+          updateFormData={setFormData}
         />
         <RequestContainer id={id} account={account} requestList={requestList} />
       </div>
