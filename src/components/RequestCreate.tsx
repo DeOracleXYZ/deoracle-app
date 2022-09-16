@@ -138,12 +138,11 @@ function RequestCreate(props: any) {
                     required
                     minLength={10}
                     rows={4}
-                    className="w-full mt-1 border border-purple-300 px-4 py-3  rounded-lg"
+                    className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg"
                   />
                 </div>
               </div>
 
-              <div className="col-1">
                 <div className="col-1">
                   <label className="pl-2">
                     <b>Bounty (USDC):</b>
@@ -157,7 +156,7 @@ function RequestCreate(props: any) {
                     required
                     placeholder="i.e. 100"
                     minLength={1}
-                    className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg  mb-5"
+                    className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5"
                   />
                 </div>
 
@@ -177,25 +176,8 @@ function RequestCreate(props: any) {
                     className="w-full mt-1 border border-purple-300 px-4 py-3  rounded-lg border-purple-300 mb-5"
                   />
                 </div>
-              </div>
 
-              <div className="col-1">
-                <div className="col-1">
-                  <label className="pl-2">
-                    <b>Max. No. of Answers:</b>
-                  </label>
-                  <br />
-                  <input
-                    type="number"
-                    name="maxAnswers"
-                    value={formData.maxAnswers}
-                    onChange={handleChange}
-                    required
-                    placeholder="i.e. 1"
-                    minLength={1}
-                    className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5"
-                  />
-                </div>
+              <div className="col-span-2">
 
                 <div className="col-1">
                   <label className="pl-2">

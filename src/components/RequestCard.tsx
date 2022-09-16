@@ -68,18 +68,19 @@ function RequestCard(props: any) {
     <>
       {requestData ? (
         <div className="request-box mb-3">
-          <p className="text-2xl pt-5 pb-3 px-5">
+          <p className="text-xl md:text-2xl pt-5 pb-3 px-5">
             <b>{requestText}</b>
           </p>
           <hr className="my-2" />
           <div className="request-info flex flex-nowrap overflow-scroll gap-5 justify-between text-purple-500 text-sm px-5 pt-2 pb-3">
-            <p className="whitespace-nowrap"><b>Posted by</b><br /> {shortWallet}</p>
             <p className="whitespace-nowrap"><b>Bounty:</b><br /> {ethers.utils.formatUnits(bounty, 0)} USDC</p>
             <p className="whitespace-nowrap"><b>Req. Reputation:</b><br /> {ethers.utils.formatUnits(reputation, 0)} RP</p>
-            <p className="whitespace-nowrap"><b>Answers:</b><br /> 0 / {ethers.utils.formatUnits(maxAnswers, 0)}</p>
-            <p className="whitespace-nowrap"><b>Posted on:</b><br /> {postedOnFinal}</p>
             <p className="whitespace-nowrap"><b>Due date:</b><br /> {dueDateFinal}</p>
             <p className="whitespace-nowrap"><b>Status:</b><br /> {requestStatus}</p>
+            <p className="whitespace-nowrap"><b>Posted by:</b><br /> 
+              <a href={"https://mumbai.polygonscan.com/address/" + {shortWallet}} className="underline hover:no-underline hover:text-purple-400" target="_blank">{shortWallet}</a>
+            </p>
+            <p className="whitespace-nowrap"><b>Posted on:</b><br /> {postedOnFinal}</p>
           </div>
           
             <div className="w-full bg-slate-100 border-t border-purple-200 shadow-inner" style={{borderRadius: "0 0 15px 15px"}}>
@@ -87,23 +88,23 @@ function RequestCard(props: any) {
                 <div className={`${ !showMe ? "hidden" : "" }` + " px-5 py-5"}>
 
                     <div className="border-b border-slate-200 flex gap-5 text-sm py-3 items-center">
-                        <p><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="inline w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> <b>Accepted Answer</b></p>
-                        <p className="text-lg font-bold grow">10.000</p>
+                        {/* <p><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="inline w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> <b>Accepted Answer</b></p> */}
                         <p className="justify-self-end font-bold">
                             <button className="rounded-l-xl px-3 py-1 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">+11</button>
                             <button className="rounded-r-xl px-3 py-1 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">-2</button>
                         </p>
-                        <p className="justify-self-end"><b>Answered by:</b> 0x45x9...45b9</p>
+                        <p className="text-lg font-bold grow">10.000</p>
+                        <p className="justify-self-end text-slate-400"><b>Answered by:</b> <a href="https://mumbai.polygonscan.com/address/" className="underline hover:no-underline hover:text-slate-500" target="_blank">0x45x9...45b9</a></p>
                     </div>
 
                     <div className="border-b border-slate-200 flex gap-5 text-sm py-3 items-center">
-                        <p className="invisible"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="inline w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> <b>Accepted Answer</b></p>
-                        <p className="text-lg font-bold grow">1.000</p>
+                        {/* <p className="invisible"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="inline w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> <b>Accepted Answer</b></p> */}
                         <p className="justify-self-end font-bold">
                             <button className="rounded-l-xl px-3 py-1 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">+11</button>
                             <button className="rounded-r-xl px-3 py-1 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">-2</button>
                         </p>
-                        <p className="justify-self-end"><b>Answered by:</b> 0x11b1...39c3</p>
+                        <p className="text-lg font-bold grow">1.000</p>
+                        <p className="justify-self-end text-slate-400"><b>Answered by:</b> <a href="https://mumbai.polygonscan.com/address/" className="underline hover:no-underline hover:text-slate-500" target="_blank">0x11b1...39c3</a></p>
                     </div>
 
                     <div className="flex gap-0 justify-between text-purple-500 py-3 relative">
