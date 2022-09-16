@@ -51,14 +51,13 @@ function RequestCreate(props: any) {
   const unixStamp = Math.floor(date.getTime() / 1000);
 
   // convert date string to Data object
-  // console.log(parseInt( Date.parse("2011-10-10T14:48:00.000+09:00").toString() ));
 
   // reconstruct date from unix stamp
   const dateObject = new Date(unixStamp * 1000);
 
   // print date based on local timezone
   const humanReadableDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'long', timeZone: timezone }).format(dateObject);
-  console.log(humanReadableDate);
+
 
   function addDays(date: string | number | Date, days: number) {
     let result = new Date(date)
@@ -73,14 +72,11 @@ function RequestCreate(props: any) {
     return dueDateUnixFinal;
   }
 
-  console.log(addDays(date, daysAfterDueDate)); // 2002-11-11T11:01
-
 
 
   function handleSubmit(event: any) {
     event.preventDefault()
     handleClick(formData)
-    console.log(formData)
   } 
 
   function toggle() {

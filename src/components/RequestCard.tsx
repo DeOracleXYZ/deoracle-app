@@ -5,7 +5,6 @@ function RequestCard(props: any) {
   const { requestData, handleClick } = props;
   const { bounty, requestText, requestOrigin, reputation, maxAnswers, active } =
     requestData;
-    console.log(requestData);
   const [requestStatus, setRequestStatus] = useState("Inactive");
   const [shortWallet, setShortWallet] = useState("");
   const [timeStampDue, setTimeStampDue] = useState(requestData.timeStampDue);
