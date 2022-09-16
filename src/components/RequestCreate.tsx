@@ -73,7 +73,7 @@ function RequestCreate(props: any) {
           " w-full px-5 text-left grid grid-cols-2"
         } >
         <div className="col-1">
-          <p className="new-request-header text-purple-500 text-2xl px-4 py-5">New Request</p>
+          <p className="new-request-header text-purple-500 text-xl md:text-2xl px-4 py-5">New Request</p>
         </div>
 
         <div className="col-1 text-right">
