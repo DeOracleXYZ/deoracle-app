@@ -49,11 +49,8 @@ export default function Home() {
   });
   const [formData, setFormData] = useState({
     requestText: "",
-    requestOrigin: account,
     bounty: 0,
     reputation: 0,
-    submittedAnswers: [],
-    active: true,
     dueDate: "",
     dueDateUnix: "",
   });
