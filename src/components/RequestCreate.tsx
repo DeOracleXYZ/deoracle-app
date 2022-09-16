@@ -120,8 +120,8 @@ function RequestCreate(props: any) {
         </div>
       </header>
 
-      <div className={`${!showMe ? "hidden" : ""}` + " grid grid-cols-2 grid-flow-col gap-4"}>
-        <div className="col-1 px-8 py-8">
+      <div className={`${!showMe ? "hidden" : ""}` + " grid grid-cols-1 md:grid-cols-2 gap-4"}>
+        <div className="order-2 md:order-none col-1 px-8 pt-0 pb-8 md:pt-8">
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
@@ -225,14 +225,14 @@ function RequestCreate(props: any) {
           </form>
         </div>
 
-        <div className="col-1 px-5 py-5 flex place-content-center">
+        <div className="col-1 px-5 pt-8 pb-0 flex order-1 md:order-none place-content-center">
           <Image
             style={{ zIndex: -1 }}
             className="self-center"
             src="eyeball.svg"
             alt="eyeball image"
-            width={300}
-            height={300}
+            width={200}
+            height={200}
           ></Image>
         </div>
       </div>
