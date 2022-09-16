@@ -4,16 +4,11 @@ import { useEffect, useState } from "react";
 
 function RequestCard(props: any) {
   const { requestData } = props;
-  const { bounty, requestText, requestOrigin, reputation, active } =
-    requestData;
+  const { bounty, requestText, origin, reputation, active, timeStampDue, timeStampPosted } = requestData;
   const [requestStatus, setRequestStatus] = useState("Inactive");
   const [shortWallet, setShortWallet] = useState("");
-  const [timeStampDue, setTimeStampDue] = useState(requestData.timeStampDue);
-  const [timeStampPosted, setTimeStampPosted] = useState(requestData.timeStampPosted);
-
   const [datePosted, setDatePosted] = useState("");
   const [dateDue, setDateDue] = useState("");
-
   const [showMe, setShowMe] = useState(false);
 
   function toggle() {
@@ -23,8 +18,8 @@ function RequestCard(props: any) {
   useEffect(() => {
     active ? setRequestStatus("green") : setRequestStatus("red")
 
-    requestOrigin
-      ? setShortWallet(requestOrigin.substring(0, 6) + "..." + requestOrigin.slice(-4))
+    origin
+      ? setShortWallet(origin.substring(0, 6) + "..." + origin.slice(-4))
       : setShortWallet("")
 
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -40,7 +35,7 @@ function RequestCard(props: any) {
     setDatePosted(datePosted)
     setDateDue(dateDue)
 
-  }, [active, requestOrigin, timeStampDue, timeStampPosted]);
+  }, [active, origin, timeStampDue, timeStampPosted]);
 
 
   return (
@@ -56,7 +51,7 @@ function RequestCard(props: any) {
             <p className="whitespace-nowrap"><b>Req. Reputation:</b><br /> {ethers.utils.formatUnits(reputation, 0)} RP</p>
             <p className="whitespace-nowrap"><b>Due Date:</b><br /> <span className="text-xs"> <span className={"w-2 h-2 bg-" + `${requestStatus}` + "-300 mr-1 rounded inline-block"}></span> {dateDue}</span></p>
             <p className="whitespace-nowrap"><b>Posted by:</b><br /> 
-              <a href={"https://mumbai.polygonscan.com/address/" + `${requestOrigin}`} className="underline hover:no-underline hover:text-purple-400" target="_blank"><span className="text-xs">{shortWallet}</span></a>
+              <a href={"https://mumbai.polygonscan.com/address/" + `${origin}`} className="underline hover:no-underline hover:text-purple-400" target="_blank"><span className="text-xs">{shortWallet}</span></a>
             </p>
             <p className="whitespace-nowrap"><b>Posted on:</b><br /> <span className="text-xs">{datePosted}</span></p>
           </div>
