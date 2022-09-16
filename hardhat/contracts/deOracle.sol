@@ -75,9 +75,9 @@ contract deOracle {
             timeStampPosted: block.timestamp,
             timeStampDue: _timeStampDue
         });
-        requestList.push(newRequest);
-        requestIdToRequest[requestCount] = requestList[requestCount];
         requestCount++;
+        requestList.push(newRequest);
+        requestIdToRequest[newRequest.id] = requestList[newRequest.id];
     }
 
     function postAnswer(uint256 _requestId, string memory _answerText) public {
@@ -90,14 +90,19 @@ contract deOracle {
             upVotes: 0,
             downVotes: 0
         });
-        answerList.push(newAnswer);
-        answerIdToAnswer[answerCount] = answerList[answerCount];
-        requestIdToAnswerIds[_requestId] = answerCount;
         answerCount++;
+        answerList.push(newAnswer);
+        answerIdToAnswer[newAnswer.id] = answerList[newAnswer.id];
+        answerIdToRequestId[newAnswer.id] = _requestId;
+        requestIdToAnswerIds[_requestId].push(newAnswer.id);
     }
 
     function getRequestList() public view returns (Request[] memory) {
         return requestList;
+    }
+
+    function getAnswerList() public view returns (Answer[] memory) {
+        return answerList;
     }
 
     //worldId verification complete?
