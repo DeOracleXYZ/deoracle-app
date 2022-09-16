@@ -181,7 +181,7 @@ export default function Home() {
 
   // const deOracleAddress = "0x13879b673b8787b031c263520A92d630b73F8C2F";
   //hardhat TEMP:
-  const deOracleAddress = "0xaab7899C52A2d427cF01938da4D2F4CD63f8d29D";
+  const deOracleAddress = "0xbb385025B17F539d2d46Fbb90a4548424718AD26";
 
   async function sendProof(verificationResponse: any) {
     const { merkle_root, nullifier_hash, proof } = verificationResponse;
