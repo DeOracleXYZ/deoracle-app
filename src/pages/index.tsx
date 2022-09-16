@@ -10,7 +10,7 @@ import { deOracleABI } from "../constants/abis";
 import Head from "next/head";
 import RequestCreate from "../components/RequestCreate";
 
-const injected = new InjectedConnector({ supportedChainIds: [0x13881] });
+const injected = new InjectedConnector({ supportedChainIds: [0x13881, 0x7a69] });
 
 const WorldIDWidget = dynamic<WidgetProps>(
   () => import("@worldcoin/id").then((mod) => mod.WorldIDWidget),
