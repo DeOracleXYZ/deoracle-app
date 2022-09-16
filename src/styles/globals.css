@@ -17,8 +17,8 @@
 }
 
 .profile-button {
-    padding-right: 4rem;
     cursor: pointer;
+    user-select: none;
 }
 
 .profile-button:hover,
@@ -35,10 +35,10 @@
     height: 0; 
     position: absolute;
     top: 45%;
-    right: 1.5rem;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid rgba(0, 0, 0, 0.2);
+    right: 1rem;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgba(0, 0, 0, 0.2);
 }
 
 .profile-button.active::after {
@@ -47,11 +47,29 @@
     height: 0; 
     position: absolute;
     top: 40%;
-    right: 1.5rem;
+    right: 1rem;
     border-top: 0px;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 8px solid rgba(0, 0, 0, 0.2);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid rgba(0, 0, 0, 0.2);
+}
+
+
+@media (min-width: 768px) {
+    .profile-button::after {
+        right: 1.5rem;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-button.active::after {
+        right: 1.5rem;
+        border-top: 0px;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid rgba(0, 0, 0, 0.2);
+    }
 }
 
 .nav-dropdown { 

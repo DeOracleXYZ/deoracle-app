@@ -85,23 +85,15 @@ export default function ConnectHeader(props: any) {
         </div>
         {active ? (
           <>
-            <div
-              className={
-                `${showMe ? "active" : ""}` +
-                " profile-button py-5 px-5 h-full align-middle justify-self-end"
-              }
-              onClick={toggle}
-            >
+            <div className={`${showMe ? "active" : ""}` + " profile-button py-5 pl-2 md:pl-5 pr-8 md:pr-16 h-full align-middle justify-self-end"} onClick={toggle}>
               <div className="text-l flex flex-col">
                 <p>
-                  <span className="text-xl">
-                    <b>{shortWallet}</b> - {Number(balance).toFixed(2)}
-                  </span>{" "}
-                  <small>{chainIdsMap[chainId]}</small>
+                  <span className="text-sm md:text-xl"><b>{shortWallet}</b> </span>
+                  <span className="text-xs md:text-lg"> - {Number(balance).toFixed(2)} {chainIdsMap[chainId]}</span>
                 </p>
-                <div className="flex place-content-end gap-3 mt-1 ">
-                  <p className="text-slate-600 text-sm">200 REP</p>
-                  <p className="text-slate-600 text-sm">
+                <div className="grid place-content-end md:place-items-center grid-cols-1 md:grid-cols-2 gap-1 md:gap-3 mt-1 text-right">
+                  <p className="text-slate-600 text-xs md:text-sm">200 REP</p>
+                  <p className="text-slate-600 text-xs md:text-sm">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill={verificationCount ? "#f7eb02" : "none"}

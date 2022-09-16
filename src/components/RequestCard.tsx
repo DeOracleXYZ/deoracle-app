@@ -21,7 +21,7 @@ function RequestCard(props: any) {
     }
 
   useEffect(() => {
-    active ? setRequestStatus("Active") : setRequestStatus("Inactive")
+    active ? setRequestStatus("green") : setRequestStatus("red")
 
     requestOrigin
       ? setShortWallet(requestOrigin.substring(0, 6) + "..." + requestOrigin.slice(-4))
@@ -54,10 +54,9 @@ function RequestCard(props: any) {
           <div className="request-info flex flex-nowrap overflow-scroll gap-5 justify-between text-purple-500 text-sm px-5 pt-2 pb-3">
             <p className="whitespace-nowrap"><b>Bounty:</b><br /> {ethers.utils.formatUnits(bounty, 0)} USDC</p>
             <p className="whitespace-nowrap"><b>Req. Reputation:</b><br /> {ethers.utils.formatUnits(reputation, 0)} RP</p>
-            <p className="whitespace-nowrap"><b>Due Date:</b><br /> <span className="text-xs">{dateDue}</span></p>
-            <p className="whitespace-nowrap"><b>Status:</b><br /> {requestStatus}</p>
+            <p className="whitespace-nowrap"><b>Due Date:</b><br /> <span className="text-xs"> <span className={"w-2 h-2 bg-" + `${requestStatus}` + "-300 mr-1 rounded inline-block"}></span> {dateDue}</span></p>
             <p className="whitespace-nowrap"><b>Posted by:</b><br /> 
-              <a href={"https://mumbai.polygonscan.com/address/" + `${requestOrigin}`} className="underline hover:no-underline hover:text-purple-400" target="_blank">{shortWallet}</a>
+              <a href={"https://mumbai.polygonscan.com/address/" + `${requestOrigin}`} className="underline hover:no-underline hover:text-purple-400" target="_blank"><span className="text-xs">{shortWallet}</span></a>
             </p>
             <p className="whitespace-nowrap"><b>Posted on:</b><br /> <span className="text-xs">{datePosted}</span></p>
           </div>
