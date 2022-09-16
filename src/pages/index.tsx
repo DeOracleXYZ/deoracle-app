@@ -41,6 +41,7 @@ export default function Home() {
   const [deOracleContract, setDeOracleContract] = useState();
   const [requestList, setRequestList] = useState();
   const [answerList, setAnswerList] = useState();
+  const [requestIdToAnswerIds, setRequestIdToAnswerIds] = useState(0);
   const [verificationCount, setVerficationCount] = useState(0);
   const [answerFormData, setAnswerFormData] = useState({
     answerText: "",
@@ -235,6 +236,15 @@ export default function Home() {
 
     deOracleContract.postAnswer(requestId, answerText);
   }
+
+  async function getAnswerCount(id: any) {
+    const deOracleContract = new ethers.Contract(
+      deOracleAddress,
+      deOracleABI,
+      provider
+    );
+    setRequestIdToAnswerIds(await deOracleContract.getRequestIdToAnswerIds(id));
+  };
 
   return (
     <>
