@@ -276,19 +276,19 @@ export default function Home() {
 
       <div className="flex flex-col-3 gap-4 justify-center">
         <button
-          className="border px-4 py-2 bg-purple-200 border-purple-400"
+          className="border px-4 py-2 bg-purple-200 border-purple-400 hover:bg-purple-100 hover:border-purple-300"
           onClick={() => sendProof(proof)}
         >
           SendProof
         </button>
         <button
-          className="border px-4 py-2 bg-purple-200 border-purple-400"
+          className="border px-4 py-2 bg-purple-200 border-purple-400 hover:bg-purple-100 hover:border-purple-300"
           onClick={() => console.log(requestList)}
         >
           PrintList
         </button>
         <button
-          className="border px-4 py-2 bg-purple-200 border-purple-400"
+          className="border px-4 py-2 bg-purple-200 border-purple-400 hover:bg-purple-100 hover:border-purple-300"
           onClick={() => console.log(requestList)}
         >
           SendRequest
