@@ -1,55 +1,6 @@
 module.exports = {
   deOracleABI: [
     {
-      inputs: [
-        {
-          internalType: "address",
-          name: "_address",
-          type: "address",
-        },
-        {
-          internalType: "uint256",
-          name: "_amount",
-          type: "uint256",
-        },
-      ],
-      name: "addREP",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "_requestId",
-          type: "uint256",
-        },
-        {
-          internalType: "string",
-          name: "_answerText",
-          type: "string",
-        },
-      ],
-      name: "postAnswer",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "_address",
-          type: "address",
-        },
-      ],
-      name: "setENSVerified",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
       inputs: [],
       stateMutability: "nonpayable",
       type: "constructor",
@@ -63,67 +14,35 @@ module.exports = {
       inputs: [
         {
           internalType: "address",
-          name: "_address",
+          name: "",
           type: "address",
         },
       ],
-      name: "setWorldIdVerified",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
+      name: "ENSVerified",
+      outputs: [
         {
-          internalType: "string",
-          name: "_requestText",
-          type: "string",
-        },
-        {
-          internalType: "uint256",
-          name: "_bounty",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "_reputation",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "_timeStampDue",
-          type: "uint256",
+          internalType: "bool",
+          name: "",
+          type: "bool",
         },
       ],
-      name: "submitRequest",
-      outputs: [],
-      stateMutability: "nonpayable",
+      stateMutability: "view",
       type: "function",
     },
     {
       inputs: [
         {
           internalType: "address",
-          name: "signal",
+          name: "_address",
           type: "address",
         },
         {
           internalType: "uint256",
-          name: "root",
+          name: "_amount",
           type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "nullifierHash",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256[8]",
-          name: "proof",
-          type: "uint256[8]",
         },
       ],
-      name: "verifyAndExecute",
+      name: "addREP",
       outputs: [],
       stateMutability: "nonpayable",
       type: "function",
@@ -273,25 +192,6 @@ module.exports = {
         },
       ],
       name: "checkWorldIdVerified",
-      outputs: [
-        {
-          internalType: "bool",
-          name: "",
-          type: "bool",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
-      ],
-      name: "ENSVerified",
       outputs: [
         {
           internalType: "bool",
@@ -456,6 +356,24 @@ module.exports = {
       inputs: [
         {
           internalType: "uint256",
+          name: "_requestId",
+          type: "uint256",
+        },
+        {
+          internalType: "string",
+          name: "_answerText",
+          type: "string",
+        },
+      ],
+      name: "postAnswer",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
           name: "",
           type: "uint256",
         },
@@ -582,6 +500,88 @@ module.exports = {
         },
       ],
       stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_address",
+          type: "address",
+        },
+      ],
+      name: "setENSVerified",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_address",
+          type: "address",
+        },
+      ],
+      name: "setWorldIdVerified",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "string",
+          name: "_requestText",
+          type: "string",
+        },
+        {
+          internalType: "uint256",
+          name: "_bounty",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "_reputation",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "_timeStampDue",
+          type: "uint256",
+        },
+      ],
+      name: "submitRequest",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "signal",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "root",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "nullifierHash",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256[8]",
+          name: "proof",
+          type: "uint256[8]",
+        },
+      ],
+      name: "verifyAndExecute",
+      outputs: [],
+      stateMutability: "nonpayable",
       type: "function",
     },
     {
