@@ -1,5 +1,4 @@
 import RequestCard from "./RequestCard";
-import RequestCreate from "./RequestCreate";
 
 function RequestContainer(props: any) {
   const { account, requestList, id } = props;

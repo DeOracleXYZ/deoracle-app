@@ -43,11 +43,9 @@ export default function Home() {
         requestText: "", 
         requestOrigin: account,
         bounty: 0, 
-        reputation: 0, 
-        maxAnswers: 0, 
+        reputation: 0,
         submittedAnswers: [],
         active: true,
-        postedDate: "",
         dueDate: "",
         dueDateUnix: "",
     }
@@ -180,8 +178,8 @@ export default function Home() {
       ["uint256[8]"],
       proof
     )[0];
-    console.log(verificationResponse);
-    console.log(unpackedProof);
+    // console.log(verificationResponse);
+    // console.log(unpackedProof);
     const deOracleContract = new ethers.Contract(
       deOracleAddress,
       deOracleABI,
@@ -197,31 +195,20 @@ export default function Home() {
     );
   }
 
-  type requestSubmission = [
-    requestText: string,
-    requestOrigin: string,
-    bounty: number,
-    reputation: number,
-    maxAnswers: number,
-    submittedAnswers: number,
-    active: boolean,
-    timeStampPosted: number,
-    timeStampDue: number
-  ];
-
   async function sendRequest(request: any) {
 
     let newReq = Object.values(request)
-    newReq.splice(8,1);
-    // console.log(newReq)
+    newReq.splice(6,1);
 
-    const deOracleContract = new ethers.Contract(
-      deOracleAddress,
-      deOracleABI,
-      provider.getSigner()
-    );
+    console.log(newReq)
 
-    deOracleContract.submitRequest(newReq);
+    // const deOracleContract = new ethers.Contract(
+    //   deOracleAddress,
+    //   deOracleABI,
+    //   provider.getSigner()
+    // );
+
+    // deOracleContract.submitRequest(newReq);
   }
 
   return (

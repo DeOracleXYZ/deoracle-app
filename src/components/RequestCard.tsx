@@ -1,18 +1,19 @@
 import { ethers } from "ethers";
+import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
 import { useEffect, useState } from "react";
 
 function RequestCard(props: any) {
-  const { requestData, handleClick } = props;
-  const { bounty, requestText, requestOrigin, reputation, maxAnswers, active } =
+  const { requestData } = props;
+  const { bounty, requestText, requestOrigin, reputation, active } =
     requestData;
   const [requestStatus, setRequestStatus] = useState("Inactive");
   const [shortWallet, setShortWallet] = useState("");
   const [timeStampDue, setTimeStampDue] = useState(requestData.timeStampDue);
-  const [timeStampPosted, setTimeStampPosted] = useState(
-    requestData.timeStampPosted
-  );
-  const [postedOnFinal, setPostedOnFinal] = useState("");
-  const [dueDateFinal, setDueDateFinal] = useState("");
+  const [timeStampPosted, setTimeStampPosted] = useState(requestData.timeStampPosted);
+
+  const [datePosted, setDatePosted] = useState("");
+  const [dateDue, setDateDue] = useState("");
+
   const [showMe, setShowMe] = useState(false);
 
     function toggle(){
@@ -20,49 +21,27 @@ function RequestCard(props: any) {
     }
 
   useEffect(() => {
-    active ? setRequestStatus("Active") : setRequestStatus("Inactive");
+    active ? setRequestStatus("Active") : setRequestStatus("Inactive")
 
     requestOrigin
-      ? setShortWallet(
-          requestOrigin.substring(0, 6) + "..." + requestOrigin.slice(-4)
-        )
-      : setShortWallet("");
+      ? setShortWallet(requestOrigin.substring(0, 6) + "..." + requestOrigin.slice(-4))
+      : setShortWallet("")
 
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  
+    let datePosted = new Intl.DateTimeFormat('en-GB', 
+                    { dateStyle: 'full', timeStyle: 'long', timeZone: timezone }
+                    ).format( new Date(timeStampPosted.toNumber() * 1000) )
 
-    // TODO: Fix display of due date
-    let date1 = new Date(timeStampPosted * 1000);
-    let hours1 = date1.getHours();
-    let minutes1 = "0" + date1.getMinutes();
-    let seconds1 = "0" + date1.getSeconds();
-    let fulldate1 =
-      date1.getMonth() + "." + date1.getDay() + "." + date1.getFullYear();
+    let dateDue = new Intl.DateTimeFormat('en-GB', 
+                    { dateStyle: 'full', timeStyle: 'long', timeZone: timezone }
+                    ).format( new Date(timeStampDue.toNumber() * 1000) )
+    
+    setDatePosted(datePosted)
+    setDateDue(dateDue)
 
-    let date2 = new Date(timeStampDue * 1000);
-    let hours2 = date2.getHours();
-    let minutes2 = "0" + date2.getMinutes();
-    let seconds2 = "0" + date2.getSeconds();
-    let fulldate2 =
-      date2.getMonth() + "." + date2.getDay() + "." + date2.getFullYear();
-
-    setPostedOnFinal(
-      fulldate1 +
-        " - " +
-        hours1 +
-        ":" +
-        minutes1.substring(1) +
-        ":" +
-        seconds1.substring(1)
-    );
-    setDueDateFinal(
-      fulldate2 +
-        " - " +
-        hours2 +
-        ":" +
-        minutes2.substring(1) +
-        ":" +
-        seconds2.substring(1)
-    );
   }, [active, requestOrigin, timeStampDue, timeStampPosted]);
+
 
   return (
     <>
@@ -75,12 +54,12 @@ function RequestCard(props: any) {
           <div className="request-info flex flex-nowrap overflow-scroll gap-5 justify-between text-purple-500 text-sm px-5 pt-2 pb-3">
             <p className="whitespace-nowrap"><b>Bounty:</b><br /> {ethers.utils.formatUnits(bounty, 0)} USDC</p>
             <p className="whitespace-nowrap"><b>Req. Reputation:</b><br /> {ethers.utils.formatUnits(reputation, 0)} RP</p>
-            <p className="whitespace-nowrap"><b>Due date:</b><br /> {dueDateFinal}</p>
+            <p className="whitespace-nowrap"><b>Due Date:</b><br /> <span className="text-xs">{dateDue}</span></p>
             <p className="whitespace-nowrap"><b>Status:</b><br /> {requestStatus}</p>
             <p className="whitespace-nowrap"><b>Posted by:</b><br /> 
-              <a href={"https://mumbai.polygonscan.com/address/" + {shortWallet}} className="underline hover:no-underline hover:text-purple-400" target="_blank">{shortWallet}</a>
+              <a href={"https://mumbai.polygonscan.com/address/" + `${requestOrigin}`} className="underline hover:no-underline hover:text-purple-400" target="_blank">{shortWallet}</a>
             </p>
-            <p className="whitespace-nowrap"><b>Posted on:</b><br /> {postedOnFinal}</p>
+            <p className="whitespace-nowrap"><b>Posted on:</b><br /> <span className="text-xs">{datePosted}</span></p>
           </div>
           
             <div className="w-full bg-slate-100 border-t border-purple-200 shadow-inner" style={{borderRadius: "0 0 15px 15px"}}>
@@ -93,8 +72,8 @@ function RequestCard(props: any) {
                             <button className="rounded-l-xl px-3 py-1 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">+11</button>
                             <button className="rounded-r-xl px-3 py-1 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">-2</button>
                         </p>
-                        <p className="text-lg font-bold grow">10.000</p>
-                        <p className="justify-self-end text-slate-400"><b>Answered by:</b> <a href="https://mumbai.polygonscan.com/address/" className="underline hover:no-underline hover:text-slate-500" target="_blank">0x45x9...45b9</a></p>
+                        <p className="text-base md:text-lg font-bold grow">10.000</p>
+                        <p className="justify-self-end text-xs md:text-sm text-slate-400"><b>Answered by:</b> <a href="https://mumbai.polygonscan.com/address/" className="underline hover:no-underline hover:text-slate-500" target="_blank">0x45x9...45b9</a></p>
                     </div>
 
                     <div className="border-b border-slate-200 flex gap-5 text-sm py-3 items-center">
@@ -103,8 +82,8 @@ function RequestCard(props: any) {
                             <button className="rounded-l-xl px-3 py-1 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">+11</button>
                             <button className="rounded-r-xl px-3 py-1 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">-2</button>
                         </p>
-                        <p className="text-lg font-bold grow">1.000</p>
-                        <p className="justify-self-end text-slate-400"><b>Answered by:</b> <a href="https://mumbai.polygonscan.com/address/" className="underline hover:no-underline hover:text-slate-500" target="_blank">0x11b1...39c3</a></p>
+                        <p className="text-base md:text-lg font-bold grow">1.000</p>
+                        <p className="justify-self-end text-xs md:text-sm text-slate-400"><b>Answered by:</b> <a href="https://mumbai.polygonscan.com/address/" className="underline hover:no-underline hover:text-slate-500" target="_blank">0x11b1...39c3</a></p>
                     </div>
 
                     <div className="flex gap-0 justify-between text-purple-500 py-3 relative">

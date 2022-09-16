@@ -117,8 +117,8 @@ export default function ConnectHeader(props: any) {
                       />
                     </svg>{" "}
                     {verificationCount
-                      ? "Verified " + verificationCount + "/3"
-                      : "Unverified 0/3"}
+                      ? "Verified " + verificationCount + "/2"
+                      : "Unverified 0/2"}
                   </p>
                 </div>
               </div>
@@ -149,16 +149,16 @@ export default function ConnectHeader(props: any) {
           }}
         >
           <p className="pb-3">
-            <b>Wallet:</b> {shortWallet}
+            <b>My Wallet:</b> <a href={"https://mumbai.polygonscan.com/address/" +  account}className="underline hover:no-underline hover:text-slate-700" target="_blank">{shortWallet}</a>
           </p>
           <hr />
-          <p className="pt-3">
+          <p className="pt-3 text-slate-500">
             <b>Earned Bounty:</b> 0 USDC
           </p>
-          <p className="py-1">
+          <p className="py-1 text-slate-500">
             <b>Answers:</b> 0
           </p>
-          <p className="pb-3">
+          <p className="pb-3 text-slate-500">
             <b>Requests:</b> 0
           </p>
           <hr />
@@ -183,10 +183,10 @@ export default function ConnectHeader(props: any) {
             </b>
           </div>
           <hr />
-          <p className="pt-3 pb-1">
-            <b>Verification ({verificationCount}/3):</b>
+          <p className="pt-3 pb-4">
+            <b>Verification ({verificationCount}/2):</b>
           </p>
-          <div className="flex gap-3 pb-3">
+          <div className="flex gap-3 pb-5">
             <Image
               className={worldIdCondition}
               onClick={() =>
@@ -215,7 +215,7 @@ export default function ConnectHeader(props: any) {
             {!worldIdVerified && WorldIDWidget}
           </div>
           <hr />
-          <p className="pt-3">
+          <p className="pt-5">
             <b>
               <a href="#" className="text-red-500 hover:text-red-400">
                 Disconnect

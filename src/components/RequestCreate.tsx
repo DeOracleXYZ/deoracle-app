@@ -8,14 +8,13 @@ function RequestCreate(props: any) {
   const daysAfterDueDate = 5;
   const [dueDate, setDueDate] = useState( addDays(new Date( Date.now() ), daysAfterDueDate) );
   const [dueDateUnix, setDueDateUnix] = useState(timeToUnix(dueDate));
-  
+  const zone = new Date().toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
 
   useEffect( () => {
     updateFormData((prevFormData: any) => {
         return {
             ...prevFormData,
             requestOrigin: account,
-            postedDate: unixStamp,
             dueDate: dueDate,
             dueDateUnix: dueDateUnix,
         }
@@ -32,32 +31,12 @@ function RequestCreate(props: any) {
     updateFormData((prevFormData: any) => {
         return {
             ...prevFormData,
-            [name]: type === "checkbox" ? checked : value
+            [name]: value
         }
     })
 
     setDueDate( formData['dueDate'] )
   }
-
-
-  // Get local timezone (long and short)
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  var zone = new Date().toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
-
-  // Get local date
-  const date = new Date( Date.now() );
-
-  // convert to unix stamp
-  const unixStamp = Math.floor(date.getTime() / 1000);
-
-  // convert date string to Data object
-
-  // reconstruct date from unix stamp
-  const dateObject = new Date(unixStamp * 1000);
-
-  // print date based on local timezone
-  const humanReadableDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'long', timeZone: timezone }).format(dateObject);
-
 
   function addDays(date: string | number | Date, days: number) {
     let result = new Date(date)
@@ -72,10 +51,9 @@ function RequestCreate(props: any) {
     return dueDateUnixFinal;
   }
 
-
-
   function handleSubmit(event: any) {
     event.preventDefault()
+    console.log(formData)
     handleClick(formData)
   } 
 
