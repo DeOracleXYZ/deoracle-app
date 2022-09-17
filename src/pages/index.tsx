@@ -5,10 +5,11 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { VerificationResponse, WidgetProps } from "@worldcoin/id";
 import dynamic from "next/dynamic";
 import ConnectHeader from "../components/ConnectHeader";
-import RequestContainer from "../components/RequestContainer";
+// import RequestContainer from "../components/RequestContainer";
 import { deOracleABI } from "../constants/abis";
 import Head from "next/head";
 import RequestCreate from "../components/RequestCreate";
+import RequestCard from "../components/RequestCard";
 
 const injected = new InjectedConnector({
   supportedChainIds: [0x13881, 0x7a69],
@@ -258,6 +259,25 @@ export default function Home() {
     setRequestIdToAnswerIds(await deOracleContract.getRequestIdToAnswerIds(id));
   }
 
+  const requestCardList = () => {
+    const requestEls = requestList.map((card: any) => {
+      let i = requestList.indexOf(card);
+      return (
+        <RequestCard
+          key={id + i}
+          requestData={card}
+          handleClick={() => console.log("clicked!")}
+          handleClickAnswer={() => handleClickAnswer(answerFormData)}
+          answerFormData={answerFormData}
+          updateAnswerFormData={setAnswerFormData}
+          answerList={answerList}
+          getAnswerCount={() => getAnswerCount(id.toNumber())}
+        />
+      );
+    });
+    return requestEls;
+  };
+
   return (
     <>
       <Head>
@@ -284,17 +304,8 @@ export default function Home() {
           formData={formData}
           updateFormData={setFormData}
         />
-        <RequestContainer
-          id={id}
-          account={account}
-          requestList={requestList}
-          answerList={answerList}
-          handleClickAnswer={() => {
-            sendAnswer(answerFormData);
-          }}
-          answerFormData={answerFormData}
-          updateAnswerFormData={setAnswerFormData}
-        />
+
+        <div>{requestList && requestCardList()}</div>
       </div>
 
       <div className="flex flex-col-3 gap-4 justify-center">
