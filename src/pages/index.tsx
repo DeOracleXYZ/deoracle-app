@@ -2,7 +2,7 @@ import { useEffect, useState, useId } from "react";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
-import { VerificationResponse, WidgetProps } from "@worldcoin/id";
+import { ABIEncodedValue, VerificationResponse, WidgetProps } from "@worldcoin/id";
 import dynamic from "next/dynamic";
 import ConnectHeader from "../components/ConnectHeader";
 import RequestContainer from "../components/RequestContainer";
@@ -34,7 +34,7 @@ export default function Home() {
   const id = useId();
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState("");
-  const [proof, setProof] = useState(null as VerificationResponse | null);
+  const [proofResponse, setProofResponse] = useState(null as VerificationResponse | null);
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
@@ -65,7 +65,7 @@ export default function Home() {
     theme: "light",
     debug: true, // Recommended **only** for development
     onSuccess: (verificationResponse) => {
-      setProof(verificationResponse);
+      setProofResponse(verificationResponse);
     },
     onError: ({ code, detail }) => console.log({ code, detail }),
     onInitSuccess: () => console.log("Init successful"),
@@ -147,6 +147,31 @@ export default function Home() {
     }
   }, [ENSVerified, account, provider, worldIdVerified]);
 
+  useEffect(() => {
+    proofResponse && sendProof();
+    async function sendProof() {
+      const { merkle_root, nullifier_hash, proof }  = proofResponse!; 
+      const unpackedProof = ethers.utils.defaultAbiCoder.decode(
+        ["uint256[8]"],
+        proof
+      )[0];
+      const deOracleContract = new ethers.Contract(
+        deOracleAddress,
+        deOracleABI,
+        provider.getSigner()
+      );
+  
+      deOracleContract.verifyAndExecute(
+        account,
+        merkle_root,
+        nullifier_hash,
+        unpackedProof,
+        { gasLimit: 10000000 }
+      );
+    }
+    console.log("Proof Print", proofResponse);
+  }, [proofResponse])
+
   //ENSVerification
   useEffect(() => {
     const mainNetProvider = new ethers.providers.AlchemyProvider(
@@ -160,8 +185,7 @@ export default function Home() {
           const ENS = await mainNetProvider.lookupAddress(account);
           ENS && setENSName(ENS);
           ENS && setENSVerified(true);
-          console.log(ethers.utils.namehash(ENSName));
-          console.log(ENSVerified);
+
         } catch (err) {
           console.log(err);
         }
@@ -198,28 +222,7 @@ export default function Home() {
   //hardhat TEMP:
   const deOracleAddress = "0xbb385025B17F539d2d46Fbb90a4548424718AD26";
 
-  async function sendProof(verificationResponse: any) {
-    const { merkle_root, nullifier_hash, proof } = verificationResponse;
-    const unpackedProof = ethers.utils.defaultAbiCoder.decode(
-      ["uint256[8]"],
-      proof
-    )[0];
-    // console.log(verificationResponse);
-    // console.log(unpackedProof);
-    const deOracleContract = new ethers.Contract(
-      deOracleAddress,
-      deOracleABI,
-      provider.getSigner()
-    );
-
-    deOracleContract.verifyAndExecute(
-      account,
-      merkle_root,
-      nullifier_hash,
-      unpackedProof,
-      { gasLimit: 10000000 }
-    );
-  }
+  
 
   async function sendRequest(request: any) {
     const { requestText, bounty, reputation, dueDateUnix } = request;
@@ -295,15 +298,6 @@ export default function Home() {
           answerFormData={answerFormData}
           updateAnswerFormData={setAnswerFormData}
         />
-      </div>
-
-      <div className="flex flex-col-3 gap-4 justify-center">
-        <button
-          className="border px-4 py-2 bg-purple-200 border-purple-400 hover:bg-purple-100 hover:border-purple-300"
-          onClick={() => sendProof(proof)}
-        >
-          SendProof
-        </button>
       </div>
 
       <footer className="container text-center py-10 px-10 mt-10">
