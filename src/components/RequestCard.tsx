@@ -1,5 +1,4 @@
 import { ethers } from "ethers";
-import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
 import { useEffect, useState } from "react";
 
 function RequestCard(props: any) {
@@ -9,7 +8,6 @@ function RequestCard(props: any) {
     handleClickAnswer,
     answerFormData,
     updateAnswerFormData,
-    requestIdToAnswerIds,
   } = props;
 
   const {
@@ -28,10 +26,24 @@ function RequestCard(props: any) {
   const [datePosted, setDatePosted] = useState("");
   const [dateDue, setDateDue] = useState("");
   const [showMe, setShowMe] = useState(false);
+  const [requestIdToAnswerIds, setRequestIdToAnswerIds] = useState(0);
+
+
+  // async function getAnswerCount(id: any) {
+  //   const deOracleContract = new ethers.Contract(
+  //     deOracleAddress,
+  //     deOracleABI,
+  //     provider
+  //   );
+  //   setRequestIdToAnswerIds(await deOracleContract.getRequestIdToAnswerIds(id));
+  // }
+
+  
 
   function toggle() {
     setShowMe(!showMe);
   }
+
 
   useEffect(() => {
     active ? setRequestStatus("green") : setRequestStatus("red");
@@ -57,6 +69,7 @@ function RequestCard(props: any) {
     setDatePosted(datePosted);
     setDateDue(dateDue);
   }, [active, origin, timeStampDue, timeStampPosted, id]);
+
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
