@@ -1,5 +1,5 @@
 # deOracle.xyz
-<img src="./public/logo.svg">
+
 Decentralized P2P oracles platform to bring real-world data on-chain with a reputation system for on-chain identity.
 
 . 
