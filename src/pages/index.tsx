@@ -114,10 +114,10 @@ export default function Home() {
   }, [activateNetwork, networkActive, networkError]);
 
   useEffect(() => {
-    if (provider) {
-
+    if (deOracleWRITE) {
       const readContractData = async () => {
         deOracleWRITE && (
+          console.log("running"),
           setREP((await deOracleWRITE.getREP()).toNumber()),
           setRequestList(await deOracleWRITE.getRequestList()),
           setAnswerList(await deOracleWRITE.getAnswerList())
@@ -166,7 +166,7 @@ export default function Home() {
 
       getRequestsRPC().catch(console.error);
     }
-  }, [ENSVerified, account, provider, worldIdVerified]);
+  }, [ENSVerified, balance, worldIdVerified, deOracleWRITE, deOracleWRITE]);
 
   useEffect(() => {
     proofResponse && sendProof();
