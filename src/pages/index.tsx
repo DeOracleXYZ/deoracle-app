@@ -264,13 +264,11 @@ export default function Home() {
 
   const requestCardList = () => {
 
-    const keysDesc = Object.keys(requestList).sort((a:any, b:any) => {return b-a})
+    const keysDesc = Object.keys(requestList!).sort((a:any, b:any) => {return b-a})
+    const requestListDesc: any = [];
 
-    const requestListDesc = [];
-    
     for (let i=0; i<keysDesc.length; i++) {
-      const obj = {};
-      obj = requestList[keysDesc[i]];
+      const obj = requestList![keysDesc[i]];
       requestListDesc.push(obj);
     }
 
@@ -281,11 +279,11 @@ export default function Home() {
           key={id + i}
           requestData={card}
           handleClick={() => console.log("clicked!")}
-          handleClickAnswer={() => handleClickAnswer(answerFormData)}
+          handleClickAnswer={() => sendAnswer(answerFormData)}
           answerFormData={answerFormData}
           updateAnswerFormData={setAnswerFormData}
           answerList={answerList}
-          getAnswerCount={() => getAnswerCount(id.toNumber())}
+          // getAnswerCount={() => getAnswerCount(id.toNumber())}
         />
       );
     });
