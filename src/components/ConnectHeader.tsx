@@ -100,7 +100,7 @@ export default function ConnectHeader(props: any) {
                   </span>
                   <span className="text-xs md:text-lg">
                     {" "}
-                    - {Number(balance).toFixed(2)} {chainIdsMap[chainId]}
+                    - {Number(balance).toFixed(2)} <small>{chainIdsMap[chainId]}</small>
                   </span>
                 </p>
                 <div className="grid place-content-end md:place-items-center grid-cols-1 md:grid-cols-2 gap-1 md:gap-3 mt-1 text-right">
