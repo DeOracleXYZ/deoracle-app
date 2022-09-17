@@ -6,6 +6,7 @@ export default function ConnectHeader(props: any) {
   const {
     data,
     handleClickConnect,
+    handleClickDisconnect,
     balance,
     worldIdVerified,
     ENSVerified,
@@ -234,9 +235,9 @@ export default function ConnectHeader(props: any) {
           <hr />
           <p className="pt-5">
             <b>
-              <a href="#" className="text-red-500 hover:text-red-400">
+              <button onClick={() => {handleClickDisconnect(); toggle()}} className="text-red-500 hover:text-red-400">
                 Disconnect
-              </a>
+              </button>
             </b>
           </p>
         </div>

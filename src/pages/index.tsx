@@ -25,6 +25,7 @@ export default function Home() {
     active: networkActive,
     error: networkError,
     activate: activateNetwork,
+    deactivate,
     library,
     library: provider,
     account,
@@ -247,6 +248,14 @@ export default function Home() {
     }
   }
 
+  async function disconnect() {
+      // TODO
+      // - disconnect
+      // - refresh nav
+      // - close nav menu
+  }
+  
+
   // async function verifyENS() {
   //   if (ENSVerified)
   //     try {
@@ -331,6 +340,7 @@ export default function Home() {
         earnedBountyCount={earnedBountyCount}
         verificationCount={verificationCount}
         handleClickConnect={() => connect()}
+        handleClickDisconnect={() => disconnect()}
       />
 
       <div className="flex flex-col my-6 mx-3 md:m-10 justify-center">
