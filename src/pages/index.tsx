@@ -263,8 +263,19 @@ export default function Home() {
   }
 
   const requestCardList = () => {
-    const requestEls = requestList.map((card: any) => {
-      let i = requestList.indexOf(card);
+
+    const keysDesc = Object.keys(requestList).sort((a:any, b:any) => {return b-a})
+
+    const requestListDesc = [];
+    
+    for (let i=0; i<keysDesc.length; i++) {
+      const obj = {};
+      obj = requestList[keysDesc[i]];
+      requestListDesc.push(obj);
+    }
+
+    const requestEls = requestListDesc.map((card: any) => {
+      let i = requestListDesc.indexOf(card);
       return (
         <RequestCard
           key={id + i}
