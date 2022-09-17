@@ -5,7 +5,6 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { VerificationResponse, WidgetProps } from "@worldcoin/id";
 import dynamic from "next/dynamic";
 import ConnectHeader from "../components/ConnectHeader";
-// import RequestContainer from "../components/RequestContainer";
 import { deOracleABI } from "../constants/abis";
 import Head from "next/head";
 import RequestCreate from "../components/RequestCreate";
@@ -14,7 +13,6 @@ import RequestCard from "../components/RequestCard";
 const injected = new InjectedConnector({
   supportedChainIds: [0x13881, 0x7a69],
 });
-
 
 const WorldIDWidget = dynamic<WidgetProps>(
   () => import("@worldcoin/id").then((mod) => mod.WorldIDWidget),
@@ -58,7 +56,6 @@ export default function Home() {
     dueDate: "",
     dueDateUnix: "",
   });
-
 
   const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
 
@@ -117,7 +114,6 @@ export default function Home() {
     if (deOracleWRITE) {
       const readContractData = async () => {
         deOracleWRITE && (
-          console.log("running"),
           setREP((await deOracleWRITE.getREP()).toNumber()),
           setRequestList(await deOracleWRITE.getRequestList()),
           setAnswerList(await deOracleWRITE.getAnswerList())
@@ -143,7 +139,6 @@ export default function Home() {
         const data = await provider.getBalance(account);
         setBalance(ethers.utils.formatEther(data));
       };
-
       readContractData();
       checkVerified();
       fetchbalanceAndREP();
