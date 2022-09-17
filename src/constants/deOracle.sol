@@ -1,54 +1,117 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.10;
+pragma solidity ^0.8.14;
+
+interface IWorldID {
+    function verifyProof(
+        uint256 root,
+        uint256 groupId,
+        uint256 signalHash,
+        uint256 nullifierHash,
+        uint256 externalNullifierHash,
+        uint256[8] calldata proof
+    ) external view;
+}
 
 contract deOracle {
     using ByteHasher for bytes;
 
     address public owner;
-    mapping(address => bool) public worldIdVerified;
-    mapping(address => bool) public ENSVerified;
-    Request[] public requestList;
+
+    //requestIdCounter AnswerIdCounter
+    uint256 requestCount = 0;
+    uint256 answerCount = 0;
 
     struct Request {
+        uint256 id;
         string requestText;
-        address requestOrigin;
+        address origin;
         uint256 bounty; //USDC
         uint256 reputation;
-        uint256 maxAnswers;
-        uint256[] submittedAnswers;
         bool active;
         uint256 timeStampPosted;
         uint256 timeStampDue;
     }
-
     struct Answer {
-        uint256 answer;
-        Oracle answerOrigin;
-        bool acceptedAnswer;
+        uint256 id;
+        uint256 requestId;
+        string answerText;
+        address origin;
+        bool rewarded;
         uint256 upVotes;
         uint256 downVotes;
     }
 
-    struct Oracle {
-        address payable oracleAddress;
-        bool worldIdVerified;
-        uint256 reputation;
+    mapping(address => bool) public worldIdVerified;
+    mapping(address => bool) public ENSVerified;
+
+    // ID's to opposite ID answer -> request vice versa
+    mapping(uint256 => uint256[]) public requestIdToAnswerIds;
+    mapping(uint256 => uint256) public answerIdToRequestId;
+    // ID's to structs id -> Request/Answer
+    mapping(uint256 => Request) public requestIdToRequest;
+    mapping(uint256 => Answer) public answerIdToAnswer;
+
+    Request[] public requestList;
+
+    Answer[] public answerList;
+
+    constructor() {
+        owner = msg.sender;
     }
 
-    function submitRequest(Request memory _newRequest) public {
-        requestList.push(_newRequest);
+    function submitRequest(
+        string memory _requestText,
+        uint256 _bounty, //USDC
+        uint256 _reputation,
+        uint256 _timeStampDue
+    ) public {
+        Request memory newRequest = Request({
+            id: requestCount,
+            requestText: _requestText,
+            origin: msg.sender,
+            bounty: _bounty,
+            reputation: _reputation,
+            active: true,
+            timeStampPosted: block.timestamp,
+            timeStampDue: _timeStampDue
+        });
+        requestCount++;
+        requestList.push(newRequest);
+        requestIdToRequest[newRequest.id] = requestList[newRequest.id];
+    }
+
+    function postAnswer(uint256 _requestId, string memory _answerText) public {
+        Answer memory newAnswer = Answer({
+            id: answerCount,
+            requestId: _requestId,
+            answerText: _answerText,
+            origin: msg.sender,
+            rewarded: false,
+            upVotes: 0,
+            downVotes: 0
+        });
+        answerCount++;
+        answerList.push(newAnswer);
+        answerIdToAnswer[newAnswer.id] = answerList[newAnswer.id];
+        answerIdToRequestId[newAnswer.id] = _requestId;
+        requestIdToAnswerIds[_requestId].push(newAnswer.id);
     }
 
     function getRequestList() public view returns (Request[] memory) {
         return requestList;
     }
 
-    //Verify worldId with worldId contract
-    function checkVerified(address _address) public view returns (bool) {
+    function getAnswerList() public view returns (Answer[] memory) {
+        return answerList;
+    }
+
+    //worldId verification complete?
+    function checkWorldIdVerified(address _address) public view returns (bool) {
         return worldIdVerified[_address] ? true : false;
     }
 
-    function setVerified(address _address) private {
+    //worldID only modifier needed ***
+    function setWorldIdVerified(address _address) public {
         worldIdVerified[_address] = true;
     }
 
@@ -61,18 +124,10 @@ contract deOracle {
     /// @dev The World ID group ID (always 1)
     uint256 internal immutable groupId = 1;
     /// @dev The World ID instance that will be used for verifying proofs
-    IWorldID internal immutable worldId;
+    IWorldID internal immutable worldId =
+        IWorldID(0xABB70f7F39035586Da57B3c8136035f87AC0d2Aa);
     /// @dev Whether a nullifier hash has been used already. Used to guarantee an action is only performed once by a single person
     mapping(uint256 => bool) internal nullifierHashes;
-
-    event logId(string indexed walletAddress);
-
-    /// @param _worldId The WorldID instance that will verify the proofs
-    /// sets owner to contract deployer
-    constructor(IWorldID _worldId) {
-        worldId = _worldId;
-        owner = msg.sender;
-    }
 
     ///@param signal An arbitrary input from the user, usually the user's wallet address (check README for further details)
     /// @param root The root of the Merkle tree (returned by the JS widget).
@@ -105,7 +160,7 @@ contract deOracle {
 
         // Finally, execute your logic here, for example issue a token, NFT, etc...
         // Make sure to emit some kind of event afterwards!
-        setVerified(signal);
+        setWorldIdVerified(signal);
 
         ///add address to array of verified addresses
     }
@@ -114,27 +169,6 @@ contract deOracle {
         require(msg.sender == address(this));
         _;
     }
-}
-
-pragma solidity ^0.8.10;
-
-interface IWorldID {
-    /// @notice Reverts if the zero-knowledge proof is invalid.
-    /// @param root The of the Merkle tree
-    /// @param groupId The id of the Semaphore group
-    /// @param signalHash A keccak256 hash of the Semaphore signal
-    /// @param nullifierHash The nullifier hash
-    /// @param externalNullifierHash A keccak256 hash of the external nullifier
-    /// @param proof The zero-knowledge proof
-    /// @dev  Note that a double-signaling check is not included here, and should be carried by the caller.
-    function verifyProof(
-        uint256 root,
-        uint256 groupId,
-        uint256 signalHash,
-        uint256 nullifierHash,
-        uint256 externalNullifierHash,
-        uint256[8] calldata proof
-    ) external view;
 }
 
 library ByteHasher {
