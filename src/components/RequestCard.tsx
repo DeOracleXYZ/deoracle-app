@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
 import { useEffect, useState } from "react";
 
 function RequestCard(props: any) {
@@ -8,6 +9,7 @@ function RequestCard(props: any) {
     handleClickAnswer,
     answerFormData,
     updateAnswerFormData,
+    requestIdToAnswerIds,
   } = props;
 
   const {
@@ -30,24 +32,10 @@ function RequestCard(props: any) {
   const [datePosted, setDatePosted] = useState("");
   const [dateDue, setDateDue] = useState("");
   const [showMe, setShowMe] = useState(false);
-  const [requestIdToAnswerIds, setRequestIdToAnswerIds] = useState(0);
-
-
-  // async function getAnswerCount(id: any) {
-  //   const deOracleContract = new ethers.Contract(
-  //     deOracleAddress,
-  //     deOracleABI,
-  //     provider
-  //   );
-  //   setRequestIdToAnswerIds(await deOracleContract.getRequestIdToAnswerIds(id));
-  // }
-
-  
 
   function toggle() {
     setShowMe(!showMe);
   }
-
 
   useEffect(() => {
     active ? setRequestStatus("green") : setRequestStatus("red");
@@ -73,7 +61,6 @@ function RequestCard(props: any) {
     setDatePosted(datePosted);
     setDateDue(dateDue);
   }, [active, origin, timeStampDue, timeStampPosted, id]);
-
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
@@ -155,10 +142,10 @@ function RequestCard(props: any) {
                     return (
                       <div
                         key={answer.id.toNumber()}
-                        className="border-b border-slate-200 flex gap-5 text-sm py-3 items-center"
+                        className="border-b border-slate-200 flex flex-wrap md:flex-nowrap gap-5 text-sm py-3 items-center"
                       >
                         {/* <p><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="inline w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> <b>Accepted Answer</b></p> */}
-                        <p className="justify-self-end font-bold">
+                        <p className="font-bold flex-none">
                           <button className="rounded-l-xl px-3 py-1 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">
                             +{answer.downVotes.toNumber()}
                           </button>
@@ -169,7 +156,7 @@ function RequestCard(props: any) {
                         <p className="text-base md:text-lg font-bold grow">
                           {answer.answerText}
                         </p>
-                        <p className="justify-self-end text-xs text-slate-400">
+                        <p className="text-xs text-slate-400">
                           <b>Answered by:</b>{" "}
                           <a
                             href={
