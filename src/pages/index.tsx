@@ -1,8 +1,8 @@
 import { useEffect, useState, useId } from "react";
-import { Contract, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
-import { VerificationResponse, WidgetProps } from "@worldcoin/id";
+import { ABIEncodedValue, VerificationResponse, WidgetProps } from "@worldcoin/id";
 import dynamic from "next/dynamic";
 import ConnectHeader from "../components/ConnectHeader";
 // import RequestContainer from "../components/RequestContainer";
@@ -14,7 +14,6 @@ import RequestCard from "../components/RequestCard";
 const injected = new InjectedConnector({
   supportedChainIds: [0x13881, 0x7a69],
 });
-
 
 const WorldIDWidget = dynamic<WidgetProps>(
   () => import("@worldcoin/id").then((mod) => mod.WorldIDWidget),
@@ -40,11 +39,10 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const deOracleAddress = "0xbb385025B17F539d2d46Fbb90a4548424718AD26";
-  const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
-  const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
+  const [deOracleContract, setDeOracleContract] = useState();
   const [requestList, setRequestList] = useState();
   const [answerList, setAnswerList] = useState();
+  const [requestIdToAnswerIds, setRequestIdToAnswerIds] = useState(0);
   const [verificationCount, setVerficationCount] = useState(0);
   const [REP, setREP] = useState(0);
   const [answerFormData, setAnswerFormData] = useState({
@@ -58,7 +56,6 @@ export default function Home() {
     dueDate: "",
     dueDateUnix: "",
   });
-
 
   const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
 
@@ -78,28 +75,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if(provider)
-    try{
-      setDeOracleREAD(
-        new ethers.Contract(
-        deOracleAddress,
-        deOracleABI,
-        provider
-      ))
-      setDeOracleWRITE(
-        new ethers.Contract(
-        deOracleAddress,
-        deOracleABI,
-        provider.getSigner()
-      ))
-    } catch(err) {
-      console.log(err)
-    }
-    
-  }, [provider])
-
-
-  useEffect(() => {
     injected
       .isAuthorized()
       .then((isAuthorized) => {
@@ -114,22 +89,28 @@ export default function Home() {
   }, [activateNetwork, networkActive, networkError]);
 
   useEffect(() => {
-    if (provider) {
-
+    if (account) {
       const readContractData = async () => {
-        deOracleWRITE && (
-          setREP((await deOracleWRITE.getREP()).toNumber()),
-          setRequestList(await deOracleWRITE.getRequestList()),
-          setAnswerList(await deOracleWRITE.getAnswerList())
-        )
-        
+        const deOracleContract = new ethers.Contract(
+          deOracleAddress,
+          deOracleABI,
+          provider.getSigner()
+        );
+
+        setREP((await deOracleContract.getREP()).toNumber());
+
+        setRequestList(await deOracleContract.getRequestList());
+        setAnswerList(await deOracleContract.getAnswerList());
       };
       const checkVerified = async () => {
-        deOracleWRITE && (
+        const deOracleContract = new ethers.Contract(
+          deOracleAddress,
+          deOracleABI,
+          provider
+        );
         setWorldIdVerified(
-          await deOracleREAD!.checkWorldIdVerified(account)
-        )
-        )
+          await deOracleContract.checkWorldIdVerified(account)
+        );
       };
 
       const updateVerifiedCount = () => {
@@ -160,8 +141,7 @@ export default function Home() {
           deOracleABI,
           mumbaiProvider
         );
-
-      setRequestList(await deOracleContract.getRequestList());
+        setRequestList(await deOracleContract.getRequestList());
       };
 
       getRequestsRPC().catch(console.error);
@@ -176,8 +156,13 @@ export default function Home() {
         ["uint256[8]"],
         proof
       )[0];
+      const deOracleContract = new ethers.Contract(
+        deOracleAddress,
+        deOracleABI,
+        provider.getSigner()
+      );
   
-      deOracleWRITE!.verifyAndExecute(
+      deOracleContract.verifyAndExecute(
         account,
         merkle_root,
         nullifier_hash,
@@ -185,6 +170,7 @@ export default function Home() {
         { gasLimit: 10000000 }
       );
     }
+    console.log("Proof Print", proofResponse);
   }, [proofResponse])
 
   //ENSVerification
@@ -235,12 +221,19 @@ export default function Home() {
 
   // const deOracleAddress = "0x13879b673b8787b031c263520A92d630b73F8C2F";
   //hardhat TEMP:
+  const deOracleAddress = "0xbb385025B17F539d2d46Fbb90a4548424718AD26";
 
+  
 
   async function sendRequest(request: any) {
     const { requestText, bounty, reputation, dueDateUnix } = request;
+    const deOracleContract = new ethers.Contract(
+      deOracleAddress,
+      deOracleABI,
+      provider.getSigner()
+    );
 
-    deOracleWRITE!.submitRequest(
+    deOracleContract.submitRequest(
       requestText,
       bounty,
       reputation,
@@ -251,8 +244,22 @@ export default function Home() {
   async function sendAnswer(answerData: any) {
     // console.log(answerData, "inside functionnn");
     const { requestId, answerText } = answerData;
+    const deOracleContract = new ethers.Contract(
+      deOracleAddress,
+      deOracleABI,
+      provider.getSigner()
+    );
 
-    deOracleWRITE!.postAnswer(requestId, answerText);
+    deOracleContract.postAnswer(requestId, answerText);
+  }
+
+  async function getAnswerCount(id: any) {
+    const deOracleContract = new ethers.Contract(
+      deOracleAddress,
+      deOracleABI,
+      provider
+    );
+    setRequestIdToAnswerIds(await deOracleContract.getRequestIdToAnswerIds(id));
   }
 
   const requestCardList = () => {
