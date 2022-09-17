@@ -8,7 +8,6 @@ function RequestCreate(props: any) {
   const [dueDate, setDueDate] = useState(
     addDays(new Date(Date.now()), daysAfterDueDate)
   );
-  const [dueDateUnix, setDueDateUnix] = useState(timeToUnix(dueDate));
   const zone = new Date()
     .toLocaleTimeString("en-us", { timeZoneName: "short" })
     .split(" ")[2];
@@ -18,15 +17,10 @@ function RequestCreate(props: any) {
       return {
         ...prevFormData,
         requestOrigin: account,
-        dueDate: dueDate,
-        dueDateUnix: dueDateUnix,
+        dueDate: dueDate
       };
     });
-  }, [account, dueDate, dueDateUnix, updateFormData]);
-
-  useEffect(() => {
-    setDueDateUnix(timeToUnix(dueDate));
-  }, [dueDate]);
+  }, [account, updateFormData]);
 
   function handleChange(event: any) {
     const { name, value, type, checked } = event.target;
@@ -55,6 +49,7 @@ function RequestCreate(props: any) {
 
   function handleSubmit(event: any) {
     event.preventDefault();
+    formData.dueDateUnix = timeToUnix(formData.dueDate)
     handleClick(formData);
   }
 
