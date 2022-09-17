@@ -256,8 +256,17 @@ export default function Home() {
   }
 
   const requestCardList = () => {
-    const requestEls = requestList.map((card: any) => {
-      let i = requestList.indexOf(card);
+
+    const keysDesc = Object.keys(requestList!).sort((a:any, b:any) => {return b-a})
+    const requestListDesc: any = [];
+
+    for (let i=0; i<keysDesc.length; i++) {
+      const obj = requestList![keysDesc[i]];
+      requestListDesc.push(obj);
+    }
+
+    const requestEls = requestListDesc.map((card: any) => {
+      let i = requestListDesc.indexOf(card);
       return (
         <RequestCard
           key={id + i}
@@ -267,7 +276,7 @@ export default function Home() {
           answerFormData={answerFormData}
           updateAnswerFormData={setAnswerFormData}
           answerList={answerList}
-          getAnswerCount={() => getAnswerCount(id.toNumber())}
+          // getAnswerCount={() => getAnswerCount(id.toNumber())}
         />
       );
     });
