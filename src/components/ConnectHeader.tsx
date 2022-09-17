@@ -10,6 +10,9 @@ export default function ConnectHeader(props: any) {
     worldIdVerified,
     ENSVerified,
     WorldIDWidget,
+    requestsCount,
+    answersCount,
+    earnedBountyCount,
     verificationCount,
     REP,
   } = props;
@@ -167,13 +170,13 @@ export default function ConnectHeader(props: any) {
           </p>
           <hr />
           <p className="pt-3 text-slate-500">
-            <b>Earned Bounty:</b> 0 USDC
+            <b>Earned Bounty:</b> {earnedBountyCount} USDC
           </p>
           <p className="py-1 text-slate-500">
-            <b>Answers:</b> 0
+            <b>Answers:</b> {answersCount}
           </p>
           <p className="pb-3 text-slate-500">
-            <b>Requests:</b> 0
+            <b>Requests:</b> {requestsCount}
           </p>
           <hr />
           <p className="pt-3 pb-1">

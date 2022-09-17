@@ -41,9 +41,12 @@ export default function Home() {
   const deOracleAddress = "0xbb385025B17F539d2d46Fbb90a4548424718AD26";
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
-  const [requestList, setRequestList] = useState();
-  const [answerList, setAnswerList] = useState();
+  const [requestList, setRequestList] = useState([] as any[]);
+  const [answerList, setAnswerList] = useState([] as any[]);
   const [verificationCount, setVerficationCount] = useState(0);
+  const [requestsCount, setRequestsCount] = useState(0);
+  const [answersCount, setAnswersCount] = useState(0);
+  const [earnedBountyCount, setEarnedBountyCount] = useState(0);
   const [REP, setREP] = useState(0);
   const [answerFormData, setAnswerFormData] = useState({
     answerText: "",
@@ -164,6 +167,38 @@ export default function Home() {
   }, [ENSVerified, balance, worldIdVerified, deOracleWRITE, deOracleWRITE]);
 
   useEffect(() => {
+    const updateRequestsCount = () => {
+      if (requestList) {
+        let requestCount = 0;
+        for (let i=0; i<Object.keys(requestList!).length; i++) {
+          (requestList[i].origin === account) && requestCount++;
+        }
+        setRequestsCount(requestCount)
+      }
+    };
+
+    const updateAnswersCount = () => {
+      if (answerList) {
+        let answerCount = 0;
+        for (let i=0; i<Object.keys(answerList!).length; i++) {
+          (answerList[i].origin === account) && answerCount++;
+        }
+        setAnswersCount(answerCount)
+      }
+    };
+
+    const updateEarnedBountyCount = () => {
+      // TODO: logic
+      setEarnedBountyCount(0)
+    };
+
+    updateRequestsCount();
+    updateAnswersCount();
+    updateEarnedBountyCount();
+  }, [account, requestList, answerList]);
+
+
+  useEffect(() => {
     proofResponse && sendProof();
     async function sendProof() {
       const { merkle_root, nullifier_hash, proof }  = proofResponse!; 
@@ -252,7 +287,7 @@ export default function Home() {
 
   const requestCardList = () => {
 
-    const keysDesc = Object.keys(requestList!).sort((a:any, b:any) => {return b-a})
+    const keysDesc: any = Object.keys(requestList!).sort((a:any, b:any) => {return b-a})
     const requestListDesc: any = [];
 
     for (let i=0; i<keysDesc.length; i++) {
@@ -291,6 +326,9 @@ export default function Home() {
         WorldIDWidget={<WorldIDWidget {...widgetProps} />}
         ENSVerified={ENSVerified}
         REP={REP}
+        requestsCount={requestsCount}
+        answersCount={answersCount} 
+        earnedBountyCount={earnedBountyCount}
         verificationCount={verificationCount}
         handleClickConnect={() => connect()}
       />
