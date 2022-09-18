@@ -23,10 +23,6 @@ function RequestCard(props: any) {
     timeStampPosted,
   } = requestData;
 
-
-// console.log( requestData) 
-  // console.log(answerList)
-
   const [requestStatus, setRequestStatus] = useState("Inactive");
   const [shortWallet, setShortWallet] = useState("");
   const [datePosted, setDatePosted] = useState("");
