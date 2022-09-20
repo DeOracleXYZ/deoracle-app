@@ -104,22 +104,22 @@ function RequestCard(props: any) {
   const upVoteAnswer = (event: any) => {
     console.log("upvote")
     console.log(event.currentTarget.name)
-    // event.currentTarget.name &&
-    //   deOracleWRITE.upVote(event.currentTarget.name)
+     event.currentTarget.name &&
+       deOracleWRITE.upVote(event.currentTarget.name)
   };
 
   const downVoteAnswer = (event: any) => {
     console.log("downvote")
     console.log(event.currentTarget.name)
-    // event.currentTarget.name &&
-    //   deOracleWRITE.downVote(event.currentTarget.name)
+     event.currentTarget.name &&
+       deOracleWRITE.downVote(event.currentTarget.name)
   };
 
   const acceptAnswer = (event: any) => {
     console.log("accept")
     console.log(event.currentTarget.name)
-    // event.currentTarget.name &&
-    //   deOracleWRITE.selectAnswer(event.currentTarget.name)
+     event.currentTarget.name &&
+       deOracleWRITE.selectAnswer(event.currentTarget.name)
   };
 
   return (
