@@ -199,7 +199,7 @@ export default function Home() {
 
     const updateEarnedBountyCount = async () => {
       deOracleWRITE &&
-        setEarnedBountyCount( ethers.utils.formatUnits((await deOracleWRITE.getBountyEarned()), 18) )
+        setEarnedBountyCount( parseInt(ethers.utils.formatUnits((await deOracleWRITE.getBountyEarned()), 18)).toFixed(2) )
     };
 
     updateRequestsCount();
