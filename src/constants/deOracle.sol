@@ -107,7 +107,6 @@ contract deOracle is IUSDC {
     }
 
     function postAnswer(uint256 _requestId, string memory _answerText) public {
-        //not tested yet
         require(
             msg.sender != requestList[_requestId].origin,
             "You cant answer your own request."
@@ -116,7 +115,6 @@ contract deOracle is IUSDC {
             requestList[_requestId].active == true,
             "Request already answered."
         );
-        // TODO this does not work currently
         require(
             requestIdToAddressToAnswered[_requestId][msg.sender] == false,
             "You've already answered this request"
@@ -133,10 +131,10 @@ contract deOracle is IUSDC {
         answerCount++;
         answerList.push(newAnswer);
         answerIdToAnswer[newAnswer.id] = answerList[newAnswer.id];
-        answerIdToRequestId[newAnswer.id] = _requestId;
+        answerIdToRequestId[newAnswer.id] = newAnswer.requestId;
         requestIdToAnswerIds[_requestId].push(newAnswer.id);
-        //TODO currently not working
-        requestIdToAddressToAnswered[_requestId][msg.sender] == true;
+
+        requestIdToAddressToAnswered[_requestId][msg.sender] = true;
         addREP(msg.sender, 5);
     }
 
