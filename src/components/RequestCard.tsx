@@ -73,12 +73,12 @@ function RequestCard(props: any) {
 
 
   useEffect(() => {
-
+ 
   const getAnswerIds = async () => {
     setAnswerIds(await deOracleREAD.getRequestIdToAnswerIds(id.toNumber()))
   }
 
-  provider && requestData && 
+  deOracleREAD && 
     getAnswerIds()
 
   },[provider])
