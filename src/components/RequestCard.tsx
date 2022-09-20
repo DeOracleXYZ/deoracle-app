@@ -234,9 +234,7 @@ function RequestCard(props: any) {
                             target="_blank"
                             rel="noreferrer"
                           >
-                            {answer.origin.substring(0, 6) +
-                              "..." +
-                              answer.origin.slice(-4)}
+                            {shortWallet}
                           </a>
                         </p>
                       </div>
