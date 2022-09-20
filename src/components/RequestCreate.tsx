@@ -14,6 +14,7 @@ function RequestCreate(props: any) {
   const [showApprove, setShowApprove] = useState(false);
   const [showSubmit, setShowSubmit] = useState(true);
   const [showLoading, setShowLoading] = useState(false);
+  const [approved, setApproved] = useState(false);
 
 
   const zone = new Date()
@@ -46,6 +47,7 @@ function RequestCreate(props: any) {
         // show Create Request button
         setShowApprove(false);
         setShowLoading(false)
+        setApproved(true);
         console.log("Tx success:", txReceipt.status === 1)
       
 
@@ -236,7 +238,7 @@ function RequestCreate(props: any) {
 
                 <button type="button" onClick={approveUSDC} className={`${showApprove ? "" : "hidden"}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700 rounded-lg mr-3 mb-3"} disabled={showLoading}>Approve {formData.bounty} USDC</button>
 
-                <button type="submit" className={`${showSubmit ? "" : "hidden"}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full rounded-lg border-purple-400 bg-gradient-to-r to-purple via-blue from-purple-200 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60 mb-3 mr-3"} disabled={showApprove}>Create Request</button>
+                <button type="submit" className={`${showSubmit ? "" : "hidden "}` + `${approved ? "hidden " : ""}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full rounded-lg border-purple-400 bg-gradient-to-r to-purple via-blue from-purple-200 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60 mb-3 mr-3"} disabled={showApprove}>Create Request</button>
 
                 <div className={`${showLoading ? "" : "hidden"}` + " inline no-wrap"}>
                   <svg className="animate-spin ml-1 mr-3 h-5 w-5 text-purple-400 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
