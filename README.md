@@ -1,28 +1,26 @@
 # deOracle.xyz
 
-Decentralized P2P oracles platform to bring real-world data on-chain with a reputation system for on-chain identity.
-
+Decentralized P2P oracles for real-world data and on-chain reputation system.
 . 
 
 
 ## Tech
 
-- **Storage:** IPFS, Filecoin, Spheron
+- **Digital Identity:** Worldcoin (PPPoPP), ENS, Lens
 - **Blockchains:** Polygon, Optimism
-- **Digital Identity:** Worldcoin (PPPoPP), ENS, Unstoppable Domains, Lens
-- **Indexing:** The Graph
-- **Crosschain:** Abacus
-- **Front-end:** Next.js, Tailwind CSS, Ethers.js, 
+- **Storage:** IPFS, Filecoin, Spheron
+- **Crosschain:** Abacus / Hyperlane
+- **Front-end:** Next.js, Tailwind CSS, Ethers.js
 
 .
 
 ## Features:
 
-- Connect wallet with Metamask on Mumbai or Goerli.
-- Verify identity with World ID, ENS and/or Lens ID.
-- Post request with bounty in USDC for oracles to answer.
+- Connect wallet with Metamask on Mumbai or Goerli
+- Verify identity with Worldcoin ID, ENS and Lens Profile
+- Post request with bounty in USDC for oracles to answer
 - Oracles answer the requests to earn bounties and reputation
-- Community votes on oracles via upvotes and downvotes
+- Community votes on oracle answers (upvotes, downvotes)
 
 
 .

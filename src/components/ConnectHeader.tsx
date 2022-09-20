@@ -97,7 +97,7 @@ export default function ConnectHeader(props: any) {
               }
               onClick={toggle}
             >
-              <div className="text-l flex flex-col">
+              <div className="text-right flex flex-col">
                 <p>
                   <span className="text-sm md:text-xl">
                     <b>{shortWallet}</b>{" "}
@@ -170,6 +170,38 @@ export default function ConnectHeader(props: any) {
             </a>
           </p>
           <hr />
+          <p className="pt-3 pb-4">
+            <b>Verification ({verificationCount}/2):</b>
+          </p>
+          <div className="flex gap-3 pb-3">
+            <Image
+              className={`${worldIdCondition}` + " hover:opacity-50"}
+              onClick={() =>
+                console.log(
+                  worldIdVerified
+                    ? "World ID verified."
+                    : "Not World ID verified."
+                )
+              }
+              src="/world-id.svg"
+              height="30"
+              width="30"
+              alt="World ID verified"
+            />
+
+            <Image
+              className={`${ENSCondition}` + " hover:opacity-50"}
+              onClick={() =>
+                console.log(ENSVerified ? "ENS verified." : "Not ENS verified.")
+              }
+              src="/ens.svg"
+              height="30"
+              width="30"
+              alt="ENS verified"
+            />
+            {!worldIdVerified && WorldIDWidget}
+          </div>
+          <hr />
           <p className="pt-3 text-slate-500">
             <b>Earned Bounty:</b> {earnedBountyCount} USDC
           </p>
@@ -183,7 +215,7 @@ export default function ConnectHeader(props: any) {
           <p className="pt-3 pb-1">
             <b>Network:</b>{" "}
           </p>
-          <div className="flex gap-2 justify-start pb-3">
+          <div className="flex gap-2 justify-start">
             <b>
               <button
                 className="text-purple-500 hover:text-purple-400"
@@ -199,38 +231,6 @@ export default function ConnectHeader(props: any) {
                 Goerli
               </button>
             </b>
-          </div>
-          <hr />
-          <p className="pt-3 pb-4">
-            <b>Verification ({verificationCount}/2):</b>
-          </p>
-          <div className="flex gap-3">
-            <Image
-              className={worldIdCondition}
-              onClick={() =>
-                console.log(
-                  worldIdVerified
-                    ? "World ID verified."
-                    : "Not World ID verified."
-                )
-              }
-              src="/world-id.svg"
-              height="30"
-              width="30"
-              alt="World ID verified"
-            />
-
-            <Image
-              className={ENSCondition}
-              onClick={() =>
-                console.log(ENSVerified ? "ENS verified." : "Not ENS verified.")
-              }
-              src="/ens.svg"
-              height="30"
-              width="30"
-              alt="ENS verified"
-            />
-            {!worldIdVerified && WorldIDWidget}
           </div>
           {/* <hr />
           <p className="pt-5">

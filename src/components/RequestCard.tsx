@@ -145,7 +145,7 @@ function RequestCard(props: any) {
           <div className="request-info flex flex-nowrap overflow-scroll gap-5 justify-between text-purple-500 text-sm px-5 pt-2 pb-3">
             <p className="whitespace-nowrap">
               <b>Bounty:</b>
-              <br /> {ethers.utils.formatUnits(bounty, 18)} USDC
+              <br /> {parseInt(ethers.utils.formatUnits(bounty, 18)).toFixed(2)} USDC
             </p>
             <p className="whitespace-nowrap">
               <b>Req. Reputation:</b>
@@ -214,7 +214,7 @@ function RequestCard(props: any) {
                           </button>
                         </p>
 
-                        <p className={`${answer.rewarded ? "" : "hidden"}` + " mt-2 text-blue-500 text-xs text-center"}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 inline-block align-middle" style={{marginTop: "-1.5px"}}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> Accepted Answer</p>
+                        <p className={`${answer.rewarded ? "" : "opacity-0"}` + " mt-2 text-blue-500 text-xs text-center"}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 inline-block align-middle" style={{marginTop: "-1.5px"}}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> Accepted Answer</p>
 
                         </div>
                         <p className="text-base md:text-lg font-bold grow">

@@ -10,7 +10,11 @@ function RequestCreate(props: any) {
   const [dueDate, setDueDate] = useState(
     addDays(new Date(Date.now()), daysAfterDueDate)
   );
-  const[usdcContract, setUsdcContract] = useState(null as Contract | null);
+  const [usdcContract, setUsdcContract] = useState(null as Contract | null);
+  const [showApprove, setShowApprove] = useState(false);
+  const [showSubmit, setShowSubmit] = useState(true);
+  const [showLoading, setShowLoading] = useState(false);
+
 
   const zone = new Date()
     .toLocaleTimeString("en-us", { timeZoneName: "short" })
@@ -21,12 +25,21 @@ function RequestCreate(props: any) {
     setUsdcContract(new ethers.Contract('0xe11A86849d99F524cAC3E7A0Ec1241828e332C62', erc20ABI ,provider.getSigner()));
   }, [provider]);
 
+
+  useEffect(() => {
+    formData.bounty > 0
+      ? setShowApprove(true)
+      : setShowApprove(false)
+
+  }, [formData.bounty]);
+
   async function approveUSDC() {
     if (usdcContract){
       let txReceipt = await usdcContract.approve(deOracleAddress, ethers.utils.parseUnits(formData.bounty, 18))
       txReceipt = await txReceipt.wait();
       //TODOALEX
       // start spinner
+
       if(txReceipt.status === 1) {
         // stop spinner
         // show Create Request button
@@ -47,6 +60,7 @@ function RequestCreate(props: any) {
       return {
         ...prevFormData,
         requestOrigin: account,
+        dueDate: dueDate,
       };
     });
   }, [account, updateFormData]);
@@ -179,7 +193,6 @@ function RequestCreate(props: any) {
                   minLength={1}
                   className="inline w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5"
                 />
-                <button type="button" className="inline" onClick={approveUSDC}>Approve</button>
               </div>
 
               <div className="col-1">
@@ -208,7 +221,7 @@ function RequestCreate(props: any) {
                   <input
                     type="datetime-local"
                     name="dueDate"
-                    value={dueDate}
+                    value={formData.dueDate}
                     onChange={handleChange}
                     required
                     className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5"
@@ -217,12 +230,19 @@ function RequestCreate(props: any) {
               </div>
 
               <div className="col-span-2">
-                <button
-                  type="submit"
-                  className="border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700 rounded-lg"
-                >
-                  Create Request
-                </button>
+
+                <button type="button" onClick={approveUSDC} className={`${showApprove ? "" : "hidden"}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700 rounded-lg mr-3"}>Approve {formData.bounty} USDC</button>
+
+                <button type="submit" className={`${showSubmit ? "" : "hidden"}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700 rounded-lg disabled:opacity-75"} disabled={showApprove}>Create Request</button>
+
+                <div className={`${!showLoading ? "" : "hidden"}` + " inline ml-3"}>
+                  <svg className="animate-spin ml-1 mr-3 h-5 w-5 text-purple-400 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span className="text-purple-600">Processing...</span>
+                </div>
+
               </div>
             </div>
           </form>
