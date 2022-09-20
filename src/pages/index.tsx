@@ -301,6 +301,7 @@ export default function Home() {
           deOracleWRITE={deOracleWRITE}
           deOracleREAD={deOracleREAD}
           account={account}
+          ENSName={ENSName}
         />
       );
     });

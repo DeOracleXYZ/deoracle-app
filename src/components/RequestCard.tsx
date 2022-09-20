@@ -13,6 +13,7 @@ function RequestCard(props: any) {
     deOracleWRITE,
     deOracleREAD,
     account,
+    ENSName,
   } = props;
 
   const {
@@ -44,14 +45,10 @@ function RequestCard(props: any) {
     active ? setRequestStatus("green") : setRequestStatus("red");
     
     if(origin) {
+      ENSName ? setShortWallet(ENSName) :
       setShortWallet(origin.substring(0, 6) + "..." + origin.slice(-4))
 
-      try{
-        deOracleWRITE.addressToENSVerified
-      } catch (err) {
-        console.log(err)
-      }
-    }
+    }   
 
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -75,7 +72,7 @@ function RequestCard(props: any) {
 
     setDatePosted(datePosted)
     setDateDue(dateDue)
-  }, [active, origin, timeStampDue, timeStampPosted, id, account,answerList]);
+  }, [active, origin, timeStampDue, timeStampPosted, id, account,answerList, ENSName]);
 
 
   useEffect(() => {
