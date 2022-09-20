@@ -235,7 +235,7 @@ function RequestCreate(props: any) {
 
               <div className="col-span-2">
 
-                <button type="button" onClick={approveUSDC} className={`${showApprove ? "" : "hidden"}` + `${approved ? "hidden " : ""}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700 rounded-lg mr-3 mb-3"} disabled={showLoading}>Approve {formData.bounty} USDC</button>
+                <button type="button" onClick={approveUSDC} className={`${showApprove ? "" : "hidden "}` + `${approved ? "hidden " : ""}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700 rounded-lg mr-3 mb-3"} disabled={showLoading}>Approve {formData.bounty} USDC</button>
 
                 <button type="submit" className={`${showSubmit ? "" : "hidden"}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full rounded-lg border-purple-400 bg-gradient-to-r to-purple via-blue from-purple-200 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60 mb-3 mr-3"} disabled={showApprove}>Create Request</button>
 
