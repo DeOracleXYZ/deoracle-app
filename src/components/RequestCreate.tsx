@@ -12,7 +12,7 @@ function RequestCreate(props: any) {
   );
   const [usdcContract, setUsdcContract] = useState(null as Contract | null);
   const [showApprove, setShowApprove] = useState(false);
-  const [showSubmit, setShowSubmit] = useState(true);
+  const [disableSubmit, setDisableSubmit] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
   const [approved, setApproved] = useState(false);
   const [formData, setFormData] = useState({
@@ -113,18 +113,35 @@ function RequestCreate(props: any) {
       reputation,
       dueDateUnix
     )
-    //TODOALEX
-      //// start spinner
+    setShowLoading(true)
+    setDisableSubmit(true)
     txReceipt = await txReceipt.wait();
       
      if(txReceipt.status === 1) {
-        // stop spinner
+        setShowLoading(false);
+        setDisableSubmit(false)
+
+        setShowMe(false)
+        setFormData({
+          requestText: "",
+          bounty: 0,
+          reputation: 0,
+          dueDate: "",
+          dueDateUnix: 0,
+        });
+
+        refreshPage();
+
         // show Create Request button
         console.log("Tx success:", txReceipt.status === 1)
       
       } else {
         console.log("Approve tx Failed, check Metamask and try again.")
       }
+  }
+
+  function refreshPage() {
+    window.location.reload();
   }
 
   function handleSubmit(event: any) {
@@ -268,9 +285,9 @@ function RequestCreate(props: any) {
 
               <div className="col-span-2">
 
-                <button type="button" onClick={approveUSDC} className={`${showApprove ? "" : "hidden "}` + `${approved ? "hidden " : ""}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700 rounded-lg disabled:opacity-60 mr-3 my-3"} disabled={showLoading}>Approve {formData.bounty} USDC</button>
+                <button type="button" onClick={approveUSDC} className={`${showApprove ? "" : "hidden "}` + `${approved ? "hidden " : ""}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full rounded-lg border-purple-400 bg-gradient-to-r to-purple via-blue from-purple-200 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60 my-3 mr-3"} disabled={showLoading}>Approve {formData.bounty} USDC</button>
 
-                <button type="submit" className={`${showSubmit ? "" : "hidden"}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full rounded-lg border-purple-400 bg-gradient-to-r to-purple via-blue from-purple-200 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60 my-3 mr-3"} disabled={showApprove}>Create Request</button>
+                <button type="submit" className="border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full rounded-lg border-purple-400 bg-gradient-to-r to-purple via-blue from-purple-200 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60 my-3 mr-3" disabled={showApprove || disableSubmit}>Create Request</button>
 
                 <div className={`${showLoading ? "" : "hidden"}` + " inline whitespace-nowrap"}>
                   <svg className="animate-spin ml-1 mr-3 h-5 w-5 text-purple-400 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
