@@ -39,7 +39,7 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const deOracleAddress = "0xbb385025B17F539d2d46Fbb90a4548424718AD26";
+  const deOracleAddress = "0xd43d391d01B7330235403f0C8e924e9EdBa2E35a";
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
   const [requestList, setRequestList] = useState([] as any[]);
@@ -270,8 +270,7 @@ export default function Home() {
 
   //worldcoin proof addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
 
-  // const deOracleAddress = "0x13879b673b8787b031c263520A92d630b73F8C2F";
-  //hardhat TEMP:
+
 
   async function sendRequest(request: any) {
     const { requestText, bounty, reputation, dueDateUnix } = request;
