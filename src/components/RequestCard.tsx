@@ -78,7 +78,7 @@ function RequestCard(props: any) {
     setAnswerIds(await deOracleREAD.getRequestIdToAnswerIds(id.toNumber()))
   }
 
-  provider &&
+  provider && requestData && 
     getAnswerIds()
 
   },[provider])

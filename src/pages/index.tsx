@@ -192,7 +192,8 @@ export default function Home() {
     };
 
     const updateEarnedBountyCount = () => {
-      // setEarnedBountyCount( deOracleREAD.getBountyEarned().toNumber() )
+      deOracleREAD &&
+        setEarnedBountyCount( deOracleREAD.getBountyEarned().toNumber() )
     };
 
     updateRequestsCount();
