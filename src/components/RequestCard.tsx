@@ -9,7 +9,6 @@ function RequestCard(props: any) {
     handleClickAnswer,
     answerFormData,
     updateAnswerFormData,
-    requestIdToAnswerIds,
   } = props;
 
   const {

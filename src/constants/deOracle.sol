@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.14;
 
 interface IWorldID {
@@ -12,14 +13,28 @@ interface IWorldID {
     ) external view;
 }
 
-contract deOracle {
-    using ByteHasher for bytes;
+interface IUSDC {
+    function transfer(address dst, uint wad) external returns (bool);
 
+    function transferFrom(
+        address src,
+        address dst,
+        uint wad
+    ) external returns (bool);
+
+    function balanceOf(address guy) external view returns (uint);
+
+    function approve(address spender, uint256 amount) external returns (bool);
+}
+
+contract deOracle is IUSDC {
+    using ByteHasher for bytes;
     address public owner;
 
     //requestIdCounter AnswerIdCounter
     uint256 requestCount = 0;
     uint256 answerCount = 0;
+    IUSDC private usdcToken = IUSDC(0xe11A86849d99F524cAC3E7A0Ec1241828e332C62);
 
     struct Request {
         uint256 id;
@@ -43,6 +58,12 @@ contract deOracle {
 
     mapping(address => bool) public worldIdVerified;
     mapping(address => bool) public ENSVerified;
+    mapping(address => uint256) public addressToREP;
+
+    mapping(address => uint256) public addressToBountyEarned;
+
+    mapping(uint256 => mapping(address => bool))
+        public answerIdToAddressToVoted;
 
     // ID's to opposite ID answer -> request vice versa
     mapping(uint256 => uint256[]) public requestIdToAnswerIds;
@@ -52,7 +73,6 @@ contract deOracle {
     mapping(uint256 => Answer) public answerIdToAnswer;
 
     Request[] public requestList;
-
     Answer[] public answerList;
 
     constructor() {
@@ -65,6 +85,9 @@ contract deOracle {
         uint256 _reputation,
         uint256 _timeStampDue
     ) public {
+        if (_bounty > 0) {
+            usdcToken.transfer(address(this), _bounty);
+        }
         Request memory newRequest = Request({
             id: requestCount,
             requestText: _requestText,
@@ -78,6 +101,7 @@ contract deOracle {
         requestCount++;
         requestList.push(newRequest);
         requestIdToRequest[newRequest.id] = requestList[newRequest.id];
+        addREP(msg.sender, 10);
     }
 
     function postAnswer(uint256 _requestId, string memory _answerText) public {
@@ -95,6 +119,16 @@ contract deOracle {
         answerIdToAnswer[newAnswer.id] = answerList[newAnswer.id];
         answerIdToRequestId[newAnswer.id] = _requestId;
         requestIdToAnswerIds[_requestId].push(newAnswer.id);
+
+        addREP(msg.sender, 5);
+    }
+
+    function addREP(address _address, uint256 _amount) private {
+        addressToREP[_address] += _amount;
+    }
+
+    function deductREP(address _address, uint256 _amount) private {
+        addressToREP[_address] -= _amount;
     }
 
     function getRequestList() public view returns (Request[] memory) {
@@ -105,6 +139,22 @@ contract deOracle {
         return answerList;
     }
 
+    function getRequestIdToAnswerIds(uint256 _requestId)
+        public
+        view
+        returns (uint256[] memory)
+    {
+        return requestIdToAnswerIds[_requestId];
+    }
+
+    function getREP() public view returns (uint256) {
+        return addressToREP[msg.sender];
+    }
+
+    function getBountyEarned() public view returns (uint256) {
+        return addressToBountyEarned[msg.sender];
+    }
+
     //worldId verification complete?
     function checkWorldIdVerified(address _address) public view returns (bool) {
         return worldIdVerified[_address] ? true : false;
@@ -113,10 +163,64 @@ contract deOracle {
     //worldID only modifier needed ***
     function setWorldIdVerified(address _address) public {
         worldIdVerified[_address] = true;
+        addREP(_address, 100);
     }
 
     function setENSVerified(address _address) public {
         ENSVerified[_address] = true;
+        addREP(_address, 50);
+    }
+
+    function upVote(uint256 _answerId) public eligibleVoter(_answerId, 50) {
+        Answer storage answerPointer = answerIdToAnswer[_answerId];
+        answerPointer.upVotes += 1;
+        addREP(msg.sender, 1);
+        addREP(answerPointer.origin, 3);
+    }
+
+    function downVote(uint256 _answerId) public eligibleVoter(_answerId, 50) {
+        Answer storage answerPointer = answerIdToAnswer[_answerId];
+        answerPointer.downVotes += 1;
+        addREP(msg.sender, 1);
+        deductREP(answerPointer.origin, 3);
+    }
+
+    function selectAnswer(uint256 _answerId) public {
+        Request storage requestPointer = requestIdToRequest[
+            answerIdToRequestId[_answerId]
+        ];
+        require(requestPointer.active == true);
+        require(msg.sender == requestPointer.origin);
+        Answer storage answerPointer = answerIdToAnswer[_answerId];
+        addREP(answerPointer.origin, 15);
+        addREP(msg.sender, 5);
+        if (requestPointer.bounty > 0) {
+            usdcToken.transfer(answerPointer.origin, requestPointer.bounty);
+        }
+        requestPointer.active = false;
+        answerPointer.rewarded = true;
+    }
+
+    //////////////////BOUNTY / ERC20 ///////////////////////
+    ///////////////////////////////////////////////////////
+    function approve(address _spender, uint256 _amount) public returns (bool) {
+        return usdcToken.approve(_spender, _amount);
+    }
+
+    function balanceOf(address _address) public view returns (uint) {
+        return usdcToken.balanceOf(_address);
+    }
+
+    function transfer(address _to, uint _amount) public returns (bool) {
+        return usdcToken.transfer(_to, _amount);
+    }
+
+    function transferFrom(
+        address _from,
+        address to,
+        uint _amount
+    ) public returns (bool) {
+        return usdcToken.transferFrom(_from, to, _amount);
     }
 
     /// @notice Thrown when attempting to reuse a nullifier
@@ -167,6 +271,18 @@ contract deOracle {
 
     modifier onlyOwner() {
         require(msg.sender == address(this));
+        _;
+    }
+
+    //has not voted, and REP requirement.  Also sets voted to TRUE
+    modifier eligibleVoter(uint256 _answerId, uint256 _minREP) {
+        require(
+            msg.sender !=
+                requestIdToRequest[answerIdToRequestId[_answerId]].origin
+        );
+        require(answerIdToAddressToVoted[_answerId][msg.sender] == false);
+        require(addressToREP[msg.sender] >= _minREP);
+        answerIdToAddressToVoted[_answerId][msg.sender] = true;
         _;
     }
 }
