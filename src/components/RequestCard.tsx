@@ -9,7 +9,10 @@ function RequestCard(props: any) {
     handleClickAnswer,
     answerFormData,
     updateAnswerFormData,
-    requestIdToAnswerIds,
+    provider,
+    deOracleWRITE,
+    deOracleREAD,
+    account,
   } = props;
 
   const {
@@ -23,11 +26,15 @@ function RequestCard(props: any) {
     timeStampPosted,
   } = requestData;
 
+  // answerList && console.log(answerList)
+
   const [requestStatus, setRequestStatus] = useState("Inactive");
   const [shortWallet, setShortWallet] = useState("");
   const [datePosted, setDatePosted] = useState("");
   const [dateDue, setDateDue] = useState("");
   const [showMe, setShowMe] = useState(false);
+  const [requestOwner, setRequestOwner] = useState(false);
+  const [answerIds, setAnswerIds] = useState([]);
 
   function toggle() {
     setShowMe(!showMe);
@@ -54,9 +61,29 @@ function RequestCard(props: any) {
       timeZone: timezone,
     }).format(new Date(timeStampDue.toNumber() * 1000));
 
-    setDatePosted(datePosted);
-    setDateDue(dateDue);
-  }, [active, origin, timeStampDue, timeStampPosted, id]);
+  account && origin
+    ? (origin == account) 
+      ? setRequestOwner(true) 
+      : setRequestOwner(false)
+    : setRequestOwner(false)
+
+    setDatePosted(datePosted)
+    setDateDue(dateDue)
+  }, [active, origin, timeStampDue, timeStampPosted, id, account,answerList]);
+
+
+  useEffect(() => {
+
+  const getAnswerIds = async () => {
+    setAnswerIds(await deOracleREAD.getRequestIdToAnswerIds(id.toNumber()))
+  }
+
+  provider &&
+    getAnswerIds()
+
+  },[provider])
+
+
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
@@ -71,6 +98,28 @@ function RequestCard(props: any) {
         requestId: requestId,
       };
     });
+  };
+
+
+  const upVoteAnswer = (event: any) => {
+    console.log("upvote")
+    console.log(event.currentTarget.name)
+    // event.currentTarget.name &&
+    //   deOracleWRITE.upVote(event.currentTarget.name)
+  };
+
+  const downVoteAnswer = (event: any) => {
+    console.log("downvote")
+    console.log(event.currentTarget.name)
+    // event.currentTarget.name &&
+    //   deOracleWRITE.downVote(event.currentTarget.name)
+  };
+
+  const acceptAnswer = (event: any) => {
+    console.log("accept")
+    console.log(event.currentTarget.name)
+    // event.currentTarget.name &&
+    //   deOracleWRITE.selectAnswer(event.currentTarget.name)
   };
 
   return (
@@ -140,19 +189,26 @@ function RequestCard(props: any) {
                         key={answer.id.toNumber()}
                         className="border-b border-slate-200 flex flex-wrap md:flex-nowrap gap-5 text-sm py-3 items-center"
                       >
-                        {/* <p><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="inline w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> <b>Accepted Answer</b></p> */}
-                        <p className="font-bold flex-none">
-                          <button className="rounded-l-xl px-3 py-1 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">
-                            +{answer.downVotes.toNumber()}
+                        <div className="flex-none text-center font-bold">
+                        <p className="">
+                          <button name={answer.id.toNumber()} onClick={upVoteAnswer} className="rounded-l-xl px-3 py-1 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">
+                            +{answer.upVotes.toNumber()}
                           </button>
-                          <button className="rounded-r-xl px-3 py-1 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">
-                            -{answer.upVotes.toNumber()}
+                          <button name={answer.id.toNumber()} onClick={acceptAnswer} className={`${requestOwner ? " " : "hidden "}` + `${answer.rewarded ? "hidden " : " "}` + " px-3 py-1 border-2 border-blue-400 text-blue-400 hover:border-blue-500 hover:text-blue-500"} title="Accept Answer">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 inline-block"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          </button>
+                          <button name={answer.id.toNumber()} onClick={downVoteAnswer} className="rounded-r-xl px-3 py-1 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">
+                            -{answer.downVotes.toNumber()}
                           </button>
                         </p>
+
+                        <p className={`${answer.rewarded ? "" : "hidden"}` + " mt-2 text-blue-500 text-xs text-center"}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 inline-block align-middle" style={{marginTop: "-1.5px"}}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> Accepted Answer</p>
+
+                        </div>
                         <p className="text-base md:text-lg font-bold grow">
                           {answer.answerText}
                         </p>
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-slate-400 text-right">
                           <b>Answered by:</b>{" "}
                           <a
                             href={
@@ -204,8 +260,7 @@ function RequestCard(props: any) {
               >
                 <span className={`${showMe ? "hidden" : ""}`}>Show</span>{" "}
                 <span className={`${!showMe ? "hidden" : ""}`}>Hide</span>{" "}
-                answers
-                {/* answers (0) */}
+                answers ({answerIds.length})
               </button>
             </div>
           </div>

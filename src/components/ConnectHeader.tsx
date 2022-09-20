@@ -204,7 +204,7 @@ export default function ConnectHeader(props: any) {
           <p className="pt-3 pb-4">
             <b>Verification ({verificationCount}/2):</b>
           </p>
-          <div className="flex gap-3 pb-5">
+          <div className="flex gap-3">
             <Image
               className={worldIdCondition}
               onClick={() =>
@@ -232,14 +232,14 @@ export default function ConnectHeader(props: any) {
             />
             {!worldIdVerified && WorldIDWidget}
           </div>
-          <hr />
+          {/* <hr />
           <p className="pt-5">
             <b>
               <button onClick={() => {handleClickDisconnect(); toggle()}} className="text-red-500 hover:text-red-400">
                 Disconnect
               </button>
             </b>
-          </p>
+          </p> */}
         </div>
       </div>
     </>
