@@ -284,7 +284,7 @@ function RequestCreate(props: any) {
   function handleSubmit(event: any) {
     event.preventDefault();
     formData.dueDateUnix = timeToUnix(formData.dueDate)
-    formData.bounty = ethers.utils.parseUnits(formData.bounty, 18)
+    formData.bounty = ethers.utils.parseUnits(formData.bounty.toString(), 18)
     handleClick(formData);
   }
 
