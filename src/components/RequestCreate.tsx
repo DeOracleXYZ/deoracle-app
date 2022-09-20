@@ -39,13 +39,12 @@ function RequestCreate(props: any) {
       let txReceipt = await usdcContract.approve(deOracleAddress, ethers.utils.parseUnits(formData.bounty, 18))
       setShowLoading(true)
       txReceipt = await txReceipt.wait();
-      setShowLoading(true)
+
 
       if(txReceipt.status === 1) {
-        setShowLoading(false)
+        setShowLoading(false);
         // show Create Request button
         setShowApprove(false);
-        setShowLoading(false)
         console.log("Tx success:", txReceipt.status === 1)
       
 
