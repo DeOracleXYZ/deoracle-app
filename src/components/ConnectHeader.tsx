@@ -29,9 +29,13 @@ export default function ConnectHeader(props: any) {
   const [shortWallet, setShortWallet] = useState("");
 
   useEffect(() => {
-    account &&
+    if(account) {
+      ENSName ? setShortWallet(ENSName) :
       setShortWallet(account.substring(0, 6) + "..." + account.slice(-4));
-  }, [setShortWallet, account]);
+    }
+      
+    
+  }, [setShortWallet, account, ENSName]);
 
   const switchNetwork = async (chain: any) => {
     try {
@@ -202,7 +206,7 @@ export default function ConnectHeader(props: any) {
               alt="ENS verified"
             />
             {!worldIdVerified && WorldIDWidget}
-            {ENSVerified && <button onClick={verifyENS}>Verify ENS</button>}
+            {(ENSName && !ENSVerified) && <button onClick={verifyENS}>Verify ENS</button>}
           </div>
           <hr />
           <p className="pt-3 text-slate-500">
