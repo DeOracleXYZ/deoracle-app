@@ -39,7 +39,7 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const deOracleAddress = "0x09FF0bd69be8d6d0bc061f2a7167a56f59FF4145";
+  const deOracleAddress = "0x5E5e4c1Ad18EC005DdBc735Aa40B00CA31828DfF";
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
   const [requestList, setRequestList] = useState([] as any[]);
@@ -78,10 +78,6 @@ export default function Home() {
     onInitError: (error) =>
       console.log("Error while initialization World ID", error),
   };
-
-  const usdcContract = "0xe11A86849d99F524cAC3E7A0Ec1241828e332C62";
-
-
 
   useEffect(() => {
     if(provider)
@@ -134,7 +130,7 @@ export default function Home() {
       const checkVerified = async () => {
         deOracleWRITE && (
         setWorldIdVerified(
-          await deOracleREAD!.checkWorldIdVerified(account)
+          await deOracleREAD!.addressToWorldIdVerified(account)
         )
         )
       };
@@ -263,21 +259,19 @@ export default function Home() {
   }
   
 
-  // async function verifyENS() {
-  //   if (ENSVerified)
-  //     try {
-  //       const deOracleContract = new ethers.Contract(
-  //         deOracleAddress,
-  //         deOracleABI,
-  //         provider.getSigner()
-  //       );
-  //       deOracleContract.setENSVerified(account);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  // }
+  async function verifyENS() {
+    if(deOracleWRITE)
+      try {
+        console.log( await deOracleWRITE.setENSVerified());
+      } catch (err) {
+        console.log(err);
+      }
+  }
+  
+  if(deOracleWRITE)
+  verifyENS();
 
-  //worldcoin proof addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
+  //worldID addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
 
 
 
@@ -293,7 +287,6 @@ export default function Home() {
   }
 
   async function sendAnswer(answerData: any) {
-    // console.log(answerData, "inside functionnn");
     const { requestId, answerText } = answerData;
 
     deOracleWRITE!.postAnswer(requestId, answerText);
