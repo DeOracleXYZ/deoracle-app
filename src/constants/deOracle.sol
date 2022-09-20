@@ -64,6 +64,8 @@ contract deOracle is IUSDC {
 
     mapping(uint256 => mapping(address => bool))
         public answerIdToAddressToVoted;
+    mapping(uint256 => mapping(address => bool))
+        public requestIdToAddressToAnswered;
 
     // ID's to opposite ID answer -> request vice versa
     mapping(uint256 => uint256[]) public requestIdToAnswerIds;
@@ -86,7 +88,7 @@ contract deOracle is IUSDC {
         uint256 _timeStampDue
     ) public {
         if (_bounty > 0) {
-            usdcToken.transfer(address(this), _bounty);
+            usdcToken.transferFrom(msg.sender, address(this), _bounty);
         }
         Request memory newRequest = Request({
             id: requestCount,
@@ -105,6 +107,20 @@ contract deOracle is IUSDC {
     }
 
     function postAnswer(uint256 _requestId, string memory _answerText) public {
+        //not tested yet
+        require(
+            msg.sender != requestList[_requestId].origin,
+            "You cant answer your own request."
+        );
+        require(
+            requestList[_requestId].active == true,
+            "Request already answered."
+        );
+        // TODO this does not work currently
+        require(
+            requestIdToAddressToAnswered[_requestId][msg.sender] == false,
+            "You've already answered this request"
+        );
         Answer memory newAnswer = Answer({
             id: answerCount,
             requestId: _requestId,
@@ -119,7 +135,8 @@ contract deOracle is IUSDC {
         answerIdToAnswer[newAnswer.id] = answerList[newAnswer.id];
         answerIdToRequestId[newAnswer.id] = _requestId;
         requestIdToAnswerIds[_requestId].push(newAnswer.id);
-
+        //TODO currently not working
+        requestIdToAddressToAnswered[_requestId][msg.sender] == true;
         addREP(msg.sender, 5);
     }
 
@@ -172,30 +189,33 @@ contract deOracle is IUSDC {
     }
 
     function upVote(uint256 _answerId) public eligibleVoter(_answerId, 50) {
-        Answer storage answerPointer = answerIdToAnswer[_answerId];
+        Answer storage answerPointer = answerList[_answerId];
         answerPointer.upVotes += 1;
+
         addREP(msg.sender, 1);
         addREP(answerPointer.origin, 3);
     }
 
     function downVote(uint256 _answerId) public eligibleVoter(_answerId, 50) {
-        Answer storage answerPointer = answerIdToAnswer[_answerId];
+        Answer storage answerPointer = answerList[_answerId];
         answerPointer.downVotes += 1;
         addREP(msg.sender, 1);
         deductREP(answerPointer.origin, 3);
     }
 
     function selectAnswer(uint256 _answerId) public {
-        Request storage requestPointer = requestIdToRequest[
+        Request storage requestPointer = requestList[
             answerIdToRequestId[_answerId]
         ];
         require(requestPointer.active == true);
         require(msg.sender == requestPointer.origin);
-        Answer storage answerPointer = answerIdToAnswer[_answerId];
+        Answer storage answerPointer = answerList[_answerId];
         addREP(answerPointer.origin, 15);
         addREP(msg.sender, 5);
         if (requestPointer.bounty > 0) {
             usdcToken.transfer(answerPointer.origin, requestPointer.bounty);
+            addressToBountyEarned[answerPointer.origin] += requestPointer
+                .bounty;
         }
         requestPointer.active = false;
         answerPointer.rewarded = true;
@@ -276,12 +296,9 @@ contract deOracle is IUSDC {
 
     //has not voted, and REP requirement.  Also sets voted to TRUE
     modifier eligibleVoter(uint256 _answerId, uint256 _minREP) {
-        require(
-            msg.sender !=
-                requestIdToRequest[answerIdToRequestId[_answerId]].origin
-        );
+        require(msg.sender != answerIdToAnswer[_answerId].origin);
         require(answerIdToAddressToVoted[_answerId][msg.sender] == false);
-        require(addressToREP[msg.sender] >= _minREP);
+        // require(addressToREP[msg.sender] >= _minREP);
         answerIdToAddressToVoted[_answerId][msg.sender] = true;
         _;
     }

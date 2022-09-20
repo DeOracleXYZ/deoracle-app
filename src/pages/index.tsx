@@ -48,7 +48,7 @@ export default function Home() {
   const [requestsCount, setRequestsCount] = useState(0);
   const [answersCount, setAnswersCount] = useState(0);
   
-  const [earnedBountyCount, setEarnedBountyCount] = useState(0);
+  const [earnedBountyCount, setEarnedBountyCount] = useState("");
   const [REP, setREP] = useState(0);
   const [answerFormData, setAnswerFormData] = useState({
     answerText: "",
@@ -191,9 +191,9 @@ export default function Home() {
       }
     };
 
-    const updateEarnedBountyCount = () => {
-      deOracleREAD &&
-        setEarnedBountyCount( deOracleREAD.getBountyEarned().toNumber() )
+    const updateEarnedBountyCount = async () => {
+      deOracleWRITE &&
+        setEarnedBountyCount( ethers.utils.formatUnits((await deOracleWRITE.getBountyEarned()), 18) )
     };
 
     updateRequestsCount();
