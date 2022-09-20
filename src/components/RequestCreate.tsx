@@ -242,7 +242,7 @@ function RequestCreate(props: any) {
   }, [provider]);
 
   async function approveUSDC() {
-    await usdcContract!.approve(deOracleAddress, formData.bounty)
+    await usdcContract!.approve(deOracleAddress, ethers.utils.parseUnits(formData.bounty, 18))
   }
 
 
@@ -284,6 +284,7 @@ function RequestCreate(props: any) {
   function handleSubmit(event: any) {
     event.preventDefault();
     formData.dueDateUnix = timeToUnix(formData.dueDate)
+    formData.bounty = ethers.utils.parseUnits(formData.bounty, 18)
     handleClick(formData);
   }
 

@@ -133,7 +133,7 @@ function RequestCard(props: any) {
           <div className="request-info flex flex-nowrap overflow-scroll gap-5 justify-between text-purple-500 text-sm px-5 pt-2 pb-3">
             <p className="whitespace-nowrap">
               <b>Bounty:</b>
-              <br /> {ethers.utils.formatUnits(bounty, 0)} USDC
+              <br /> {ethers.utils.formatUnits(bounty, 18)} USDC
             </p>
             <p className="whitespace-nowrap">
               <b>Req. Reputation:</b>
