@@ -31,6 +31,8 @@ function RequestCreate(props: any) {
         // stop spinner
         // show Create Request button
         console.log("Tx success:", txReceipt.status === 1)
+      
+
       } else {
         console.log("Approve tx Failed, check Metamask and try again.")
       }
