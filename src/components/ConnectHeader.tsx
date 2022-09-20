@@ -10,7 +10,9 @@ export default function ConnectHeader(props: any) {
     balance,
     worldIdVerified,
     ENSVerified,
+    ENSName,
     WorldIDWidget,
+    verifyENS,
     requestsCount,
     answersCount,
     earnedBountyCount,
@@ -200,6 +202,7 @@ export default function ConnectHeader(props: any) {
               alt="ENS verified"
             />
             {!worldIdVerified && WorldIDWidget}
+            {ENSVerified && <button onClick={verifyENS}>Verify ENS</button>}
           </div>
           <hr />
           <p className="pt-3 text-slate-500">
