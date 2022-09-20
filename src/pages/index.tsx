@@ -47,6 +47,7 @@ export default function Home() {
   const [verificationCount, setVerficationCount] = useState(0);
   const [requestsCount, setRequestsCount] = useState(0);
   const [answersCount, setAnswersCount] = useState(0);
+  
   const [earnedBountyCount, setEarnedBountyCount] = useState(0);
   const [REP, setREP] = useState(0);
   const [answerFormData, setAnswerFormData] = useState({
@@ -189,8 +190,7 @@ export default function Home() {
     };
 
     const updateEarnedBountyCount = () => {
-      // TODO: logic
-      setEarnedBountyCount(0)
+      // setEarnedBountyCount( deOracleREAD.getBountyEarned().toNumber() )
     };
 
     updateRequestsCount();
@@ -249,10 +249,8 @@ export default function Home() {
   }
 
   async function disconnect() {
-      // TODO
-      // - disconnect
-      // - refresh nav
-      // - close nav menu
+    // deactivate()
+    // window.location.reload();
   }
   
 
@@ -271,6 +269,7 @@ export default function Home() {
   // }
 
   //worldcoin proof addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
+
 
 
   async function sendRequest(request: any) {
@@ -307,11 +306,14 @@ export default function Home() {
         <RequestCard
           key={id + i}
           requestData={card}
-          handleClick={() => console.log("clicked!")}
           handleClickAnswer={() => sendAnswer(answerFormData)}
           answerFormData={answerFormData}
           updateAnswerFormData={setAnswerFormData}
           answerList={answerList}
+          provider={provider}
+          deOracleWRITE={deOracleWRITE}
+          deOracleREAD={deOracleREAD}
+          account={account}
         />
       );
     });
@@ -347,6 +349,9 @@ export default function Home() {
           }}
           formData={formData}
           updateFormData={setFormData}
+          provider={provider}
+          deOracleWRITE={deOracleWRITE}
+          deOracleAddress={deOracleAddress}
         />
 
         <div>{requestList && requestCardList()}</div>
@@ -357,25 +362,24 @@ export default function Home() {
         <br />
         <br />
         <p className="mb-1 pt-2 text-slate-400">
-          &copy; {copyrightYear} deOracle.xyz
-        </p>
-        <p className="text-slate-400">
-          <i>
+          &copy; {copyrightYear} deOracle.xyz. <i>
             Made by{" "}
             <a
               href="https://twitter.com/0xMarkeljan"
               target="_blank"
               rel="noreferrer"
+              className="text-slate-600 underline hover:no-underline hover:text-slate-500"
             >
-              <u>@Mark</u>
+              @Mark
             </a>{" "}
             and{" "}
             <a
               href="https://twitter.com/alex_biet"
               target="_blank"
               rel="noreferrer"
+              className="text-slate-600 underline hover:no-underline hover:text-slate-500"
             >
-              <u>@Alex</u>
+              @Alex
             </a>
           </i>
         </p>
@@ -383,9 +387,13 @@ export default function Home() {
         <br />
         <br />
 
-        <p className="text-slate-400">
-          <a href="#">Back to top</a>
+        <p>
+          <a className="text-slate-600 underline hover:no-underline hover:text-slate-500"
+             href="https://calibration-faucet.filswan.com/#/dashboard" 
+             target="_blank" 
+             rel="noreferrer">Faucet USDC</a> &nbsp; | &nbsp; <a href="#" className="text-slate-600 underline hover:no-underline hover:text-slate-500">Back to Top</a>
         </p>
+        <br />
       </footer>
     </>
   );
