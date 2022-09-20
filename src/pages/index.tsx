@@ -39,7 +39,7 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const deOracleAddress = "0x5E5e4c1Ad18EC005DdBc735Aa40B00CA31828DfF";
+  const deOracleAddress = "0x26E40C77945c7F0cF5C6Be597d7192aBAa273301";
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
   const [requestList, setRequestList] = useState([] as any[]);
@@ -122,9 +122,8 @@ export default function Home() {
       };
       const checkVerified = async () => {
         deOracleWRITE && (
-        setWorldIdVerified(
-          await deOracleREAD!.addressToWorldIdVerified(account)
-        )
+        setWorldIdVerified(await deOracleWRITE.addressToWorldIdVerified(account)),
+        setENSVerified(await deOracleWRITE.addressToENSVerified(account))
         )
       };
 
@@ -228,7 +227,6 @@ export default function Home() {
         try {
           const ENS = await mainNetProvider.lookupAddress(account);
           ENS && setENSName(ENS);
-          ENS && setENSVerified(true);
 
         } catch (err) {
           console.log(err);
@@ -253,9 +251,18 @@ export default function Home() {
   
 
   async function verifyENS() {
+    let txReceipt;
     if(deOracleWRITE)
       try {
-        console.log( await deOracleWRITE.setENSVerified());
+        txReceipt = await deOracleWRITE.setENSVerified();
+        //ENS Status loading spinner? 
+        txReceipt = await txReceipt.wait();
+
+        if(txReceipt.status === 1){
+          setENSVerified(true);
+        } else {
+          console.log("Transaction failed, ENS not verified.")
+        }
       } catch (err) {
         console.log(err);
       }

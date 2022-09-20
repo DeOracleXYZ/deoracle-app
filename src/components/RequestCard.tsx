@@ -42,10 +42,16 @@ function RequestCard(props: any) {
 
   useEffect(() => {
     active ? setRequestStatus("green") : setRequestStatus("red");
+    
+    if(origin) {
+      setShortWallet(origin.substring(0, 6) + "..." + origin.slice(-4))
 
-    origin
-      ? setShortWallet(origin.substring(0, 6) + "..." + origin.slice(-4))
-      : setShortWallet("");
+      try{
+        deOracleWRITE.addressToENSVerified
+      } catch (err) {
+        console.log(err)
+      }
+    }
 
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
