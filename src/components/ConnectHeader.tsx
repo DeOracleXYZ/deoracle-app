@@ -235,14 +235,6 @@ export default function ConnectHeader(props: any) {
               </button>
             </b>
           </div>
-          {/* <hr />
-          <p className="pt-5">
-            <b>
-              <button onClick={() => {handleClickDisconnect(); toggle()}} className="text-red-500 hover:text-red-400">
-                Disconnect
-              </button>
-            </b>
-          </p> */}
         </div>
       </div>
     </>
