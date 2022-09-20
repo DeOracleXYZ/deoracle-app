@@ -111,7 +111,7 @@ export default function ConnectHeader(props: any) {
                 </p>
                 <div className="grid place-content-end md:place-items-center grid-cols-1 md:grid-cols-2 gap-1 md:gap-3 mt-1 text-right">
                   <p className="text-slate-600 text-xs md:text-sm">
-                    {ENSVerified ? REP + 50 : REP} REP
+                    {REP} REP
                   </p>
                   <p className="text-slate-600 text-xs md:text-sm">
                     <svg

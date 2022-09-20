@@ -54,13 +54,6 @@ export default function Home() {
     answerText: "",
     requestId: -1,
   });
-  const [formData, setFormData] = useState({
-    requestText: "",
-    bounty: 0,
-    reputation: 0,
-    dueDate: "",
-    dueDateUnix: "",
-  });
 
   const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
 
@@ -271,23 +264,6 @@ export default function Home() {
   //worldID addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
 
 
-
-  
-  // let txReceipt = await usdcContract.approve(deOracleAddress, ethers.utils.parseUnits(formData.bounty, 18))
-  //     txReceipt = await txReceipt.wait();
-  //     //TODOALEX
-  //     // start spinner
-
-  //     if(txReceipt.status === 1) {
-  //       // stop spinner
-  //       // show Create Request button
-  //       console.log("Tx success:", txReceipt.status === 1)
-      
-
-  //     } else {
-  //       console.log("Approve tx Failed, check Metamask and try again.")
-  //     }
-
   async function sendAnswer(answerData: any) {
     const { requestId, answerText } = answerData;
 
@@ -351,8 +327,6 @@ export default function Home() {
         <RequestCreate
           account={account}
           deOracleWRITE={deOracleWRITE}
-          formData={formData}
-          updateFormData={setFormData}
           provider={provider}
           deOracleAddress={deOracleAddress}
         />

@@ -4,7 +4,7 @@ import { erc20ABI } from "../constants/abis";
 import { Contract, ethers } from "ethers";
 
 function RequestCreate(props: any) {
-  const { account, formData, updateFormData, provider, deOracleAddress, deOracleWRITE } = props;
+  const { account, provider, deOracleAddress, deOracleWRITE } = props;
   const [showMe, setShowMe] = useState(false);
   const daysAfterDueDate = 5;
   const [dueDate, setDueDate] = useState(
@@ -15,6 +15,13 @@ function RequestCreate(props: any) {
   const [showSubmit, setShowSubmit] = useState(true);
   const [showLoading, setShowLoading] = useState(false);
   const [approved, setApproved] = useState(false);
+  const [formData, setFormData] = useState({
+    requestText: "",
+    bounty: 0,
+    reputation: 0,
+    dueDate: "",
+    dueDateUnix: 0,
+  });
 
 
   const zone = new Date()
@@ -37,7 +44,7 @@ function RequestCreate(props: any) {
   async function approveUSDC() {
     if (usdcContract){
   
-      let txReceipt = await usdcContract.approve(deOracleAddress, ethers.utils.parseUnits(formData.bounty, 18))
+      let txReceipt = await usdcContract.approve(deOracleAddress, ethers.utils.parseUnits(formData.bounty.toString(), 18))
       setShowLoading(true)
       txReceipt = await txReceipt.wait();
 
@@ -60,18 +67,18 @@ function RequestCreate(props: any) {
 
 
   useEffect(() => {
-    updateFormData((prevFormData: any) => {
+    setFormData((prevFormData: any) => {
       return {
         ...prevFormData,
         requestOrigin: account,
         dueDate: dueDate,
       };
     });
-  }, [account, updateFormData]);
+  }, [account, setFormData]);
 
   function handleChange(event: any) {
     const { name, value, type, checked } = event.target;
-    updateFormData((prevFormData: any) => {
+    setFormData((prevFormData: any) => {
       return {
         ...prevFormData,
         [name]: value,
@@ -95,8 +102,10 @@ function RequestCreate(props: any) {
   }
 
   async function sendRequest(request: any) {
-    const { requestText, bounty, reputation, dueDateUnix } = request;
+    const { requestText, reputation, dueDateUnix } = request;
+    let {bounty} = request;
     let txReceipt;
+    bounty = ethers.utils.parseUnits(bounty, 18)
     if(deOracleWRITE)
      txReceipt = await deOracleWRITE.submitRequest(
       requestText,
@@ -113,7 +122,6 @@ function RequestCreate(props: any) {
         // show Create Request button
         console.log("Tx success:", txReceipt.status === 1)
       
-
       } else {
         console.log("Approve tx Failed, check Metamask and try again.")
       }
@@ -122,8 +130,8 @@ function RequestCreate(props: any) {
   function handleSubmit(event: any) {
     event.preventDefault();
     formData.dueDateUnix = timeToUnix(formData.dueDate)
-    formData.bounty = ethers.utils.parseUnits(formData.bounty.toString(), 18)
     sendRequest(formData);
+  
   }
 
   function toggle() {
