@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { erc20ABI } from "../constants/abis";
 import { Contract, ethers } from "ethers";
 
 function RequestCreate(props: any) {
@@ -17,232 +18,25 @@ function RequestCreate(props: any) {
 
   useEffect(() => {
     provider &&
-    setUsdcContract(new ethers.Contract('0xe11A86849d99F524cAC3E7A0Ec1241828e332C62',[
-      {
-          "constant": true,
-          "inputs": [],
-          "name": "name",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "string"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "constant": false,
-          "inputs": [
-              {
-                  "name": "_spender",
-                  "type": "address"
-              },
-              {
-                  "name": "_value",
-                  "type": "uint256"
-              }
-          ],
-          "name": "approve",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "bool"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [],
-          "name": "totalSupply",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "uint256"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "constant": false,
-          "inputs": [
-              {
-                  "name": "_from",
-                  "type": "address"
-              },
-              {
-                  "name": "_to",
-                  "type": "address"
-              },
-              {
-                  "name": "_value",
-                  "type": "uint256"
-              }
-          ],
-          "name": "transferFrom",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "bool"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [],
-          "name": "decimals",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "uint8"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [
-              {
-                  "name": "_owner",
-                  "type": "address"
-              }
-          ],
-          "name": "balanceOf",
-          "outputs": [
-              {
-                  "name": "balance",
-                  "type": "uint256"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [],
-          "name": "symbol",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "string"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "constant": false,
-          "inputs": [
-              {
-                  "name": "_to",
-                  "type": "address"
-              },
-              {
-                  "name": "_value",
-                  "type": "uint256"
-              }
-          ],
-          "name": "transfer",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "bool"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [
-              {
-                  "name": "_owner",
-                  "type": "address"
-              },
-              {
-                  "name": "_spender",
-                  "type": "address"
-              }
-          ],
-          "name": "allowance",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "uint256"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "payable": true,
-          "stateMutability": "payable",
-          "type": "fallback"
-      },
-      {
-          "anonymous": false,
-          "inputs": [
-              {
-                  "indexed": true,
-                  "name": "owner",
-                  "type": "address"
-              },
-              {
-                  "indexed": true,
-                  "name": "spender",
-                  "type": "address"
-              },
-              {
-                  "indexed": false,
-                  "name": "value",
-                  "type": "uint256"
-              }
-          ],
-          "name": "Approval",
-          "type": "event"
-      },
-      {
-          "anonymous": false,
-          "inputs": [
-              {
-                  "indexed": true,
-                  "name": "from",
-                  "type": "address"
-              },
-              {
-                  "indexed": true,
-                  "name": "to",
-                  "type": "address"
-              },
-              {
-                  "indexed": false,
-                  "name": "value",
-                  "type": "uint256"
-              }
-          ],
-          "name": "Transfer",
-          "type": "event"
-      }
-  ],provider.getSigner()));
+    setUsdcContract(new ethers.Contract('0xe11A86849d99F524cAC3E7A0Ec1241828e332C62', erc20ABI ,provider.getSigner()));
   }, [provider]);
 
   async function approveUSDC() {
-    await usdcContract!.approve(deOracleAddress, ethers.utils.parseUnits(formData.bounty, 18))
+    if (usdcContract){
+      let txReceipt = await usdcContract.approve(deOracleAddress, ethers.utils.parseUnits(formData.bounty, 18))
+      txReceipt = await txReceipt.wait();
+      //TODOALEX
+      // start spinner
+      if(txReceipt.status === 1) {
+        // stop spinner
+        // show Create Request button
+        console.log("Tx success:", txReceipt.status === 1)
+      } else {
+        console.log("Approve tx Failed, check Metamask and try again.")
+      }
+
+    }
+
   }
 
 

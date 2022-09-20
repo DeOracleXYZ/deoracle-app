@@ -5,7 +5,7 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { VerificationResponse, WidgetProps } from "@worldcoin/id";
 import dynamic from "next/dynamic";
 import ConnectHeader from "../components/ConnectHeader";
-import { deOracleABI } from "../constants/abis";
+import { deOracleABI, erc20ABI } from "../constants/abis";
 import Head from "next/head";
 import RequestCreate from "../components/RequestCreate";
 import RequestCard from "../components/RequestCard";
@@ -78,6 +78,10 @@ export default function Home() {
     onInitError: (error) =>
       console.log("Error while initialization World ID", error),
   };
+
+  const usdcContract = "0xe11A86849d99F524cAC3E7A0Ec1241828e332C62";
+
+
 
   useEffect(() => {
     if(provider)
