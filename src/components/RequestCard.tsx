@@ -253,7 +253,7 @@ function RequestCard(props: any) {
                   />
                   <button
                     type="submit"
-                    className="absolute right-0 border px-5 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700"
+                    className="absolute right-0 border px-5 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r to-purple via-blue from-purple-200 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 hover:border-purple-500 hover:text-purple-700"
                   >
                     Send
                   </button>
