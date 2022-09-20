@@ -31,17 +31,16 @@ function RequestCreate(props: any) {
       ? setShowApprove(true)
       : setShowApprove(false)
 
-  }, [formData.bounty]);
+  }, [formData.bounty, approveUSDC]);
 
   async function approveUSDC() {
     if (usdcContract){
       let txReceipt = await usdcContract.approve(deOracleAddress, ethers.utils.parseUnits(formData.bounty, 18))
       txReceipt = await txReceipt.wait();
-      //TODOALEX
-      // start spinner
+      setShowLoading(true)
 
       if(txReceipt.status === 1) {
-        // stop spinner
+        setShowLoading(false)
         // show Create Request button
         console.log("Tx success:", txReceipt.status === 1)
       
@@ -127,7 +126,7 @@ function RequestCreate(props: any) {
         </div>
 
         <div className="col-1 text-right">
-          <button onClick={toggle} className="px-4 pt-5 pb-3">
+          <button onClick={toggle} className="px-2 py-2 mt-3 hover:bg-purple-100/50 rounded-md">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -231,11 +230,11 @@ function RequestCreate(props: any) {
 
               <div className="col-span-2">
 
-                <button type="button" onClick={approveUSDC} className={`${showApprove ? "" : "hidden"}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700 rounded-lg mr-3"}>Approve {formData.bounty} USDC</button>
+                <button type="button" onClick={approveUSDC} className={`${showApprove ? "" : "hidden"}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700 rounded-lg mr-3 mb-3"} disabled={showLoading}>Approve {formData.bounty} USDC</button>
 
-                <button type="submit" className={`${showSubmit ? "" : "hidden"}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700 rounded-lg disabled:opacity-75"} disabled={showApprove}>Create Request</button>
+                <button type="submit" className={`${showSubmit ? "" : "hidden"}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full rounded-lg border-purple-400 bg-gradient-to-r to-purple via-blue from-purple-200 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60 mb-3 mr-3"} disabled={showApprove}>Create Request</button>
 
-                <div className={`${!showLoading ? "" : "hidden"}` + " inline ml-3"}>
+                <div className={`${showLoading ? "" : "hidden"}` + " inline no-wrap"}>
                   <svg className="animate-spin ml-1 mr-3 h-5 w-5 text-purple-400 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
