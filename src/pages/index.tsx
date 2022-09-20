@@ -147,8 +147,10 @@ export default function Home() {
       };
 
       const fetchbalanceAndREP = async () => {
-        const data = await provider.getBalance(account);
-        setBalance(ethers.utils.formatEther(data));
+        if (provider) {
+          const data = await provider.getBalance(account);
+          setBalance(ethers.utils.formatEther(data));
+        }
       };
       readContractData();
       checkVerified();
@@ -172,7 +174,7 @@ export default function Home() {
 
       getRequestsRPC().catch(console.error);
     }
-  }, [ENSVerified, balance, worldIdVerified, deOracleWRITE, deOracleWRITE]);
+  }, [ENSVerified, balance, worldIdVerified, deOracleWRITE, deOracleREAD, account, provider]);
 
   useEffect(() => {
     const updateRequestsCount = () => {
@@ -203,7 +205,7 @@ export default function Home() {
     updateRequestsCount();
     updateAnswersCount();
     updateEarnedBountyCount();
-  }, [account, requestList, answerList]);
+  }, [account, requestList, answerList, deOracleWRITE]);
 
 
   useEffect(() => {
@@ -223,7 +225,7 @@ export default function Home() {
         { gasLimit: 10000000 }
       );
     }
-  }, [proofResponse])
+  }, [proofResponse, deOracleWRITE, account])
 
   //ENSVerification
   useEffect(() => {

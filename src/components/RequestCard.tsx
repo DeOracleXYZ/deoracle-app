@@ -81,7 +81,7 @@ function RequestCard(props: any) {
   deOracleREAD && 
     getAnswerIds()
 
-  },[provider])
+  },[provider, id, deOracleREAD])
 
 
 

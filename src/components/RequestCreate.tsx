@@ -45,7 +45,6 @@ function RequestCreate(props: any) {
       return {
         ...prevFormData,
         requestOrigin: account,
-        dueDate: dueDate
       };
     });
   }, [account, updateFormData]);
@@ -207,7 +206,7 @@ function RequestCreate(props: any) {
                   <input
                     type="datetime-local"
                     name="dueDate"
-                    value={formData.dueDate}
+                    value={dueDate}
                     onChange={handleChange}
                     required
                     className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5"
