@@ -286,7 +286,7 @@ export default function Home() {
       dueDateUnix
     )
     //TODOALEX
-      //// start spinner
+    //// start spinner
     txReceipt = await txReceipt.wait();
 
       
