@@ -25,7 +25,6 @@ export default function Home() {
     active: networkActive,
     error: networkError,
     activate: activateNetwork,
-    deactivate,
     library,
     library: provider,
     account,
@@ -243,13 +242,7 @@ export default function Home() {
       console.log(e);
     }
   }
-
-  async function disconnect() {
-    // deactivate()
-    // window.location.reload();
-  }
   
-
   async function verifyENS() {
     let txReceipt;
     if(deOracleWRITE)
@@ -328,7 +321,6 @@ export default function Home() {
         earnedBountyCount={earnedBountyCount}
         verificationCount={verificationCount}
         handleClickConnect={() => connect()}
-        handleClickDisconnect={() => disconnect()}
       />
 
       <div className="flex flex-col my-6 mx-3 md:m-10 justify-center">
