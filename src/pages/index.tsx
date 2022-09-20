@@ -39,7 +39,7 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const deOracleAddress = "0xd43d391d01B7330235403f0C8e924e9EdBa2E35a";
+  const deOracleAddress = "0x24b61aB06f4103A93C4E64e5BFda0E0DecC6B5f5";
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
   const [requestList, setRequestList] = useState([] as any[]);
@@ -88,6 +88,7 @@ export default function Home() {
         deOracleABI,
         provider
       ))
+   
       setDeOracleWRITE(
         new ethers.Contract(
         deOracleAddress,
@@ -97,6 +98,7 @@ export default function Home() {
     } catch(err) {
       console.log(err)
     }
+  
     
   }, [provider])
 
@@ -274,7 +276,7 @@ export default function Home() {
 
   async function sendRequest(request: any) {
     const { requestText, bounty, reputation, dueDateUnix } = request;
-
+    console.log(deOracleWRITE)
     deOracleWRITE!.submitRequest(
       requestText,
       bounty,

@@ -16,6 +16,7 @@ function RequestCreate(props: any) {
     .split(" ")[2];
 
   useEffect(() => {
+    provider &&
     setUsdcContract(new ethers.Contract('0xe11A86849d99F524cAC3E7A0Ec1241828e332C62',[
       {
           "constant": true,
@@ -237,12 +238,13 @@ function RequestCreate(props: any) {
           "name": "Transfer",
           "type": "event"
       }
-  ],provider));
+  ],provider.getSigner()));
   }, [provider]);
 
   async function approveUSDC() {
     await usdcContract!.approve(deOracleAddress, formData.bounty)
   }
+
 
   useEffect(() => {
     updateFormData((prevFormData: any) => {
