@@ -259,17 +259,17 @@ export default function Home() {
   }
   
 
-  async function verifyENS() {
-    if(deOracleWRITE)
-      try {
-        console.log( await deOracleWRITE.setENSVerified());
-      } catch (err) {
-        console.log(err);
-      }
-  }
+  // async function verifyENS() {
+  //   if(deOracleWRITE)
+  //     try {
+  //       console.log( await deOracleWRITE.setENSVerified());
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  // }
   
-  if(deOracleWRITE)
-  verifyENS();
+  // if(deOracleWRITE)
+  // verifyENS();
 
   //worldID addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
 
@@ -277,14 +277,43 @@ export default function Home() {
 
   async function sendRequest(request: any) {
     const { requestText, bounty, reputation, dueDateUnix } = request;
-    console.log(deOracleWRITE)
-    deOracleWRITE!.submitRequest(
+    let txReceipt;
+    if(deOracleWRITE)
+     txReceipt = await deOracleWRITE.submitRequest(
       requestText,
       bounty,
       reputation,
       dueDateUnix
-    );
+    )
+    //TODOALEX
+      //// start spinner
+    txReceipt = await txReceipt.wait();
+
+      
+     if(txReceipt.status === 1) {
+        // stop spinner
+        // show Create Request button
+        console.log("Tx success:", txReceipt.status === 1)
+      
+
+      } else {
+        console.log("Approve tx Failed, check Metamask and try again.")
+      }
   }
+  // let txReceipt = await usdcContract.approve(deOracleAddress, ethers.utils.parseUnits(formData.bounty, 18))
+  //     txReceipt = await txReceipt.wait();
+  //     //TODOALEX
+  //     // start spinner
+
+  //     if(txReceipt.status === 1) {
+  //       // stop spinner
+  //       // show Create Request button
+  //       console.log("Tx success:", txReceipt.status === 1)
+      
+
+  //     } else {
+  //       console.log("Approve tx Failed, check Metamask and try again.")
+  //     }
 
   async function sendAnswer(answerData: any) {
     const { requestId, answerText } = answerData;

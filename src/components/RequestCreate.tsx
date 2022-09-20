@@ -35,14 +35,18 @@ function RequestCreate(props: any) {
 
   async function approveUSDC() {
     if (usdcContract){
+  
       let txReceipt = await usdcContract.approve(deOracleAddress, ethers.utils.parseUnits(formData.bounty, 18))
+      setShowLoading(true)
       txReceipt = await txReceipt.wait();
       //TODOALEX
       // start spinner
-
+     
       if(txReceipt.status === 1) {
         // stop spinner
         // show Create Request button
+        setShowApprove(false);
+        setShowLoading(false)
         console.log("Tx success:", txReceipt.status === 1)
       
 
@@ -235,7 +239,7 @@ function RequestCreate(props: any) {
 
                 <button type="submit" className={`${showSubmit ? "" : "hidden"}` + " border px-1 py-2 align-middle px-6 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:border-purple-500 hover:text-purple-700 rounded-lg disabled:opacity-75"} disabled={showApprove}>Create Request</button>
 
-                <div className={`${!showLoading ? "" : "hidden"}` + " inline ml-3"}>
+                <div className={`${showLoading ? "" : "hidden"}` + " inline ml-3"}>
                   <svg className="animate-spin ml-1 mr-3 h-5 w-5 text-purple-400 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
