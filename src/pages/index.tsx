@@ -259,47 +259,20 @@ export default function Home() {
   }
   
 
-  // async function verifyENS() {
-  //   if(deOracleWRITE)
-  //     try {
-  //       console.log( await deOracleWRITE.setENSVerified());
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  // }
-  
-  // if(deOracleWRITE)
-  // verifyENS();
+  async function verifyENS() {
+    if(deOracleWRITE)
+      try {
+        console.log( await deOracleWRITE.setENSVerified());
+      } catch (err) {
+        console.log(err);
+      }
+  }
 
   //worldID addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
 
 
 
-  async function sendRequest(request: any) {
-    const { requestText, bounty, reputation, dueDateUnix } = request;
-    let txReceipt;
-    if(deOracleWRITE)
-     txReceipt = await deOracleWRITE.submitRequest(
-      requestText,
-      bounty,
-      reputation,
-      dueDateUnix
-    )
-    //TODOALEX
-    //// start spinner
-    txReceipt = await txReceipt.wait();
-
-      
-     if(txReceipt.status === 1) {
-        // stop spinner
-        // show Create Request button
-        console.log("Tx success:", txReceipt.status === 1)
-      
-
-      } else {
-        console.log("Approve tx Failed, check Metamask and try again.")
-      }
-  }
+  
   // let txReceipt = await usdcContract.approve(deOracleAddress, ethers.utils.parseUnits(formData.bounty, 18))
   //     txReceipt = await txReceipt.wait();
   //     //TODOALEX
@@ -362,7 +335,9 @@ export default function Home() {
         balance={balance}
         worldIdVerified={worldIdVerified}
         WorldIDWidget={<WorldIDWidget {...widgetProps} />}
+        verifyENS={() => verifyENS()}
         ENSVerified={ENSVerified}
+        ENSName={ENSName}
         REP={REP}
         requestsCount={requestsCount}
         answersCount={answersCount} 
@@ -375,13 +350,10 @@ export default function Home() {
       <div className="flex flex-col my-6 mx-3 md:m-10 justify-center">
         <RequestCreate
           account={account}
-          handleClick={() => {
-            sendRequest(formData);
-          }}
+          deOracleWRITE={deOracleWRITE}
           formData={formData}
           updateFormData={setFormData}
           provider={provider}
-          deOracleWRITE={deOracleWRITE}
           deOracleAddress={deOracleAddress}
         />
 

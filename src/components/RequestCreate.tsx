@@ -4,7 +4,7 @@ import { erc20ABI } from "../constants/abis";
 import { Contract, ethers } from "ethers";
 
 function RequestCreate(props: any) {
-  const { handleClick, account, formData, updateFormData, provider, deOracleAddress } = props;
+  const { account, formData, updateFormData, provider, deOracleAddress, deOracleWRITE } = props;
   const [showMe, setShowMe] = useState(false);
   const daysAfterDueDate = 5;
   const [dueDate, setDueDate] = useState(
@@ -94,11 +94,36 @@ function RequestCreate(props: any) {
     return dueDateUnixFinal;
   }
 
+  async function sendRequest(request: any) {
+    const { requestText, bounty, reputation, dueDateUnix } = request;
+    let txReceipt;
+    if(deOracleWRITE)
+     txReceipt = await deOracleWRITE.submitRequest(
+      requestText,
+      bounty,
+      reputation,
+      dueDateUnix
+    )
+    //TODOALEX
+      //// start spinner
+    txReceipt = await txReceipt.wait();
+      
+     if(txReceipt.status === 1) {
+        // stop spinner
+        // show Create Request button
+        console.log("Tx success:", txReceipt.status === 1)
+      
+
+      } else {
+        console.log("Approve tx Failed, check Metamask and try again.")
+      }
+  }
+
   function handleSubmit(event: any) {
     event.preventDefault();
     formData.dueDateUnix = timeToUnix(formData.dueDate)
     formData.bounty = ethers.utils.parseUnits(formData.bounty.toString(), 18)
-    handleClick(formData);
+    sendRequest(formData);
   }
 
   function toggle() {
