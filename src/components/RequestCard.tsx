@@ -13,7 +13,6 @@ function RequestCard(props: any) {
     deOracleWRITE,
     deOracleREAD,
     account,
-    ENSName,
   } = props;
 
   const {
@@ -27,8 +26,6 @@ function RequestCard(props: any) {
     timeStampPosted,
   } = requestData;
 
-  // answerList && console.log(answerList)
-
   const [requestStatus, setRequestStatus] = useState("Inactive");
   const [shortWallet, setShortWallet] = useState("");
   const [datePosted, setDatePosted] = useState("");
@@ -36,18 +33,27 @@ function RequestCard(props: any) {
   const [showMe, setShowMe] = useState(false);
   const [requestOwner, setRequestOwner] = useState(false);
   const [answerIds, setAnswerIds] = useState([]);
+  const [ENSName, setENSName] = useState("");
 
   function toggle() {
     setShowMe(!showMe);
   }
 
   useEffect(() => {
-    active ? setRequestStatus("green") : setRequestStatus("red");
     
+    const checkENSName = async () => {
+      if(deOracleREAD)
+      setENSName(await deOracleREAD.addressToENSName(account));
+    }
+   checkENSName();
+  }, [deOracleREAD])
+
+  useEffect(() => {
+    active ? setRequestStatus("green") : setRequestStatus("red");
+
     if(origin) {
       ENSName ? setShortWallet(ENSName) :
       setShortWallet(origin.substring(0, 6) + "..." + origin.slice(-4))
-
     }   
 
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;

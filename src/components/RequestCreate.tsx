@@ -105,7 +105,9 @@ function RequestCreate(props: any) {
     const { requestText, reputation, dueDateUnix } = request;
     let {bounty} = request;
     let txReceipt;
-    bounty = ethers.utils.parseUnits(bounty, 18)
+    if(bounty !== 0){
+      bounty = ethers.utils.parseUnits(bounty, 18)
+    }
     if(deOracleWRITE)
      txReceipt = await deOracleWRITE.submitRequest(
       requestText,

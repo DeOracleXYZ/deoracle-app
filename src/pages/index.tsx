@@ -38,7 +38,7 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const deOracleAddress = "0x26E40C77945c7F0cF5C6Be597d7192aBAa273301";
+  const deOracleAddress = "0x0903DefA6E37fdEc2996DfAfC8Dccff5b826b706";
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
   const [requestList, setRequestList] = useState([] as any[]);
@@ -247,7 +247,7 @@ export default function Home() {
     let txReceipt;
     if(deOracleWRITE)
       try {
-        txReceipt = await deOracleWRITE.setENSVerified();
+        txReceipt = await deOracleWRITE.setENSVerified(ENSName);
         //ENS Status loading spinner? 
         txReceipt = await txReceipt.wait();
 
@@ -294,7 +294,6 @@ export default function Home() {
           deOracleWRITE={deOracleWRITE}
           deOracleREAD={deOracleREAD}
           account={account}
-          ENSName={ENSName}
         />
       );
     });
