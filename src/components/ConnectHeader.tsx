@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import { chainIdsMap, mumbai, goerli } from "../constants/networks";
 import Image from "next/image";
+import { mumbai, goerli, chainIdsMap } from "../constants/networks";
 
 export default function ConnectHeader(props: any) {
   const {
     data,
     handleClickConnect,
+    handleSwitchNetwork,
+    chain,
+    setChain,
     balance,
     worldIdVerified,
     ENSVerified,
@@ -35,36 +38,6 @@ export default function ConnectHeader(props: any) {
 
     
   }, [setShortWallet, account, ENSName]);
-
-  const switchNetwork = async (chain: any) => {
-    try {
-      await library.provider.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: chain.chainId }],
-      });
-    } catch (switchError: any) {
-      // 4902 error code indicates the chain is missing on the wallet
-      if (switchError.code === 4902) {
-        try {
-          await library.provider.request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                chainId: chain.chainId,
-                rpcUrls: chain.rpcUrls,
-                chainName: chain.chainName,
-                nativeCurrency: chain.nativeCurrency,
-                blockExplorerUrls: chain.blockExplorerUrls,
-                iconUrls: chain.iconUrls,
-              },
-            ],
-          });
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    }
-  };
 
   function toggle() {
     setShowMe(!showMe);
@@ -242,14 +215,14 @@ export default function ConnectHeader(props: any) {
             <b>
               <button
                 className="text-purple-500 hover:text-purple-400"
-                onClick={() => switchNetwork(mumbai)}
+                onClick={() => (setChain(goerli), handleSwitchNetwork())}
               >
                 Polygon Mumbai
               </button>{" "}
               &nbsp; &nbsp; &nbsp; &nbsp;
               <button
                 className="text-red-500 hover:text-red-400"
-                onClick={() => switchNetwork(goerli)}
+                onClick={() => (setChain(mumbai), handleSwitchNetwork())}
               >
                 Goerli
               </button>

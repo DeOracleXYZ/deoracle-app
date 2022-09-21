@@ -9,9 +9,12 @@ import { deOracleABI, erc20ABI } from "../constants/abis";
 import Head from "next/head";
 import RequestCreate from "../components/RequestCreate";
 import RequestCard from "../components/RequestCard";
+import { goerli, mumbai } from '../constants/networks'
+
+
 
 const injected = new InjectedConnector({
-  supportedChainIds: [0x13881, 0x7a69],
+  supportedChainIds: [0x13881, 0x7a69, 420],
 });
 
 const WorldIDWidget = dynamic<WidgetProps>(
@@ -41,6 +44,7 @@ export default function Home() {
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState("");
   const [proofResponse, setProofResponse] = useState(null as VerificationResponse | null);
+  const [chain, setChain] = useState();
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
@@ -211,8 +215,6 @@ export default function Home() {
   }, [ENSName, ENSVerified, account]);
 
 
-
-
   useEffect(() => {
     injected
       .isAuthorized()
@@ -230,11 +232,43 @@ export default function Home() {
   async function connect() {
     //TODO: 
     try {
-      await activate(injected);
+      await activate(injected)
     } catch (e) {
       console.log(e);
     }
   }
+
+  const switchNetwork = async (chain: any) => {
+    try {
+      await library.provider.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: chain.chainId }],
+      });
+    } catch (switchError: any) {
+      console.log(switchError)
+      // 4902 error code indicates the chain is missing on the wallet
+      if (switchError.code === 4902) {
+        try {
+          await library.provider.request({
+            method: "wallet_addEthereumChain",
+            params: [
+              {
+                chainId: chain.chainId,
+                rpcUrls: chain.rpcUrls,
+                chainName: chain.chainName,
+                nativeCurrency: chain.nativeCurrency,
+                blockExplorerUrls: chain.blockExplorerUrls,
+                iconUrls: chain.iconUrls,
+              },
+            ],
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
+  };
+
   
   async function verifyENS() {
     let txReceipt;
@@ -255,13 +289,6 @@ export default function Home() {
   }
 
   //worldID addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
-
-
-  // async function sendAnswer(answerData: any) {
-  //   const { requestId, answerText } = answerData;
-
-  //   deOracleWRITE!.postAnswer(requestId, answerText);
-  // }
 
   const requestCardList = () => {
 
@@ -313,6 +340,10 @@ export default function Home() {
         answersCount={answersCount} 
         earnedBountyCount={earnedBountyCount}
         verificationCount={verificationCount}
+        chain={chain}
+        setChain={setChain}
+        handleSwitchNetwork={() => switchNetwork(chain)}
+       
         handleClickConnect={() => connect()}
       />
 
