@@ -24,8 +24,7 @@ function RequestCard(props: any) {
     timeStampDue,
     timeStampPosted,
   } = requestData;
-  
-  const [requestList, setRequestList] = useState([] as any[]);
+
   const [requestStatus, setRequestStatus] = useState("Inactive");
   const [shortWallet, setShortWallet] = useState("");
   const [datePosted, setDatePosted] = useState("");
@@ -69,7 +68,6 @@ function RequestCard(props: any) {
 
   useEffect(() => {
     const checkENSName = async () => {
-      console.log(await deOracleREAD.addressToENSName(origin))
       setRequestENSName(await deOracleREAD.addressToENSName(origin));
     }
     deOracleREAD &&
@@ -210,7 +208,7 @@ function RequestCard(props: any) {
                 target="_blank"
                 rel="noreferrer"
               >
-                <span className="text-xs">{shortWallet}</span>
+                <span className="text-xs">{requestENSName ? requestENSName : shortWallet}</span>
               </a>
             </p>
             <p className="whitespace-nowrap">
