@@ -216,7 +216,7 @@ export default function ConnectHeader(props: any) {
             {(verificationCount == 2) && <p className="italic text-sm pr-24 font-bold text-slate-500">⭐️ Your identity has been verified with Worldcoin and ENS.</p>  }
             {!worldIdVerified && WorldIDWidget}
             {(ENSName && !ENSVerified) && <button onClick={verifyENS} className="verify-ens block w-full border-2 text-slate-700 border-sky-500 rounded-xl mt-2 px-5 py-4 text-sm font-bold relative">
-              {ENSVerified ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute stroke-green-500 left-3.5 top-3.5 "><path strokeLinecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> : <span className="absolute left-4 top-4 border border-slate-700 rounded-full w-5 h-5"> </span>} Verify my ENS <span className="absolute right-5 top-2"><Image className="" src="/ens.svg" height="36" width="36" alt="ENS" /></span></button>}
+              {ENSVerified ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute stroke-green-500 left-3.5 top-3.5 "><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> : <span className="absolute left-4 top-4 border border-slate-700 rounded-full w-5 h-5"> </span>} Verify my ENS <span className="absolute right-5 top-2"><Image className="" src="/ens.svg" height="36" width="36" alt="ENS" /></span></button>}
           </div>
           <hr />
           <p className="pt-3 text-slate-500">
