@@ -247,6 +247,7 @@ function RequestCreate(props: any) {
                   required
                   placeholder="i.e. 100"
                   minLength={1}
+                  min="0"
                   className="inline w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5"
                 />
               </div>
@@ -264,6 +265,7 @@ function RequestCreate(props: any) {
                   required
                   placeholder="i.e. 100"
                   minLength={1}
+                  min="0"
                   className="w-full mt-1 border border-purple-300 px-4 py-3  rounded-lg border-purple-300 mb-5"
                 />
               </div>
@@ -313,6 +315,9 @@ function RequestCreate(props: any) {
             width={200}
             height={200}
           ></Image>
+
+          {/* <iframe src='https://my.spline.design/untitled-66c44eb6a2b0d71bedc6c49d71c1ae89/' frameBorder='0' width='100%' height='100%'></iframe> */}
+
         </div>
       </div>
     </div>

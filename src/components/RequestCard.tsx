@@ -1,13 +1,14 @@
 import { ethers } from "ethers";
+import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
 import { useEffect, useState } from "react";
 
 function RequestCard(props: any) {
   const {
     requestData,
     answerList,
-    handleClickAnswer,
     answerFormData,
     updateAnswerFormData,
+    setSendAnswerState,
     provider,
     deOracleWRITE,
     deOracleREAD,
@@ -119,12 +120,6 @@ function RequestCard(props: any) {
 // }, [provider, id, deOracleREAD])
 
 
-
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-    handleClickAnswer(answerFormData);
-  };
-
   const handleChange = (event: any) => {
     const requestId = id.toNumber();
     updateAnswerFormData((prevData: any) => {
@@ -134,6 +129,46 @@ function RequestCard(props: any) {
       };
     });
   };
+
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+    sendAnswer(answerFormData, event);
+  };
+
+  async function sendAnswer(answerData: any, event: any) {
+    const { requestId, answerText } = answerData;
+    let txReceipt;
+    const input = event.target.firstChild.firstChild
+    const button = event.target.firstChild.lastChild
+    const spinner = event.target.lastChild
+
+    // deOracleWRITE!.postAnswer(requestId, answerText);
+    if(deOracleWRITE)
+     txReceipt = await deOracleWRITE.postAnswer(requestId, answerText);
+
+    // disable answer input & button and show loading
+    input.setAttribute("disabled", "true")
+    button.setAttribute("disabled", "true")
+    spinner.classList.remove("hidden")
+    
+    txReceipt = await txReceipt.wait();
+      
+     if(txReceipt.status === 1) {
+        // enable answer input & button and hide loading
+        input.removeAttribute("disabled")
+        button.removeAttribute("disabled")
+        spinner.classList.add("hidden")
+        input.value = ""
+        setSendAnswerState((previousState: any) => !previousState)
+
+        // show Create Request button
+        console.log("Tx success:", txReceipt.status === 1)
+      
+      } else {
+        console.log("Approve tx Failed, check Metamask and try again.")
+      }
+
+  }
 
 
   const upVoteAnswer = (event: any) => {
@@ -230,9 +265,9 @@ function RequestCard(props: any) {
                     return (
                       <div
                         key={answer.id.toNumber()}
-                        className="border-b border-slate-200 flex flex-wrap md:flex-nowrap gap-5 text-sm py-3 items-top"
+                        className="border-b border-slate-200 flex flex-wrap md:flex-nowrap gap-5 text-sm py-3 items-center"
                       >
-                        <div className="flex-none text-center font-bold">
+                        <div className="flex-none font-bold w-full md:w-auto">
                         <p className="">
                           <button name={answer.id.toNumber()} onClick={upVoteAnswer} className="rounded-l-xl px-3 py-2 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">
                             +{answer.upVotes.toNumber()}
@@ -244,14 +279,14 @@ function RequestCard(props: any) {
                             -{answer.downVotes.toNumber()}
                           </button>
                         </p>
-
-                        <p className={`${answer.rewarded ? "" : "opacity-0"}` + " mt-2 text-blue-500 text-xs text-center"}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 inline-block align-middle" style={{marginTop: "-1.5px"}}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> Accepted Answer</p>
-
                         </div>
-                        <p className="text-base md:text-lg font-bold grow">
+                        <div className="grow w-full md:w-auto">
+                        <p className="text-base md:text-lg font-bold">
                           {answer.answerText}
                         </p>
-                        <p className="text-xs text-slate-400 text-right">
+                        <p className={`${answer.rewarded ? "" : "hidden"}` + " mt-2 text-blue-500 text-xs text-left"}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 inline-block align-middle" style={{marginTop: "-1.5px"}}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> Accepted Answer</p>
+                        </div>
+                        <p className="text-xs text-slate-400 text-left md:text-right w-full md:w-auto">
                           <b>Answered by:</b>{" "}
                           <a
                             href={
@@ -282,11 +317,22 @@ function RequestCard(props: any) {
                   />
                   <button
                     type="submit"
-                    className="absolute right-0 border px-5 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r to-purple via-blue from-purple-200 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 hover:border-purple-500 hover:text-purple-700"
+                    className="absolute right-0 border px-5 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r to-purple via-blue from-purple-200 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 hover:border-purple-500 hover:text-purple-700 disabled:opacity-60"
                   >
                     Send
                   </button>
                 </div>
+
+                <div className="grid hidden">
+                  <div className="place-self-end inline whitespace-nowrap">
+                    <svg className="animate-spin ml-1 mr-3 h-5 w-5 text-purple-400 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span className="text-purple-600">Processing...</span>
+                  </div>
+                </div>
+
               </form>
             </div>
 

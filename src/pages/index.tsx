@@ -53,6 +53,7 @@ export default function Home() {
   const [verificationCount, setVerficationCount] = useState(0);
   const [requestsCount, setRequestsCount] = useState(0);
   const [answersCount, setAnswersCount] = useState(0);
+  const [sendAnswerState, setSendAnswerState] = useState(false);
   
   const [earnedBountyCount, setEarnedBountyCount] = useState("");
   const [REP, setREP] = useState(0);
@@ -135,7 +136,7 @@ export default function Home() {
       writeContractData();
       updateVerifiedCount();
     }
-  }, [deOracleREAD, worldIdVerified]);
+  }, [deOracleREAD, worldIdVerified, sendAnswerState]);
 
   useEffect(() => {
     const updateRequestsCount = () => {
@@ -256,11 +257,11 @@ export default function Home() {
   //worldID addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
 
 
-  async function sendAnswer(answerData: any) {
-    const { requestId, answerText } = answerData;
+  // async function sendAnswer(answerData: any) {
+  //   const { requestId, answerText } = answerData;
 
-    deOracleWRITE!.postAnswer(requestId, answerText);
-  }
+  //   deOracleWRITE!.postAnswer(requestId, answerText);
+  // }
 
   const requestCardList = () => {
 
@@ -278,10 +279,11 @@ export default function Home() {
         <RequestCard
           key={id + i}
           requestData={card}
-          handleClickAnswer={() => sendAnswer(answerFormData)}
+          // handleClickAnswer={() => sendAnswer(answerFormData)}
           answerFormData={answerFormData}
           updateAnswerFormData={setAnswerFormData}
           answerList={answerList}
+          setSendAnswerState={setSendAnswerState}
           provider={provider}
           deOracleWRITE={deOracleWRITE}
           deOracleREAD={deOracleREAD}
