@@ -177,8 +177,8 @@ export default function Home() {
         ["uint256[8]"],
         proof
       )[0];
-  
-      deOracleWRITE!.verifyAndExecute(
+      deOracleWRITE &&
+      deOracleWRITE.verifyAndExecute(
         account,
         merkle_root,
         nullifier_hash,

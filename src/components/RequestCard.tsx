@@ -24,7 +24,8 @@ function RequestCard(props: any) {
     timeStampDue,
     timeStampPosted,
   } = requestData;
-
+  
+  const [requestList, setRequestList] = useState([] as any[]);
   const [requestStatus, setRequestStatus] = useState("Inactive");
   const [shortWallet, setShortWallet] = useState("");
   const [datePosted, setDatePosted] = useState("");
@@ -57,32 +58,29 @@ function RequestCard(props: any) {
     }
 
     if(Object.keys(answerList).length > 0) {
-      console.log("running");
       getENSNames();
       setENSFetched(true);
-    } 
+    }  
       async function checkENS(origin: string) {
           const ENS = await mainNetProvider.lookupAddress(origin);
           return ENS;
     }
-  }, [id])
+  }, [answerList.length])
 
   useEffect(() => {
-    
     const checkENSName = async () => {
-      deOracleREAD &&
+      console.log(await deOracleREAD.addressToENSName(origin))
       setRequestENSName(await deOracleREAD.addressToENSName(origin));
     }
+    deOracleREAD &&
    checkENSName();
-  }, [deOracleREAD])
+  }, [])
 
   useEffect(() => {
     active ? setRequestStatus("green") : setRequestStatus("red");
 
-    if(origin) {
       requestENSName ? setShortWallet(requestENSName) :
       setShortWallet(origin.substring(0, 6) + "..." + origin.slice(-4))
-    }   
 
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
