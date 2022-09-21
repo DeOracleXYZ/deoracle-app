@@ -44,7 +44,7 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const deOracleAddress = "0x0903DefA6E37fdEc2996DfAfC8Dccff5b826b706";
+  const deOracleAddress = "0x0550e780BA813D2EDbB6A755662640f4A0a97aC8";
   
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
@@ -166,7 +166,7 @@ export default function Home() {
     updateRequestsCount();
     updateAnswersCount();
     updateEarnedBountyCount();
-  }, []);
+  }, [deOracleREAD, requestsCount, answersCount, earnedBountyCount]);
 
 
   useEffect(() => {
@@ -227,6 +227,7 @@ export default function Home() {
   }, [activateNetwork, networkActive, networkError]);
 
   async function connect() {
+    //TODO: 
     try {
       await activate(injected);
     } catch (e) {

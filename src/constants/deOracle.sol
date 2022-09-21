@@ -56,8 +56,9 @@ contract deOracle is IUSDC {
         uint256 downVotes;
     }
 
-    mapping(address => bool) public worldIdVerified;
-    mapping(address => bool) public ENSVerified;
+    mapping(address => bool) public addressToWorldIdVerified;
+    mapping(address => bool) public addressToENSVerified;
+    mapping(address => string) public addressToENSName;
     mapping(address => uint256) public addressToREP;
 
     mapping(address => uint256) public addressToBountyEarned;
@@ -107,6 +108,10 @@ contract deOracle is IUSDC {
     }
 
     function postAnswer(uint256 _requestId, string memory _answerText) public {
+        require(
+            addressToREP[msg.sender] >= requestList[_requestId].reputation,
+            "Not enough REP to answer."
+        );
         require(
             msg.sender != requestList[_requestId].origin,
             "You cant answer your own request."
@@ -170,20 +175,20 @@ contract deOracle is IUSDC {
         return addressToBountyEarned[msg.sender];
     }
 
-    //worldId verification complete?
-    function checkWorldIdVerified(address _address) public view returns (bool) {
-        return worldIdVerified[_address] ? true : false;
-    }
-
     //worldID only modifier needed ***
     function setWorldIdVerified(address _address) public {
-        worldIdVerified[_address] = true;
+        addressToWorldIdVerified[_address] = true;
         addREP(_address, 100);
     }
 
-    function setENSVerified(address _address) public {
-        ENSVerified[_address] = true;
-        addREP(_address, 50);
+    function setENSVerified(string memory _ensName) public {
+        require(
+            addressToENSVerified[msg.sender] == false,
+            "Already ENS Verified"
+        );
+        addressToENSVerified[msg.sender] = true;
+        addressToENSName[msg.sender] = _ensName;
+        addREP(msg.sender, 50);
     }
 
     function upVote(uint256 _answerId) public eligibleVoter(_answerId, 50) {
