@@ -214,17 +214,17 @@ export default function ConnectHeader(props: any) {
           <div className="flex gap-2 justify-start">
             <b>
               <button
-                className="text-purple-500 hover:text-purple-400"
+                className="text-sm text-purple-500 hover:text-purple-400"
                 onClick={() => (setChain(goerli), handleSwitchNetwork())}
               >
                 Polygon Mumbai
               </button>{" "}
               &nbsp; &nbsp; &nbsp; &nbsp;
               <button
-                className="text-red-500 hover:text-red-400"
+                className="text-sm text-red-500 hover:text-red-400"
                 onClick={() => (setChain(mumbai), handleSwitchNetwork())}
               >
-                Goerli
+                Optimism Goerli
               </button>
             </b>
           </div>
