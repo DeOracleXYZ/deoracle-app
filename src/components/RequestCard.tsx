@@ -1,5 +1,5 @@
+import { isCommunityResourcable } from "@ethersproject/providers";
 import { ethers } from "ethers";
-import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
 import { useEffect, useState } from "react";
 
 function RequestCard(props: any) {
@@ -33,17 +33,49 @@ function RequestCard(props: any) {
   const [showMe, setShowMe] = useState(false);
   const [requestOwner, setRequestOwner] = useState(false);
   const [answerIds, setAnswerIds] = useState([]);
-  const [ENSName, setENSName] = useState("");
+  const [requestENSName, setRequestENSName] = useState("");
+  const [answerOriginToENS, setAnswerOriginToENS] = useState({});
+  const mainNetProvider = new ethers.providers.AlchemyProvider(
+    1,
+    "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
+  );
 
   function toggle() {
     setShowMe(!showMe);
   }
+  useEffect(() => {
+    //answerOriginToENS &&
+    //console.log(answerOriginToENS)
+  }, [answerOriginToENS])
+
+  useEffect(() => {
+    let ENS: any;
+    answerList &&
+    answerList.map((answerArray: any) => {
+      if(answerArray.origin){
+        ENS = checkENS(answerArray.origin)
+        setAnswerOriginToENS(prevState => (
+          {
+            ...prevState,
+            [answerArray.origin]:ENS
+          }
+        ))
+      }
+  
+    }
+
+      )
+      async function checkENS(origin: string) {
+          const ENS = await mainNetProvider.lookupAddress(origin);
+          return ENS;
+    }
+  }, [answerList, provider,])
 
   useEffect(() => {
     
     const checkENSName = async () => {
       deOracleREAD &&
-      setENSName(await deOracleREAD.addressToENSName(origin));
+      setRequestENSName(await deOracleREAD.addressToENSName(origin));
     }
    checkENSName();
   }, [deOracleREAD])
@@ -52,7 +84,7 @@ function RequestCard(props: any) {
     active ? setRequestStatus("green") : setRequestStatus("red");
 
     if(origin) {
-      ENSName ? setShortWallet(ENSName) :
+      requestENSName ? setShortWallet(requestENSName) :
       setShortWallet(origin.substring(0, 6) + "..." + origin.slice(-4))
     }   
 
@@ -78,7 +110,7 @@ function RequestCard(props: any) {
 
     setDatePosted(datePosted)
     setDateDue(dateDue)
-  }, [active, origin, timeStampDue, timeStampPosted, id, account,answerList, ENSName]);
+  }, [active, origin, timeStampDue, timeStampPosted, id, account,answerList]);
 
 
   useEffect(() => {
@@ -131,6 +163,7 @@ function RequestCard(props: any) {
       console.log(e);
     }
   };
+
 
   const acceptAnswer = (event: any) => {
     console.log("accept")
@@ -240,7 +273,7 @@ function RequestCard(props: any) {
                             target="_blank"
                             rel="noreferrer"
                           >
-                            {shortWallet}
+                            {answer.ENS}
                           </a>
                         </p>
                       </div>
