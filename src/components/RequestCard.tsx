@@ -42,7 +42,7 @@ function RequestCard(props: any) {
   useEffect(() => {
     
     const checkENSName = async () => {
-      if(deOracleREAD)
+      deOracleREAD &&
       setENSName(await deOracleREAD.addressToENSName(origin));
     }
    checkENSName();
