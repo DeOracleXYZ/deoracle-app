@@ -140,7 +140,7 @@ export default function Home() {
       writeContractData();
       updateVerifiedCount();
     }
-  }, [deOracleREAD, worldIdVerified, sendAnswerState]);
+  }, [deOracleREAD, worldIdVerified, ENSVerified, sendAnswerState]);
 
   useEffect(() => {
     const updateRequestsCount = () => {
