@@ -1,4 +1,3 @@
-import { isCommunityResourcable } from "@ethersproject/providers";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 
@@ -34,7 +33,8 @@ function RequestCard(props: any) {
   const [requestOwner, setRequestOwner] = useState(false);
   const [answerIds, setAnswerIds] = useState([]);
   const [requestENSName, setRequestENSName] = useState("");
-  const [answerOriginToENS, setAnswerOriginToENS] = useState({});
+  const [answerOriginToENS, setAnswerOriginToENS]:[any, any] = useState({});
+  const [ENSFetched, setENSFetched] = useState(false);
   const mainNetProvider = new ethers.providers.AlchemyProvider(
     1,
     "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
@@ -43,33 +43,31 @@ function RequestCard(props: any) {
   function toggle() {
     setShowMe(!showMe);
   }
-  useEffect(() => {
-    //answerOriginToENS &&
-    //console.log(answerOriginToENS)
-  }, [answerOriginToENS])
+
 
   useEffect(() => {
-    let ENS: any;
-    answerList &&
-    answerList.map((answerArray: any) => {
-      if(answerArray.origin){
-        ENS = checkENS(answerArray.origin)
-        setAnswerOriginToENS(prevState => (
-          {
-            ...prevState,
-            [answerArray.origin]:ENS
-          }
-        ))
-      }
-  
+
+    async function getENSNames() {
+      let ENS: string | null;
+        answerList.map(async (answerArray: any) => {
+          ENS = await checkENS(answerArray.origin);
+          setAnswerOriginToENS((prevState: any) => ({
+              ...prevState,
+              [answerArray.origin]: ENS
+          }))
+       })
     }
 
-      )
+    if(Object.keys(answerList).length > 0) {
+      getENSNames();
+      setENSFetched(true);
+    } 
       async function checkENS(origin: string) {
           const ENS = await mainNetProvider.lookupAddress(origin);
           return ENS;
     }
-  }, [answerList, provider,])
+  }, [answerList])
+
 
   useEffect(() => {
     
@@ -143,8 +141,7 @@ function RequestCard(props: any) {
 
 
   const upVoteAnswer = (event: any) => {
-    console.log("upvote")
-    console.log(event.currentTarget.name)
+
     try {
      event.currentTarget.name &&
        deOracleWRITE.upVote(event.currentTarget.name)
@@ -154,8 +151,6 @@ function RequestCard(props: any) {
   };
 
   const downVoteAnswer = (event: any) => {
-    console.log("downvote")
-    console.log(event.currentTarget.name)
     try {
      event.currentTarget.name &&
        deOracleWRITE.downVote(event.currentTarget.name)
@@ -166,8 +161,6 @@ function RequestCard(props: any) {
 
 
   const acceptAnswer = (event: any) => {
-    console.log("accept")
-    console.log(event.currentTarget.name)
     try {
      event.currentTarget.name &&
        deOracleWRITE.selectAnswer(event.currentTarget.name)
@@ -273,7 +266,7 @@ function RequestCard(props: any) {
                             target="_blank"
                             rel="noreferrer"
                           >
-                            {answer.ENS}
+                            {  ENSFetched && answerOriginToENS[answer.origin] ? answerOriginToENS[answer.origin] : answer.origin.substring(0, 6) + "..." + answer.origin.slice(-4)}
                           </a>
                         </p>
                       </div>

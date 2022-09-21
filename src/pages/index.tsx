@@ -26,10 +26,16 @@ export default function Home() {
     error: networkError,
     activate: activateNetwork,
     library,
+    library: active,
     library: provider,
     account,
     chainId,
   } = useWeb3React();
+
+  const mumbaiProvider = new ethers.providers.AlchemyProvider(
+    0x13881,
+    "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
+  );
 
   const id = useId();
   const [loaded, setLoaded] = useState(false);
@@ -39,6 +45,7 @@ export default function Home() {
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
   const deOracleAddress = "0x0903DefA6E37fdEc2996DfAfC8Dccff5b826b706";
+  
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
   const [requestList, setRequestList] = useState([] as any[]);
@@ -71,59 +78,51 @@ export default function Home() {
       console.log("Error while initialization World ID", error),
   };
 
+  //check if injected and active.  If not, use Alchemy RPC provider(mumbai)
   useEffect(() => {
-    if(provider)
-    try{
+    if(!active) {
       setDeOracleREAD(
         new ethers.Contract(
         deOracleAddress,
         deOracleABI,
-        provider
+        mumbaiProvider
       ))
-   
-      setDeOracleWRITE(
-        new ethers.Contract(
-        deOracleAddress,
-        deOracleABI,
-        provider.getSigner()
-      ))
-    } catch(err) {
-      console.log(err)
+    } else {
+      try{
+        setDeOracleREAD(
+          new ethers.Contract(
+          deOracleAddress,
+          deOracleABI,
+          provider
+        ))
+        setDeOracleWRITE(
+          new ethers.Contract(
+          deOracleAddress,
+          deOracleABI,
+          provider.getSigner()
+        ))
+      } catch(err) {
+        console.log(err)
+      }
     }
-  
-    
-  }, [provider])
-
+  }, [library])
 
   useEffect(() => {
-    injected
-      .isAuthorized()
-      .then((isAuthorized) => {
-        setLoaded(true);
-        if (isAuthorized && !networkActive && !networkError) {
-          activateNetwork(injected);
-        }
-      })
-      .catch(() => {
-        setLoaded(true);
-      });
-  }, [activateNetwork, networkActive, networkError]);
-
-  useEffect(() => {
-    if (deOracleWRITE) {
+    if (deOracleREAD) {
       const readContractData = async () => {
-        deOracleWRITE && (
-          setREP((await deOracleWRITE.getREP()).toNumber()),
-          setRequestList(await deOracleWRITE.getRequestList()),
-          setAnswerList(await deOracleWRITE.getAnswerList())
-        )
-        
-      };
-      const checkVerified = async () => {
-        deOracleWRITE && (
-        setWorldIdVerified(await deOracleWRITE.addressToWorldIdVerified(account)),
-        setENSVerified(await deOracleWRITE.addressToENSVerified(account))
-        )
+        setRequestList(await deOracleREAD.getRequestList());
+        setAnswerList(await deOracleREAD.getAnswerList());
+    }
+    readContractData();
+  }
+
+    if (deOracleWRITE) {
+      const writeContractData = async () => {
+          setREP((await deOracleWRITE.getREP()).toNumber())
+          setWorldIdVerified(await deOracleWRITE.addressToWorldIdVerified(account));
+          setENSVerified(await deOracleWRITE.addressToENSVerified(account));
+          const data = await provider.getBalance(account);
+          setBalance(ethers.utils.formatEther(data));
       };
 
       const updateVerifiedCount = () => {
@@ -132,36 +131,11 @@ export default function Home() {
         ENSVerified && verifCount++;
         setVerficationCount(verifCount);
       };
-
-      const fetchbalanceAndREP = async () => {
-        if (provider) {
-          const data = await provider.getBalance(account);
-          setBalance(ethers.utils.formatEther(data));
-        }
-      };
-      readContractData();
-      checkVerified();
-      fetchbalanceAndREP();
+    
+      writeContractData();
       updateVerifiedCount();
-    } else {
-      ///default RPC provider
-      const mumbaiProvider = new ethers.providers.AlchemyProvider(
-        0x13881,
-        "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
-      );
-      const getRequestsRPC = async () => {
-        const deOracleContract = new ethers.Contract(
-          deOracleAddress,
-          deOracleABI,
-          mumbaiProvider
-        );
-
-      setRequestList(await deOracleContract.getRequestList());
-      };
-
-      getRequestsRPC().catch(console.error);
     }
-  }, [ENSVerified, balance, worldIdVerified, deOracleWRITE, deOracleREAD, account, provider]);
+  }, [deOracleREAD, verificationCount]);
 
   useEffect(() => {
     const updateRequestsCount = () => {
@@ -192,7 +166,7 @@ export default function Home() {
     updateRequestsCount();
     updateAnswersCount();
     updateEarnedBountyCount();
-  }, [account, requestList, answerList, deOracleWRITE]);
+  }, []);
 
 
   useEffect(() => {
@@ -234,6 +208,23 @@ export default function Home() {
     };
     resolveAddress();
   }, [ENSName, ENSVerified, account]);
+
+
+
+
+  useEffect(() => {
+    injected
+      .isAuthorized()
+      .then((isAuthorized) => {
+        setLoaded(true);
+        if (isAuthorized && !networkActive && !networkError) {
+          activateNetwork(injected);
+        }
+      })
+      .catch(() => {
+        setLoaded(true);
+      });
+  }, [activateNetwork, networkActive, networkError]);
 
   async function connect() {
     try {
