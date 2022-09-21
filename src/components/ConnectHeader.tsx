@@ -99,7 +99,7 @@ export default function ConnectHeader(props: any) {
             <div
               className={
                 `${showMe ? "active" : ""}` +
-                " profile-button py-5 pl-2 md:pl-5 pr-8 md:pr-16 h-full align-middle justify-self-end"
+                " profile-button py-5 pl-2 md:pl-5 pr-8 md:pr-14 h-full align-middle justify-self-end"
               }
               onClick={toggle}
             >
@@ -110,56 +110,64 @@ export default function ConnectHeader(props: any) {
                   </span>
                   <span className="text-xs md:text-lg">
                     {" "}
-                    - {Number(balance).toFixed(2)} <small>{chainIdsMap[chainId]}</small>
+                    - {Number(balance).toFixed(2)} <small className="text-xs">{chainIdsMap[chainId]}</small>
                   </span>
                 </p>
-                <div className="grid place-content-end md:place-items-center grid-cols-1 md:grid-cols-2 gap-1 md:gap-3 mt-1 text-right">
-                  <p className="text-slate-600 text-xs md:text-sm">
-                    {REP} REP
-                  </p>
-                  <p className="text-slate-600 text-xs md:text-sm">
+                <div className="grid place-content-end md:place-items-right grid-cols-1 gap-1 mt-1">
+                  <p className="text-slate-600 text-xs md:text-sm text-right">
+                    <span className="inline-block align-top">{REP} REP</span>
+                    <span>&nbsp; &nbsp; &nbsp;</span>
+                    {/* <span className="inline-block align-top">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill={verificationCount ? "#f7eb02" : "none"}
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="inline-block w-5 h-5 mb-1"
+                      className="inline-block w-4 h-4 mb-1"
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
                       />
-                    </svg>{" "}
-                    <Image
-                      className={worldIdCondition}
-                      onClick={() =>
-                        console.log(
-                          worldIdVerified
-                            ? "World ID verified."
-                            : "Not World ID verified."
-                        )
-                      }
-                      src="/world-id.svg"
-                      height="24"
-                      width="24"
-                      alt="World ID verified"
-                    />
-
-                    <Image
-                      className={ENSCondition}
-                      onClick={() =>
-                        console.log(ENSVerified ? "ENS verified." : "Not ENS verified.")
-                      }
-                      src="/ens.svg"
-                      height="24"
-                      width="24"
-                      alt="ENS verified"
-                    />
-                    {verificationCount
-                      ? "Verified " + verificationCount + "/2"
-                      : "Unverified 0/2"}
+                    </svg>&nbsp; 
+                    </span> */}
+                    <span className="inline-block align-top mb-2">Verification {verificationCount
+                      ? "(" + verificationCount + "/2)"
+                      : "(0/2)"}: </span>
+                    <span className="whitespace-nowrap">
+                      <span className="ml-2 inline-block align-baseline">
+                      <Image
+                        className={worldIdCondition}
+                        onClick={() =>
+                          console.log(
+                            worldIdVerified
+                              ? "World ID verified."
+                              : "Not World ID verified."
+                          )
+                        }
+                        src="/world-id.svg"
+                        height="18"
+                        width="18"
+                        alt="WorldCoin"
+                        title="WorldCoin ID Verification"
+                      />
+                      </span>
+                      <span className="ml-2 inline-block align-baseline">
+                      <Image
+                        className={ENSCondition}
+                        onClick={() =>
+                          console.log(ENSVerified ? "ENS verified." : "Not ENS verified.")
+                        }
+                        src="/ens.svg"
+                        height="18"
+                        width="18"
+                        alt="ENS"
+                        title="ENS Verification"
+                      />
+                      </span>
+                    </span>
                   </p>
                 </div>
               </div>
@@ -201,12 +209,14 @@ export default function ConnectHeader(props: any) {
             </a>
           </p>
           <hr />
-          <p className="pt-3 pb-4">
+          <p className="pt-3 pb-3">
             <b>Verification ({verificationCount}/2):</b>
           </p>
-          <div className="flex gap-3 pb-3">
+          <div className="pb-3">
+            {(verificationCount == 2) && <p className="italic text-sm pr-24 font-bold text-slate-500">⭐️ Your identity has been verified with Worldcoin and ENS.</p>  }
             {!worldIdVerified && WorldIDWidget}
-            {(ENSName && !ENSVerified) && <button onClick={verifyENS} className="">Verify ENS</button>}
+            {(ENSName && !ENSVerified) && <button onClick={verifyENS} className="verify-ens block w-full border-2 text-slate-700 border-sky-500 rounded-xl mt-2 px-5 py-4 text-sm font-bold relative">
+              {ENSVerified ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute stroke-green-500 left-3.5 top-3.5 "><path strokeLinecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> : <span className="absolute left-4 top-4 border border-slate-700 rounded-full w-5 h-5"> </span>} Verify my ENS <span className="absolute right-5 top-2"><Image className="" src="/ens.svg" height="36" width="36" alt="ENS" /></span></button>}
           </div>
           <hr />
           <p className="pt-3 text-slate-500">

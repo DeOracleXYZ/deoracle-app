@@ -241,17 +241,17 @@ function RequestCard(props: any) {
                     return (
                       <div
                         key={answer.id.toNumber()}
-                        className="border-b border-slate-200 flex flex-wrap md:flex-nowrap gap-5 text-sm py-3 items-center"
+                        className="border-b border-slate-200 flex flex-wrap md:flex-nowrap gap-5 text-sm py-3 items-top"
                       >
                         <div className="flex-none text-center font-bold">
                         <p className="">
-                          <button name={answer.id.toNumber()} onClick={upVoteAnswer} className="rounded-l-xl px-3 py-1 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">
+                          <button name={answer.id.toNumber()} onClick={upVoteAnswer} className="rounded-l-xl px-3 py-2 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">
                             +{answer.upVotes.toNumber()}
                           </button>
-                          <button name={answer.id.toNumber()} onClick={acceptAnswer} className={`${requestOwner ? " " : "hidden "}` + `${answer.rewarded ? "hidden " : " "}` + " px-3 py-1 border-2 border-blue-400 text-blue-400 hover:border-blue-500 hover:text-blue-500"} title="Accept Answer">
+                          <button name={answer.id.toNumber()} onClick={acceptAnswer} className={`${requestOwner ? " " : "hidden "}` + `${answer.rewarded ? "hidden " : " "}` + " px-3 py-2 border-2 border-blue-400 text-blue-400 hover:border-blue-500 hover:text-blue-500"} title="Accept Answer">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 inline-block"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                           </button>
-                          <button name={answer.id.toNumber()} onClick={downVoteAnswer} className="rounded-r-xl px-3 py-1 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">
+                          <button name={answer.id.toNumber()} onClick={downVoteAnswer} className="rounded-r-xl px-3 py-2 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">
                             -{answer.downVotes.toNumber()}
                           </button>
                         </p>
