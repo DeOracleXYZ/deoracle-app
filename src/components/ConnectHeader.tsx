@@ -33,7 +33,7 @@ export default function ConnectHeader(props: any) {
       ENSName ? setShortWallet(ENSName) :
       setShortWallet(account.substring(0, 6) + "..." + account.slice(-4));
     }
-      
+
     
   }, [setShortWallet, account, ENSName]);
 

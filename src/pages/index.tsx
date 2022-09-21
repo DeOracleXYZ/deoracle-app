@@ -135,7 +135,7 @@ export default function Home() {
       writeContractData();
       updateVerifiedCount();
     }
-  }, [deOracleREAD, verificationCount]);
+  }, [deOracleREAD, worldIdVerified]);
 
   useEffect(() => {
     const updateRequestsCount = () => {

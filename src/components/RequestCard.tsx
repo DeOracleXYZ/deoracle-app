@@ -44,9 +44,7 @@ function RequestCard(props: any) {
     setShowMe(!showMe);
   }
 
-
   useEffect(() => {
-
     async function getENSNames() {
       let ENS: string | null;
         answerList.map(async (answerArray: any) => {
@@ -59,6 +57,7 @@ function RequestCard(props: any) {
     }
 
     if(Object.keys(answerList).length > 0) {
+      console.log("running");
       getENSNames();
       setENSFetched(true);
     } 
@@ -66,8 +65,7 @@ function RequestCard(props: any) {
           const ENS = await mainNetProvider.lookupAddress(origin);
           return ENS;
     }
-  }, [answerList])
-
+  }, [id])
 
   useEffect(() => {
     
@@ -108,7 +106,8 @@ function RequestCard(props: any) {
 
     setDatePosted(datePosted)
     setDateDue(dateDue)
-  }, [active, origin, timeStampDue, timeStampPosted, id, account,answerList]);
+  }, [answerList]);
+// }, [active, origin, timeStampDue, timeStampPosted, id,answerList]);
 
 
   useEffect(() => {
@@ -120,7 +119,8 @@ function RequestCard(props: any) {
   deOracleREAD && 
     getAnswerIds()
 
-  },[provider, id, deOracleREAD])
+  }, [deOracleREAD])
+// }, [provider, id, deOracleREAD])
 
 
 
