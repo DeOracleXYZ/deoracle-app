@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { erc20ABI } from "../constants/abis";
 import { Contract, ethers } from "ethers";
+import Spline from '@splinetool/react-spline';
+
 
 function RequestCreate(props: any) {
   const { account, provider, deOracleAddress, deOracleWRITE } = props;
@@ -307,16 +309,16 @@ function RequestCreate(props: any) {
         </div>
 
         <div className="col-1 px-5 pt-8 pb-0 flex order-1 md:order-none place-content-center">
-          <Image
+          {/* <Image
             style={{ zIndex: -1 }}
             className="self-center"
             src="eyeball.svg"
             alt="eyeball image"
             width={200}
             height={200}
-          ></Image>
+          ></Image> */}
 
-          {/* <iframe src='https://my.spline.design/untitled-66c44eb6a2b0d71bedc6c49d71c1ae89/' frameBorder='0' width='100%' height='100%'></iframe> */}
+<Spline scene="https://prod.spline.design/LBWVwdzF5oRbGik2/scene.splinecode" width="300" height="300" />
 
         </div>
       </div>
