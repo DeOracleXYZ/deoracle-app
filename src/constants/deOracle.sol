@@ -2,6 +2,9 @@
 
 pragma solidity ^0.8.14;
 
+import {Router} from "@hyperlane-xyz/app/contracts/Router.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+
 interface IWorldID {
     function verifyProof(
         uint256 root,
@@ -27,9 +30,8 @@ interface IUSDC {
     function approve(address spender, uint256 amount) external returns (bool);
 }
 
-contract deOracle is IUSDC {
+contract deOracle is IUSDC, Router {
     using ByteHasher for bytes;
-    address public owner;
 
     //requestIdCounter AnswerIdCounter
     uint256 requestCount = 0;
@@ -78,8 +80,18 @@ contract deOracle is IUSDC {
     Request[] public requestList;
     Answer[] public answerList;
 
-    constructor() {
-        owner = msg.sender;
+    constructor(
+        address _abacusConnectionManager,
+        address _interchainGasPaymaster,
+        uint32 _destinationDomain
+    ) {
+        // Transfer ownership of the contract to deployer
+        _transferOwnership(msg.sender);
+        // Set the addresses for the ACM and IGP
+        // Alternatively, this could be done later in an initialize method
+        _setAbacusConnectionManager(_abacusConnectionManager);
+        _setInterchainGasPaymaster(_interchainGasPaymaster);
+        destinationDomain = _destinationDomain;
     }
 
     function submitRequest(
@@ -143,8 +155,11 @@ contract deOracle is IUSDC {
         addREP(msg.sender, 5);
     }
 
-    function addREP(address _address, uint256 _amount) private {
+    //should be private testing
+    function addREP(address _address, uint256 _amount) public {
         addressToREP[_address] += _amount;
+        sendMessageREP(_address, addressToREP[_address]);
+        // sendMessage(Strings.toString(addressToREP[_address]));
     }
 
     function deductREP(address _address, uint256 _amount) private {
@@ -224,6 +239,80 @@ contract deOracle is IUSDC {
         answerPointer.rewarded = true;
     }
 
+    /////////////////////////HyperLane/////////////////////
+    //////////////////////CrossChain Messaging///////////////////
+    ///////////////////////////////////////////////////////////
+    // ============ Events ============
+    uint32 public destinationDomain;
+
+    event SentMessage(
+        uint32 indexed origin,
+        address indexed addr,
+        uint256 indexed rep
+    );
+    event ReceivedMessage(
+        uint32 indexed origin,
+        uint32 indexed destination,
+        bytes32 sender,
+        string message
+    );
+
+    function sendMessageREP(address _address, uint256 _rep) internal {
+        sent += 1;
+        sentTo[destinationDomain] += 1;
+        _dispatchWithGas(
+            destinationDomain,
+            abi.encode(_address, _rep),
+            msg.value
+        );
+        emit SentMessage(_localDomain(), _address, _rep);
+    }
+
+    // alignment preserving cast
+    function addressToBytes32(address _addr) public pure returns (bytes32) {
+        return bytes32(uint256(uint160(_addr)));
+    }
+
+    // alignment preserving cast
+    function bytes32ToAddress(bytes32 _buf) public pure returns (address) {
+        return address(uint160(uint256(_buf)));
+    }
+
+    // ============ Internal functions ============
+
+    /**
+     * @notice Handles a message from a remote router.
+     * @dev Only called for messages sent from a remote router, as enforced by Router.sol.
+     * @param _origin The domain of the origin of the message.
+     * @param _sender The sender of the message.
+     * @param _message The message body.
+     */
+
+    //      you can use an enum as a type prefix on the message encoding
+    //      and do a sequence of if else in the handle implementation to switch on the message type
+    function _handle(
+        uint32 _origin,
+        bytes32 _sender,
+        bytes memory _message
+    ) internal override {
+        received += 1;
+        receivedFrom[_origin] += 1;
+
+        (address _address, uint256 _rep) = abi.decode(
+            _message,
+            (address, uint256)
+        );
+
+        emit ReceivedMessage(
+            _origin,
+            _localDomain(),
+            _sender,
+            string(_message)
+        );
+
+        addressToREP[_address] = _rep;
+    }
+
     //////////////////BOUNTY / ERC20 ///////////////////////
     ///////////////////////////////////////////////////////
     function approve(address _spender, uint256 _amount) public returns (bool) {
@@ -292,11 +381,6 @@ contract deOracle is IUSDC {
         ///add address to array of verified addresses
     }
 
-    modifier onlyOwner() {
-        require(msg.sender == address(this));
-        _;
-    }
-
     //has not voted, and REP requirement.  Also sets voted to TRUE
     modifier eligibleVoter(uint256 _answerId, uint256 _minREP) {
         require(msg.sender != answerIdToAnswer[_answerId].origin);
@@ -305,6 +389,25 @@ contract deOracle is IUSDC {
         answerIdToAddressToVoted[_answerId][msg.sender] = true;
         _;
     }
+
+    // A counter of how many messages have been sent from this contract.
+    uint256 public sent;
+    // A counter of how many messages have been received by this contract.
+    uint256 public received;
+    // Keyed by domain, a counter of how many messages that have been sent
+    // from this contract to the domain.
+    mapping(uint32 => uint256) public sentTo;
+    // Keyed by domain, a counter of how many messages that have been received
+    // by this contract from the domain.
+    mapping(uint32 => uint256) public receivedFrom;
+
+    // ============ External functions ============
+
+    /**
+     * @notice Sends a message to the _destinationDomain. Any msg.value is
+     * used as interchain gas payment.
+     * @param _destinationDomain The destination domain to send the message to.
+     */
 }
 
 library ByteHasher {
