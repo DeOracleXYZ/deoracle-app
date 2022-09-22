@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { mumbai, goerli, chainIdsMap } from "../constants/networks";
+import { mumbai, kovan, chainIdsMap } from "../constants/networks";
 
 export default function ConnectHeader(props: any) {
   const {
@@ -212,7 +212,7 @@ export default function ConnectHeader(props: any) {
             <b>
               <button
                 className="text-sm text-purple-500 hover:text-purple-400"
-                onClick={() => (setChain(goerli), handleSwitchNetwork())}
+                onClick={() => (setChain(kovan), handleSwitchNetwork())}
               >
                 Polygon Mumbai
               </button>{" "}
