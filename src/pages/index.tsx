@@ -308,9 +308,6 @@ export default function Home() {
       }
   }
   
-
-  //worldID addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
-
   const requestCardList = () => {
 
     const keysDesc: any = Object.keys(requestList!).sort((a:any, b:any) => {return b-a})
