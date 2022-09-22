@@ -48,7 +48,7 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const deOracleAddress = "0x0550e780BA813D2EDbB6A755662640f4A0a97aC8";
+  const deOracleAddress = "0xBE206E63D5cD933D165183C9C834a45BE6e176ea";
   
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
