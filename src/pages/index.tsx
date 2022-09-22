@@ -45,7 +45,7 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const [deOracleAddress, setDeOracleAddress] = useState("0xBE206E63D5cD933D165183C9C834a45BE6e176ea");
+  const [deOracleAddress, setDeOracleAddress] = useState();
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
   const [requestList, setRequestList] = useState([] as any[]);
@@ -79,6 +79,8 @@ export default function Home() {
       console.log("Error while initialization World ID", error),
   };
   useEffect(() => {
+    if(deOracleAddress){
+
     if(typeof(chainId) === "undefined") {
       setDeOracleREAD(
         new ethers.Contract(
@@ -101,11 +103,14 @@ export default function Home() {
             provider.getSigner()
           ))
   }
+        
+}
     
-  }, [deOracleAddress])
+  }, [deOracleAddress, chainId])
 
   //check if injected and active.  If not, use Alchemy RPC provider(mumbai)
   useEffect(() => {
+    if(chainId || deOracleREAD) {
     if(typeof(chainId) === "undefined") {
       setDeOracleAddress("0xBE206E63D5cD933D165183C9C834a45BE6e176ea");      
     } else {
@@ -118,6 +123,9 @@ export default function Home() {
       } catch(err) {
         console.log(err)
       }
+    }
+    } else {
+      setDeOracleAddress("0xBE206E63D5cD933D165183C9C834a45BE6e176ea")
     }
   }, [chainId])
 
