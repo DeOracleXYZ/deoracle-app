@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { mumbai, kovan, chainIdsMap } from "../constants/networks";
+import { chainIdsMap } from "../constants/networks";
 
 export default function ConnectHeader(props: any) {
   const {
     data,
     handleClickConnect,
-    handleSwitchNetwork,
-    chain,
-    setChain,
+    handleSwitchNetworkMumbai,
+    handleSwitchNetworkKovan,
     balance,
     worldIdVerified,
     ENSVerified,
@@ -212,14 +211,14 @@ export default function ConnectHeader(props: any) {
             <b>
               <button
                 className="text-sm text-purple-500 hover:text-purple-400"
-                onClick={() => (setChain(mumbai), handleSwitchNetwork())}
+                onClick={() => (handleSwitchNetworkMumbai())}
               >
                 Polygon Mumbai
               </button>{" "}
               &nbsp; &nbsp; &nbsp; &nbsp;
               <button
                 className="text-sm text-red-500 hover:text-red-400"
-                onClick={() => (setChain(kovan), handleSwitchNetwork())}
+                onClick={() => (handleSwitchNetworkKovan())}
               >
                 Optimism Kovan
               </button>

@@ -9,6 +9,7 @@ import { deOracleABI, erc20ABI } from "../constants/abis";
 import Head from "next/head";
 import RequestCreate from "../components/RequestCreate";
 import RequestCard from "../components/RequestCard";
+import { mumbai, kovan } from "../constants/networks";
 
 
 const injected = new InjectedConnector({
@@ -42,7 +43,6 @@ export default function Home() {
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState("");
   const [proofResponse, setProofResponse] = useState(null as VerificationResponse | null);
-  const [chain, setChain] = useState();
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
@@ -361,10 +361,8 @@ export default function Home() {
         answersCount={answersCount} 
         earnedBountyCount={earnedBountyCount}
         verificationCount={verificationCount}
-        chain={chain}
-        setChain={setChain}
-        handleSwitchNetwork={() => switchNetwork(chain)}
-       
+        handleSwitchNetworkMumbai={() => switchNetwork(mumbai)}
+        handleSwitchNetworkKovan={() => switchNetwork(kovan)}
         handleClickConnect={() => connect()}
       />
 
