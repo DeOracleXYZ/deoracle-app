@@ -10,6 +10,7 @@ import Head from "next/head";
 import RequestCreate from "../components/RequestCreate";
 import RequestCard from "../components/RequestCard";
 
+
 const injected = new InjectedConnector({
   supportedChainIds: [0x13881, 0x7a69, 69],
 });
@@ -89,13 +90,12 @@ export default function Home() {
         mumbaiProvider
       ))
     } else {
-          console.log(chainId, deOracleAddress),
           setDeOracleREAD(
             new ethers.Contract(
             deOracleAddress,
             deOracleABI,
             provider
-          )),
+          ))
           setDeOracleWRITE(
             new ethers.Contract(
             deOracleAddress,
@@ -106,9 +106,9 @@ export default function Home() {
         
 }
     
-  }, [deOracleAddress, chainId])
+  }, [deOracleAddress])
 
-  //check if injected and active.  If not, use Alchemy RPC provider(mumbai)
+
   useEffect(() => {
     if(chainId || deOracleREAD) {
     if(typeof(chainId) === "undefined") {
