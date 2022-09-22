@@ -9,12 +9,9 @@ import { deOracleABI, erc20ABI } from "../constants/abis";
 import Head from "next/head";
 import RequestCreate from "../components/RequestCreate";
 import RequestCard from "../components/RequestCard";
-import { goerli, mumbai } from '../constants/networks'
-
-
 
 const injected = new InjectedConnector({
-  supportedChainIds: [0x13881, 0x7a69, 420],
+  supportedChainIds: [0x13881, 0x7a69, 69],
 });
 
 const WorldIDWidget = dynamic<WidgetProps>(
@@ -32,7 +29,7 @@ export default function Home() {
     library: active,
     library: provider,
     account,
-    chainId,
+    chainId
   } = useWeb3React();
 
   const mumbaiProvider = new ethers.providers.AlchemyProvider(
@@ -48,8 +45,7 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const deOracleAddress = "0xBE206E63D5cD933D165183C9C834a45BE6e176ea";
-  
+  const [deOracleAddress, setDeOracleAddress] = useState("0xBE206E63D5cD933D165183C9C834a45BE6e176ea");
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
   const [requestList, setRequestList] = useState([] as any[]);
@@ -58,7 +54,6 @@ export default function Home() {
   const [requestsCount, setRequestsCount] = useState(0);
   const [answersCount, setAnswersCount] = useState(0);
   const [sendAnswerState, setSendAnswerState] = useState(false);
-  
   const [earnedBountyCount, setEarnedBountyCount] = useState("");
   const [REP, setREP] = useState(0);
   const [answerFormData, setAnswerFormData] = useState({
@@ -76,16 +71,15 @@ export default function Home() {
     debug: true, // Recommended **only** for development
     onSuccess: (verificationResponse) => {
       setProofResponse(verificationResponse);
+
     },
     onError: ({ code, detail }) => console.log({ code, detail }),
     onInitSuccess: () => console.log("Init successful"),
     onInitError: (error) =>
       console.log("Error while initialization World ID", error),
   };
-
-  //check if injected and active.  If not, use Alchemy RPC provider(mumbai)
   useEffect(() => {
-    if(!active) {
+    if(typeof(chainId) === "undefined") {
       setDeOracleREAD(
         new ethers.Contract(
         deOracleAddress,
@@ -93,54 +87,71 @@ export default function Home() {
         mumbaiProvider
       ))
     } else {
+          console.log(chainId, deOracleAddress),
+          setDeOracleREAD(
+            new ethers.Contract(
+            deOracleAddress,
+            deOracleABI,
+            provider
+          )),
+          setDeOracleWRITE(
+            new ethers.Contract(
+            deOracleAddress,
+            deOracleABI,
+            provider.getSigner()
+          ))
+  }
+    
+  }, [deOracleAddress])
+
+  //check if injected and active.  If not, use Alchemy RPC provider(mumbai)
+  useEffect(() => {
+    if(typeof(chainId) === "undefined") {
+      setDeOracleAddress("0xBE206E63D5cD933D165183C9C834a45BE6e176ea");      
+    } else {
       try{
-        setDeOracleREAD(
-          new ethers.Contract(
-          deOracleAddress,
-          deOracleABI,
-          provider
-        ))
-        setDeOracleWRITE(
-          new ethers.Contract(
-          deOracleAddress,
-          deOracleABI,
-          provider.getSigner()
-        ))
+        if (chainId === 69) {
+            setDeOracleAddress("0x7ecf20A28b2DFf9CaE85c060e9632ae5aF877209");           
+        } else if (chainId === 80001) {
+            setDeOracleAddress("0xBE206E63D5cD933D165183C9C834a45BE6e176ea");
+        }
       } catch(err) {
         console.log(err)
       }
     }
-  }, [library])
+  }, [chainId])
 
   useEffect(() => {
-    if (deOracleREAD) {
+  
       const readContractData = async () => {
-        setRequestList(await deOracleREAD.getRequestList());
-        setAnswerList(await deOracleREAD.getAnswerList());
+        setRequestList(await deOracleREAD!.getRequestList());
+        setAnswerList(await deOracleREAD!.getAnswerList());
     }
-    readContractData();
-  }
 
-    if (deOracleWRITE) {
+    deOracleREAD &&
+     readContractData();
+  
+
       const writeContractData = async () => {
-          setREP((await deOracleWRITE.getREP()).toNumber())
-          setWorldIdVerified(await deOracleWRITE.addressToWorldIdVerified(account));
-          setENSVerified(await deOracleWRITE.addressToENSVerified(account));
+          setREP(await (await deOracleWRITE!.getREP()).toNumber());
+          setWorldIdVerified(await deOracleWRITE!.addressToWorldIdVerified(account));
+          setENSVerified(await deOracleWRITE!.addressToENSVerified(account));
           const data = await provider.getBalance(account);
           setBalance(ethers.utils.formatEther(data));
       };
-
       const updateVerifiedCount = () => {
         let verifCount = 0;
         worldIdVerified && verifCount++;
         ENSVerified && verifCount++;
         setVerficationCount(verifCount);
       };
-    
-      writeContractData();
-      updateVerifiedCount();
-    }
-  }, [deOracleREAD, worldIdVerified, ENSVerified, sendAnswerState]);
+
+      deOracleWRITE && (
+        writeContractData(),
+        updateVerifiedCount()
+      )
+
+  }, [deOracleREAD]);
 
   useEffect(() => {
     const updateRequestsCount = () => {
@@ -159,6 +170,7 @@ export default function Home() {
         for (let i=0; i<Object.keys(answerList!).length; i++) {
           (answerList[i].origin === account) && answerCount++;
         }
+
         setAnswersCount(answerCount)
       }
     };
@@ -173,12 +185,11 @@ export default function Home() {
     updateEarnedBountyCount();
   }, [deOracleREAD, requestsCount, answersCount, earnedBountyCount]);
 
-
   useEffect(() => {
     proofResponse && sendProof();
     async function sendProof() {
-      const { merkle_root, nullifier_hash, proof }  = proofResponse!; 
-      const unpackedProof = ethers.utils.defaultAbiCoder.decode(
+      let { merkle_root, nullifier_hash, proof }  = proofResponse!; 
+      let unpackedProof = ethers.utils.defaultAbiCoder.decode(
         ["uint256[8]"],
         proof
       )[0];
@@ -228,6 +239,7 @@ export default function Home() {
         setLoaded(true);
       });
   }, [activateNetwork, networkActive, networkError]);
+
 
   async function connect() {
     //TODO: 
@@ -287,6 +299,7 @@ export default function Home() {
         console.log(err);
       }
   }
+  
 
   //worldID addr 0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A
 

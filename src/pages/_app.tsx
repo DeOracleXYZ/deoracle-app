@@ -3,7 +3,7 @@ import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
 const getLibrary = (provider: any) => {
-  return new Web3Provider(provider);
+  return new Web3Provider(provider, "any");
 };
 
 function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {

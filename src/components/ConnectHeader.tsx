@@ -34,9 +34,7 @@ export default function ConnectHeader(props: any) {
     if(account) {
       ENSName ? setShortWallet(ENSName) :
       setShortWallet(account.substring(0, 6) + "..." + account.slice(-4));
-    }
-
-    
+    }    
   }, [setShortWallet, account, ENSName]);
 
   function toggle() {
