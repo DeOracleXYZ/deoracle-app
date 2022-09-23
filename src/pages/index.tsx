@@ -93,7 +93,6 @@ export default function Home() {
       document.documentElement.classList.remove('dark')
       setDarkMode(false)
     }
-
   })
 
   useEffect(() => {
@@ -144,6 +143,8 @@ export default function Home() {
       }
     }
     } 
+    if(!deOracleAddress)
+    setDeOracleAddress(mumbaiAddress)
   }, [chainId])
 
   useEffect(() => {

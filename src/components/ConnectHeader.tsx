@@ -187,7 +187,7 @@ export default function ConnectHeader(props: any) {
             {(verificationCount == 2) && <p className="italic text-sm pr-24 font-bold text-slate-500 dark:text-slate-400">⭐️ Your identity has been verified with Worldcoin and ENS.</p>  }
             {!worldIdVerified && WorldIDWidget}
 
-            {(!ENSName && !ENSVerified) &&  <a href="https://app.ens.domains/" target="_blank" 
+            {(!ENSName && !ENSVerified) &&  <a href="https://ens.domains/" target="_blank" 
               rel="noreferrer" className="verify-ens block w-full border-2 text-slate-700 border-sky-500 rounded-xl mt-2 px-5 py-4 pl-11 text-sm font-bold relative dark:bg-black dark:text-white">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 absolute left-4 top-4"><path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg> Get ENS domain  <span className="absolute right-5 top-2"><Image src="/ens.svg" height="36" width="36" alt="Get ENS" /></span></a>}
 
