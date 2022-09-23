@@ -148,7 +148,7 @@ export default function ConnectHeader(props: any) {
           <div className="mr-5 grid align-middle justify-self-end content-center">
             <div>
               <button
-                className="align-middle px-6 py-3 py-1 text-xl text-purple-600 font-semibold rounded-full border-2 border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2"
+                className="align-middle px-6 py-3 py-1 text-xl text-purple-600 font-semibold rounded-full border-2 border-purple-400 bg-gradient-to-r from-purple-100 from-purple-300 hover:bg-gradient-to-l hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2 dark:text-black/80"
                 onClick={() => handleClickConnect()}
               >
                 Connect
@@ -211,14 +211,14 @@ export default function ConnectHeader(props: any) {
           <div className="flex gap-2 justify-start">
             <b>
               <button
-                className="text-sm text-purple-500 hover:text-purple-400"
+                className={"text-sm text-purple-500 hover:text-purple-400 " + `${(chainId === 80001) ? "border-2" : ""}` + " border-purple-500 px-3 py-2 rounded-lg"}
                 onClick={() => (handleSwitchNetworkMumbai())}
               >
                 Polygon Mumbai
               </button>{" "}
-              &nbsp; &nbsp; &nbsp; &nbsp;
+              &nbsp; &nbsp; 
               <button
-                className="text-sm text-red-500 hover:text-red-400"
+                className={"text-sm text-red-500 hover:text-red-400 " + `${(chainId === 69) ? "border-2" : "" }` + " border-red-500 px-3 py-2 rounded-lg"}
                 onClick={() => (handleSwitchNetworkKovan())}
               >
                 Optimism Kovan

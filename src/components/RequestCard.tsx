@@ -1,5 +1,4 @@
 import { ethers } from "ethers";
-import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
 import { useEffect, useState } from "react";
 
 function RequestCard(props: any) {
@@ -32,7 +31,8 @@ function RequestCard(props: any) {
   const [dateDue, setDateDue] = useState("");
   const [showMe, setShowMe] = useState(false);
   const [requestOwner, setRequestOwner] = useState(false);
-  const [answerIds, setAnswerIds] = useState([]);
+  const [answerIds, setAnswerIds] = useState([]);  
+  const [hasReward, setHasReward] = useState(false);
   const [requestENSName, setRequestENSName] = useState("");
   const [answerOriginToENS, setAnswerOriginToENS]:[any, any] = useState({});
   const [ENSFetched, setENSFetched] = useState(false);
@@ -40,6 +40,8 @@ function RequestCard(props: any) {
     1,
     "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
   );
+
+  let localAnswersTemp: any = [];
 
   function toggle() {
     setShowMe(!showMe);
@@ -119,6 +121,18 @@ function RequestCard(props: any) {
   }, [deOracleREAD])
 // }, [provider, id, deOracleREAD])
 
+  useEffect(() => {
+
+    answerList &&
+    answerList.map(function (answer: any, index: any) {
+      if (answer.requestId.toNumber() == id.toNumber()) {
+        if(answer.rewarded) {
+          setHasReward(true)
+        }
+      }
+    })
+
+  }, [answerList])
 
   const handleChange = (event: any) => {
     const requestId = id.toNumber();
@@ -170,7 +184,6 @@ function RequestCard(props: any) {
 
   }
 
-
   const upVoteAnswer = (event: any) => {
 
     try {
@@ -189,7 +202,6 @@ function RequestCard(props: any) {
       console.log(e);
     }
   };
-
 
   const acceptAnswer = (event: any) => {
     try {
@@ -260,27 +272,25 @@ function RequestCard(props: any) {
               {answerList &&
                 answerList.map(function (answer: any) {
                   if (answer.requestId.toNumber() == id.toNumber()) {
-                    // setCountAnswersForRequest(countAnswersForRequest+1)
-
                     return (
                       <div
                         key={answer.id.toNumber()}
-                        className="border-b border-slate-200 flex flex-wrap md:flex-nowrap gap-5 text-sm py-3 items-center"
+                        className="border-b border-slate-200 dark:border-white/10 flex flex-wrap md:flex-nowrap gap-5 text-sm py-3 items-center"
                       >
                         <div className="flex-none font-bold w-full md:w-auto">
                         <p className="">
-                          <button name={answer.id.toNumber()} onClick={upVoteAnswer} className="rounded-l-xl px-3 py-2 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500">
+                          <button name={answer.id.toNumber()} onClick={upVoteAnswer} className="rounded-l-xl px-3 py-2 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500 dark:bg-slate-900">
                             +{answer.upVotes.toNumber()}
                           </button>
-                          <button name={answer.id.toNumber()} onClick={acceptAnswer} className={`${requestOwner ? " " : "hidden "}` + `${answer.rewarded ? "hidden " : " "}` + " px-3 py-2 border-2 border-blue-400 text-blue-400 hover:border-blue-500 hover:text-blue-500"} title="Accept Answer">
+                          <button name={answer.id.toNumber()} onClick={acceptAnswer} className={`${requestOwner ? " " : "hidden "}` + `${hasReward ? "hidden " : " "}` + " px-3 py-2 border-2 border-blue-400 text-blue-400 hover:border-blue-500 hover:text-blue-500 dark:bg-slate-900"} title="Accept Answer">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 inline-block"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                           </button>
-                          <button name={answer.id.toNumber()} onClick={downVoteAnswer} className="rounded-r-xl px-3 py-2 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">
+                          <button name={answer.id.toNumber()} onClick={downVoteAnswer} className="rounded-r-xl px-3 py-2 dark:bg-slate-900 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">
                             -{answer.downVotes.toNumber()}
                           </button>
                         </p>
                         </div>
-                        <div className="grow w-full md:w-auto">
+                        <div className="grow w-full md:w-auto dark:text-slate-300">
                         <p className="text-base md:text-lg font-bold">
                           {answer.answerText}
                         </p>
@@ -303,7 +313,8 @@ function RequestCard(props: any) {
                       </div>
                     );
                   }
-                })}
+                }
+                )}
 
               <form onSubmit={handleSubmit}>
                 <div className="flex gap-0 justify-between text-purple-500 py-3 relative">
