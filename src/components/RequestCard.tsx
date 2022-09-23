@@ -243,7 +243,7 @@ function RequestCard(props: any) {
                     "-300 mr-1 rounded inline-block"
                   }
                 ></span>{" "}
-                {dateDue}
+                {active ? dateDue : "Completed"}
               </span>
             </p>
             <p className="whitespace-nowrap">
