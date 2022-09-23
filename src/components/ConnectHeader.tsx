@@ -12,6 +12,7 @@ export default function ConnectHeader(props: any) {
     worldIdVerified,
     ENSVerified,
     ENSName,
+    darkMode,
     WorldIDWidget,
     verifyENS,
     requestsCount,
@@ -43,25 +44,25 @@ export default function ConnectHeader(props: any) {
   //conditional tailwind styles based on verification
   const worldIdCondition = worldIdVerified
     ? "hover:cursor-pointer"
-    : "opacity-20 hover:cursor-pointer";
+    : "opacity-20 dark:opacity-30 hover:cursor-pointer";
   const ENSCondition = ENSVerified
     ? "hover:cursor-pointer"
-    : "opacity-20 hover:cursor-pointer";
+    : "opacity-20 dark:opacity-30 hover:cursor-pointer";
 
   return (
     <>
       <header
-        className="sticky top-3 py-1 px-1 grid grid-flow-col auto-cols-max bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 nav-border grid justify-items-stretch grid-cols-2 gap-4"
+        className="sticky top-3 py-1 px-1 grid grid-flow-col auto-cols-max bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 dark:bg-white/10 nav-border grid justify-items-stretch grid-cols-2 gap-4"
         style={{ borderRadius: 16 + "px", zIndex: 999 }}
       >
         <div className="justify-self-start h-24 pt-4">
-          <Image
-            src="/logo.svg"
-            alt="deOracle.xyz Logo"
-            width={342}
-            height={80}
-            style={{ textAlign: "left" }}
-          />
+         <Image
+          src={"/logo"+`${darkMode ? "-dark" : ""}`+".svg"}
+          alt="deOracle.xyz Logo"
+          width={342}
+          height={80}
+          style={{ textAlign: "left" }}
+        />
         </div>
         {active ? (
           <>
@@ -72,7 +73,7 @@ export default function ConnectHeader(props: any) {
               }
               onClick={toggle}
             >
-              <div className="text-right flex flex-col">
+              <div className="text-right flex flex-col dark:text-slate-300">
                 <p>
                   <span className="text-sm md:text-xl">
                     <b>{shortWallet}</b>{" "}
@@ -83,7 +84,7 @@ export default function ConnectHeader(props: any) {
                   </span>
                 </p>
                 <div className="grid place-content-end md:place-items-right grid-cols-1 gap-1 mt-1">
-                  <p className="text-slate-700 text-xs md:text-sm text-right">
+                  <p className="text-slate-700 dark:text-slate-300 text-xs md:text-sm text-right">
                     <span className="inline-block align-top">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -162,7 +163,7 @@ export default function ConnectHeader(props: any) {
         style={{ position: "fixed", zIndex: 99999 }}
       >
         <div
-          className="nav-dropdown p-5 bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 nav-border"
+          className="nav-dropdown p-5 bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 dark:bg-white/10 nav-border dark:text-slate-300"
           style={{
             display: showMe ? "block" : "none",
           }}
@@ -171,7 +172,7 @@ export default function ConnectHeader(props: any) {
             <b>My Wallet:</b>{" "}
             <a
               href={"https://mumbai.polygonscan.com/address/" + account}
-              className="underline hover:no-underline text-slate-500 hover:text-slate-400"
+              className="underline hover:no-underline text-slate-500 dark:text-slate-400 hover:text-slate-400 dark:hover:text-slate-300"
               target="_blank"
               rel="noreferrer"
             >
@@ -183,25 +184,25 @@ export default function ConnectHeader(props: any) {
             <b>Verification ({verificationCount}/2):</b>
           </p>
           <div className="pb-4">
-            {(verificationCount == 2) && <p className="italic text-sm pr-24 font-bold text-slate-500">⭐️ Your identity has been verified with Worldcoin and ENS.</p>  }
+            {(verificationCount == 2) && <p className="italic text-sm pr-24 font-bold text-slate-500 dark:text-slate-400">⭐️ Your identity has been verified with Worldcoin and ENS.</p>  }
             {!worldIdVerified && WorldIDWidget}
 
             {(!ENSName && !ENSVerified) &&  <a href="https://app.ens.domains/" target="_blank" 
-              rel="noreferrer" className="verify-ens text-center block w-full border-2 text-slate-700 border-sky-500 rounded-xl mt-2 px-5 py-4 text-sm font-bold relative">
+              rel="noreferrer" className="verify-ens block w-full border-2 text-slate-700 border-sky-500 rounded-xl mt-2 px-5 py-4 pl-11 text-sm font-bold relative dark:bg-black dark:text-white">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 absolute left-4 top-4"><path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg> Get ENS domain  <span className="absolute right-5 top-2"><Image src="/ens.svg" height="36" width="36" alt="Get ENS" /></span></a>}
 
-            {(ENSName && !ENSVerified) && <button onClick={verifyENS} className="verify-ens block w-full border-2 text-slate-700 border-sky-500 rounded-xl mt-2 px-5 py-4 text-sm font-bold relative">
-              {ENSVerified ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute stroke-green-500 left-3.5 top-3.5 "><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> : <span className="absolute left-4 top-4 border border-slate-700 rounded-full w-5 h-5"> </span>} Verify my ENS <span className="absolute right-5 top-2"><Image className="" src="/ens.svg" height="36" width="36" alt="ENS" /></span></button>}
+            {(ENSName && !ENSVerified) && <button onClick={verifyENS} className="verify-ens block w-full border-2 text-slate-700 border-sky-500 rounded-xl mt-2 px-5 py-4 pl-11 text-sm font-bold relative dark:bg-black dark:text-white text-left">
+              {ENSVerified ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute stroke-green-500 left-3.5 top-3.5 "><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> : <span className="absolute left-4 top-4 border border-slate-700 dark:border-white rounded-full w-5 h-5"> </span>} Verify my ENS <span className="absolute right-5 top-2"><Image className="" src="/ens.svg" height="36" width="36" alt="ENS" /></span></button>}
           </div>
           <hr />
           <p className="pt-3 text-sm">
-            <b>Earned Bounty:</b> <span className="text-slate-500">{earnedBountyCount} USDC</span>
+            <b>Earned Bounty:</b> <span className="text-slate-500 dark:text-slate-400">{earnedBountyCount} USDC</span>
           </p>
           <p className="py-1 text-sm">
-            <b>Answers:</b> <span className="text-slate-500">{answersCount}</span>
+            <b>Answers:</b> <span className="text-slate-500 dark:text-slate-400">{answersCount}</span>
           </p>
           <p className="pb-3 text-sm">
-            <b>Requests:</b> <span className="text-slate-500">{requestsCount}</span>
+            <b>Requests:</b> <span className="text-slate-500 dark:text-slate-400">{requestsCount}</span>
           </p>
           <hr />
           <p className="pt-3 pb-1">

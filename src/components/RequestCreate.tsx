@@ -160,11 +160,11 @@ function RequestCreate(props: any) {
   }
 
   return (
-    <div className="w-full rounded-2xl mb-3 border-2 border-purple-300 text-black hover:border-purple-400">
+    <div className="w-full rounded-2xl mb-3 border-2 border-purple-300 text-black hover:border-purple-400 dark:border-purple-300/50 dark:hover:border-purple-400/50">
       <button
         className={
           `${showMe ? "hidden" : ""}` +
-          " new-request-button w-full px-5 py-5 text-center text-purple-400 hover:text-purple-500 hover:bg-purple-100"
+          " new-request-button w-full px-5 py-5 text-center text-purple-400 hover:text-purple-500 hover:bg-purple-100 dark:text-purple-400/80 dark:hover:text-purple-500/80 dark:hover:bg-purple-800/20"
         }
         onClick={toggle}
       >
@@ -185,7 +185,7 @@ function RequestCreate(props: any) {
         </div>
 
         <div className="col-1 text-right">
-          <button onClick={toggle} className="px-2 py-2 mt-3 hover:bg-purple-100/50 rounded-md">
+          <button onClick={toggle} className="px-2 py-2 mt-3 hover:bg-purple-100/50 dark:hover:bg-purple-100/10 rounded-md">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -216,7 +216,7 @@ function RequestCreate(props: any) {
       >
         <div className="order-2 md:order-none col-1 px-8 pt-0 pb-8 md:pt-8">
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 text-black dark:text-slate-500">
               <div className="col-span-2">
                 <div className="mb-2">
                   <label className="pl-2">
@@ -231,7 +231,7 @@ function RequestCreate(props: any) {
                     required
                     minLength={10}
                     rows={4}
-                    className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg"
+                    className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg dark:bg-slate-900 text-purple-500"
                   />
                 </div>
               </div>
@@ -250,7 +250,7 @@ function RequestCreate(props: any) {
                   placeholder="i.e. 100"
                   minLength={1}
                   min="0"
-                  className="inline w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5"
+                  className="inline w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5 dark:bg-slate-900 text-purple-500"
                 />
               </div>
 
@@ -268,7 +268,7 @@ function RequestCreate(props: any) {
                   placeholder="i.e. 100"
                   minLength={1}
                   min="0"
-                  className="w-full mt-1 border border-purple-300 px-4 py-3  rounded-lg border-purple-300 mb-5"
+                  className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg border-purple-300 mb-5 dark:bg-slate-900 text-purple-500"
                 />
               </div>
 
@@ -284,16 +284,16 @@ function RequestCreate(props: any) {
                     value={formData.dueDate}
                     onChange={handleChange}
                     required
-                    className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5"
+                    className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg text-purple-500 mb-5 dark:bg-slate-900"
                   />
                 </div>
               </div>
 
               <div className="col-span-2">
 
-                <button type="button" onClick={approveUSDC} className={`${showApprove ? "" : "hidden "}` + `${approved ? "hidden " : ""}` + " border align-middle px-6 py-4 text-purple-600 font-semibold rounded-full rounded-lg border-purple-400 bg-gradient-to-r to-purple via-blue from-purple-200 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60 my-3 mr-3"} disabled={showLoading}>Approve {formData.bounty} USDC</button>
+                <button type="button" onClick={approveUSDC} className={`${showApprove ? "" : "hidden "}` + `${approved ? "hidden " : ""}` + " border drop-shadow-lg align-middle px-6 py-4 text-purple-600 dark:text-white/60 dark:hover:text-white/80 font-semibold rounded-full rounded-lg border-purple-400 bg-gradient-to-r from-purple-200 via-blue-200 to-purple-200 dark:from-purple-600/80 dark:via-blue-600/80 dark:to-purple-600/80 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60 my-3 mr-3"} disabled={showLoading}>Approve {formData.bounty} USDC</button>
 
-                <button type="submit" className="border align-middle px-6 py-4 text-purple-600 font-semibold rounded-full rounded-lg border-purple-400 bg-gradient-to-r to-purple via-blue from-purple-200 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60 my-3 mr-3" disabled={showApprove || disableSubmit}>Create Request</button>
+                <button type="submit" className="border drop-shadow-lg align-middle px-6 py-4 text-purple-600 dark:text-white/60 dark:hover:text-white/80 font-semibold rounded-full rounded-lg border-purple-400 bg-gradient-to-r from-purple-200 via-blue-200 to-purple-200 dark:from-purple-600/80 dark:via-blue-600/80 dark:to-purple-600/80 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60 my-3 mr-3" disabled={showApprove || disableSubmit}>Create Request</button>
 
                 <div className={`${showLoading ? "" : "hidden"}` + " inline whitespace-nowrap"}>
                   <svg className="animate-spin ml-1 mr-3 h-5 w-5 text-purple-400 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

@@ -76,7 +76,7 @@ function RequestCard(props: any) {
   }, [])
 
   useEffect(() => {
-    active ? setRequestStatus("green") : setRequestStatus("red");
+    active ? setRequestStatus("bg-green-400 dark:bg-green-400/60") : setRequestStatus("bg-red-400 dark:bg-red-400/60");
 
       requestENSName ? setShortWallet(requestENSName) :
       setShortWallet(origin.substring(0, 6) + "..." + origin.slice(-4))
@@ -204,11 +204,11 @@ function RequestCard(props: any) {
     <>
       {requestData ? (
         <div className="request-box mb-3">
-          <p className="text-xl md:text-2xl pt-5 pb-3 px-5">
+          <p className="text-xl md:text-2xl pt-5 pb-3 px-5 dark:text-slate-300">
             <b>{requestText}</b>
           </p>
           <hr className="my-2" />
-          <div className="request-info flex flex-nowrap overflow-scroll gap-5 justify-between text-purple-500 text-sm px-5 pt-2 pb-3">
+          <div className="request-info flex flex-nowrap overflow-scroll gap-5 justify-between text-purple-500 dark:text-purple-500/75 text-sm px-5 pt-2 pb-3">
             <p className="whitespace-nowrap">
               <b>Bounty:</b>
               <br /> {parseInt(ethers.utils.formatUnits(bounty, 18)).toFixed(2)} USDC
@@ -253,7 +253,7 @@ function RequestCard(props: any) {
           </div>
 
           <div
-            className="w-full bg-slate-100 border-t border-purple-200 shadow-inner"
+            className="w-full bg-slate-50 dark:bg-slate-800/75 border-t border-purple-300/50 dark:border-purple-300/20 shadow-inner"
             style={{ borderRadius: "0 0 15px 15px" }}
           >
             <div className={`${!showMe ? "hidden" : ""}` + " px-5 py-5"}>
@@ -313,11 +313,11 @@ function RequestCard(props: any) {
                     onChange={handleChange}
                     required
                     placeholder="Your answer..."
-                    className="w-full border border-purple-300 pl-4 pr-24 py-3 hover:border-purple-400 outline-purple-500 rounded-full"
+                    className="w-full border border-purple-300 pl-4 pr-24 py-3 hover:border-purple-400 outline-purple-500 rounded-full dark:bg-slate-900"
                   />
                   <button
                     type="submit"
-                    className="absolute right-0 border px-5 py-3 text-purple-600 font-semibold rounded-full border-purple-400 bg-gradient-to-r to-purple via-blue from-purple-200 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 hover:border-purple-500 hover:text-purple-700 disabled:opacity-60"
+                    className="absolute right-0 px-5 border rounded-full drop-shadow-lg align-middle px-6 py-4 text-purple-600 dark:text-white/60 dark:hover:text-white/80 font-semibold border-purple-400 bg-gradient-to-r from-purple-200 via-blue-200 to-purple-200 dark:from-purple-600/80 dark:via-blue-600/80 dark:to-purple-600/80 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60" style={{paddingTop: "12px", paddingBottom: "12px"}}
                   >
                     Send
                   </button>
@@ -339,8 +339,8 @@ function RequestCard(props: any) {
             <div className="text-center">
               <button
                 className={
-                  "w-full py-5 px-5 text-sm text-black font-semibold underline-offset-4 underline decoration-1 hover:text-slate-700 border-t border-transparent hover:no-underline hover:bg-slate-50 " +
-                  `${showMe ? " hover:border-slate-200" : ""}`
+                  "w-full py-5 px-5 text-sm text-black font-semibold underline-offset-4 underline decoration-1 hover:text-slate-700 border-t border-transparent hover:no-underline bg-slate-100/50 hover:bg-slate-50/25 dark:bg-slate-800/50 dark:hover:bg-slate-800/25 dark:text-slate-500 dark:hover:text-slate-400" +
+                  `${showMe ? " hover:border-slate-200 dark:hover:border-slate-700" : ""}`
                 }
                 style={{ borderRadius: "0 0 15px 15px" }}
                 onClick={toggle}

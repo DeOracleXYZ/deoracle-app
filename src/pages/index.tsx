@@ -57,6 +57,7 @@ export default function Home() {
   const [sendAnswerState, setSendAnswerState] = useState(false);
   const [earnedBountyCount, setEarnedBountyCount] = useState("");
   const [REP, setREP] = useState(0);
+  const [darkMode, setDarkMode] = useState(false);
   const [answerFormData, setAnswerFormData] = useState({
     answerText: "",
     requestId: -1,
@@ -68,7 +69,7 @@ export default function Home() {
     actionId: "wid_staging_51dfce389298ae2fea0c8d7e8f3d326e",
     signal: account ? account : "",
     enableTelemetry: true,
-    theme: "light",
+    theme: darkMode ? "dark" : "light",
     debug: true, // Recommended **only** for development
     onSuccess: (verificationResponse) => {
       setProofResponse(verificationResponse);
@@ -79,6 +80,20 @@ export default function Home() {
     onInitError: (error) =>
       console.log("Error while initialization World ID", error),
   };
+
+
+  useEffect(() => {
+    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark')
+      setDarkMode(true)
+    } else {
+      document.documentElement.classList.remove('dark')
+      setDarkMode(false)
+    }
+
+  })
+
   useEffect(() => {
     if(deOracleAddress){
 
@@ -324,7 +339,6 @@ export default function Home() {
         <RequestCard
           key={id + i}
           requestData={card}
-          // handleClickAnswer={() => sendAnswer(answerFormData)}
           answerFormData={answerFormData}
           updateAnswerFormData={setAnswerFormData}
           answerList={answerList}
@@ -338,6 +352,19 @@ export default function Home() {
     });
     return requestEls;
   };
+
+  const toggleTheme = () => {
+
+    if (darkMode) {
+      localStorage.theme = 'light'
+      setDarkMode(false)
+   } else {
+      localStorage.theme = 'dark'
+      setDarkMode(true)
+    }
+
+  }
+
 
   return (
     <>
@@ -354,6 +381,7 @@ export default function Home() {
         ENSVerified={ENSVerified}
         ENSName={ENSName}
         REP={REP}
+        darkMode={darkMode}
         requestsCount={requestsCount}
         answersCount={answersCount} 
         earnedBountyCount={earnedBountyCount}
@@ -375,9 +403,17 @@ export default function Home() {
       </div>
 
       <footer className="container text-center py-10 px-10 mt-10">
+        <button type="button" onClick={toggleTheme} className={"fixed right-5 bottom-5 rounded-full drop-shadow-md w-18 h-18 px-5 py-5 border-4 hover:border-8 opacity-75 hover:opacity-100 transition-all ease-in-out duration-500 bg-gradient-to-b " + `${darkMode ? "from-blue-900 to-purple-900" : "from-blue-600 to-sky-400"}`}>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`${darkMode ? "hidden" : ""}` + " transition-all stroke-yellow-300 w-6 h-6 inline-block"}><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
+
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`${darkMode ? "" : "hidden"}` + " transition-all stroke-yellow-300 w-6 h-6 inline-block"}><path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" /></svg>
+          
+        </button>
+
+        <br /><br />
         <hr />
-        <br />
-        <br />
+        <br /><br />
+
         <p className="mb-1 pt-2 text-slate-400">
           &copy; {copyrightYear} deOracle.xyz. <i>
             Made by{" "}
@@ -404,7 +440,7 @@ export default function Home() {
         <br />
         <br />
 
-        <p>
+        <p className="text-slate-600 ">
           <a className="text-slate-600 underline hover:no-underline hover:text-slate-500"
              href="https://calibration-faucet.filswan.com/#/dashboard" 
              target="_blank" 
