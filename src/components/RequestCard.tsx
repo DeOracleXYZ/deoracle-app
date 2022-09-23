@@ -279,13 +279,13 @@ function RequestCard(props: any) {
                       >
                         <div className="flex-none font-bold w-full md:w-auto">
                         <p className="">
-                          <button name={answer.id.toNumber()} onClick={upVoteAnswer} className="rounded-l-xl px-3 py-2 border-2 border-green-400 text-green-400 hover:border-green-500 hover:text-green-500 dark:bg-slate-900">
+                          <button name={answer.id.toNumber()} onClick={upVoteAnswer} className="rounded-l-xl px-3 py-2 border-2 border-green-400 dark:border-green-400/70 dark:hover:border-green-500/70  text-green-400 hover:border-green-500 hover:text-green-500 dark:bg-slate-900">
                             +{answer.upVotes.toNumber()}
                           </button>
-                          <button name={answer.id.toNumber()} onClick={acceptAnswer} className={`${requestOwner ? " " : "hidden "}` + `${hasReward ? "hidden " : " "}` + " px-3 py-2 border-2 border-blue-400 text-blue-400 hover:border-blue-500 hover:text-blue-500 dark:bg-slate-900"} title="Accept Answer">
+                          <button name={answer.id.toNumber()} onClick={acceptAnswer} className={`${requestOwner ? " " : "hidden "}` + `${hasReward ? "hidden " : " "}` + " px-3 py-2 border-2 border-blue-400 dark:border-blue-400/70 dark:hover:border-blue-500/70 text-blue-400 hover:border-blue-500 hover:text-blue-500 dark:bg-slate-900"} title="Accept Answer">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 inline-block"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                           </button>
-                          <button name={answer.id.toNumber()} onClick={downVoteAnswer} className="rounded-r-xl px-3 py-2 dark:bg-slate-900 border-2 border-red-400 text-red-400 hover:border-red-500 hover:text-red-500">
+                          <button name={answer.id.toNumber()} onClick={downVoteAnswer} className="rounded-r-xl px-3 py-2 dark:bg-slate-900 border-2 border-red-400 dark:border-red-400/70 dark:hover:border-red-500/70 text-red-400 hover:border-red-500 hover:text-red-500">
                             -{answer.downVotes.toNumber()}
                           </button>
                         </p>
@@ -324,7 +324,7 @@ function RequestCard(props: any) {
                     onChange={handleChange}
                     required
                     placeholder="Your answer..."
-                    className="w-full border border-purple-300 pl-4 pr-24 py-3 hover:border-purple-400 outline-purple-500 rounded-full dark:bg-slate-900"
+                    className="w-full pl-4 pr-24 py-3 rounded-full border border-purple-300  hover:border-purple-400 dark:border-purple-300/50 dark:hover:border-purple-400/80 dark:bg-slate-900 focus:outline-purple-500 dark:focus:outline-purple-400/80 dark:focus:outline-none dark:focus:outline-2 placeholder:text-purple-300 dark:placeholder:text-purple-300/40" style={{outlineOffset: '0'}}
                   />
                   <button
                     type="submit"

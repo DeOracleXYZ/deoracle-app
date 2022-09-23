@@ -216,7 +216,7 @@ function RequestCreate(props: any) {
       >
         <div className="order-2 md:order-none col-1 px-8 pt-0 pb-8 md:pt-8">
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4 text-black dark:text-slate-500">
+            <div className="grid grid-cols-2 gap-4 text-black dark:text-slate-400">
               <div className="col-span-2">
                 <div className="mb-2">
                   <label className="pl-2">
@@ -231,7 +231,7 @@ function RequestCreate(props: any) {
                     required
                     minLength={10}
                     rows={4}
-                    className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg dark:bg-slate-900 text-purple-500"
+                    className="w-full mt-1 px-4 py-3 text-purple-500 rounded-lg border border-purple-300 hover:border-purple-400 dark:border-purple-300/50 dark:hover:border-purple-400/80 dark:bg-slate-900 focus:outline-purple-500 dark:focus:outline-purple-400/80 dark:focus:outline-none dark:focus:outline-2 placeholder:text-purple-300 dark:placeholder:text-purple-300/40" style={{outlineOffset: '0'}}
                   />
                 </div>
               </div>
@@ -250,7 +250,7 @@ function RequestCreate(props: any) {
                   placeholder="i.e. 100"
                   minLength={1}
                   min="0"
-                  className="inline w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg mb-5 dark:bg-slate-900 text-purple-500"
+                  className="inline w-full mt-1 px-4 py-3 mb-5 text-purple-500 rounded-lg border border-purple-300 hover:border-purple-400 dark:border-purple-300/50 dark:hover:border-purple-400/80 dark:bg-slate-900 focus:outline-purple-500 dark:focus:outline-purple-400/80 dark:focus:outline-none dark:focus:outline-2" style={{outlineOffset: '0'}}
                 />
               </div>
 
@@ -268,7 +268,7 @@ function RequestCreate(props: any) {
                   placeholder="i.e. 100"
                   minLength={1}
                   min="0"
-                  className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg border-purple-300 mb-5 dark:bg-slate-900 text-purple-500"
+                  className="w-full mt-1 mb-5 px-4 py-3 rounded-lg border border-purple-300 text-purple-500 border-purple-300 hover:border-purple-400 dark:border-purple-300/50 dark:hover:border-purple-400/80 dark:bg-slate-900 focus:outline-purple-500 dark:focus:outline-purple-400/80 dark:focus:outline-none dark:focus:outline-2" style={{outlineOffset: '0'}}
                 />
               </div>
 
@@ -284,7 +284,7 @@ function RequestCreate(props: any) {
                     value={formData.dueDate}
                     onChange={handleChange}
                     required
-                    className="w-full mt-1 border border-purple-300 px-4 py-3 rounded-lg text-purple-500 mb-5 dark:bg-slate-900"
+                    className="w-full mt-1 px-4 py-3 text-purple-500 mb-5 rounded-lg border border-purple-300 hover:border-purple-400 dark:border-purple-300/50 dark:hover:border-purple-400/80 dark:bg-slate-900 focus:outline-purple-500 dark:focus:outline-purple-400/80 dark:focus:outline-none dark:focus:outline-2" style={{outlineOffset: '0'}}
                   />
                 </div>
               </div>
