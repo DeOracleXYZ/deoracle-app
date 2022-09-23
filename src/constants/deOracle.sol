@@ -159,7 +159,8 @@ contract deOracle is IUSDC, Router {
     function addREP(address _address, uint256 _amount) public {
         addressToREP[_address] += _amount;
         sendMessageREP(_address, addressToREP[_address]);
-        // sendMessage(Strings.toString(addressToREP[_address]));
+        //      you can use an enum as a type prefix on the message encoding
+        //      and do a sequence of if else in the handle implementation to switch on the message type
     }
 
     function deductREP(address _address, uint256 _amount) private {
@@ -193,6 +194,8 @@ contract deOracle is IUSDC, Router {
     //worldID only modifier needed ***
     function setWorldIdVerified(address _address) public {
         addressToWorldIdVerified[_address] = true;
+        //sync worldID with Hyperlane
+        sendMessageWorldId(_address);
         addREP(_address, 100);
     }
 
@@ -203,6 +206,7 @@ contract deOracle is IUSDC, Router {
         );
         addressToENSVerified[msg.sender] = true;
         addressToENSName[msg.sender] = _ensName;
+        sendMessageENS(msg.sender, _ensName);
         addREP(msg.sender, 50);
     }
 
@@ -245,27 +249,110 @@ contract deOracle is IUSDC, Router {
     // ============ Events ============
     uint32 public destinationDomain;
 
-    event SentMessage(
+    enum messageType {
+        REP,
+        WorldId,
+        ENS
+    }
+
+    event SentMessageREP(
         uint32 indexed origin,
         address indexed addr,
         uint256 indexed rep
     );
-    event ReceivedMessage(
+    event SentMessageWorldId(uint32 indexed origin, address indexed addr);
+    event SentMessageENS(
         uint32 indexed origin,
-        uint32 indexed destination,
-        bytes32 sender,
-        string message
+        address indexed addr,
+        string indexed ensName
+    );
+    event ReceivedMessageREP(
+        uint32 indexed origin,
+        uint32 destination,
+        address indexed addr,
+        uint256 indexed rep
+    );
+    event ReceivedMessageWorldId(
+        uint32 indexed origin,
+        uint32 destination,
+        address indexed addr
+    );
+    event ReceivedMessageENS(
+        uint32 indexed origin,
+        uint32 destination,
+        address indexed addr,
+        string indexed ensName
     );
 
+    //sync REP change
     function sendMessageREP(address _address, uint256 _rep) internal {
         sent += 1;
         sentTo[destinationDomain] += 1;
         _dispatchWithGas(
             destinationDomain,
-            abi.encode(_address, _rep),
+            abi.encode(messageType.REP, _address, "", _rep),
             msg.value
         );
-        emit SentMessage(_localDomain(), _address, _rep);
+        emit SentMessageREP(_localDomain(), _address, _rep);
+    }
+
+    //sync WorldID change
+    function sendMessageWorldId(address _address) internal {
+        sent += 1;
+        sentTo[destinationDomain] += 1;
+        _dispatchWithGas(
+            destinationDomain,
+            abi.encode(messageType.WorldId, _address, "", 0),
+            msg.value
+        );
+        emit SentMessageWorldId(_localDomain(), _address);
+    }
+
+    function sendMessageENS(address _address, string memory _ensName) internal {
+        sent += 1;
+        sentTo[destinationDomain] += 1;
+        _dispatchWithGas(
+            destinationDomain,
+            abi.encode(messageType.ENS, _address, _ensName, 0),
+            msg.value
+        );
+        emit SentMessageENS(_localDomain(), _address, _ensName);
+    }
+
+    function _handle(
+        uint32 _origin,
+        bytes32 _sender,
+        bytes memory _message
+    ) internal override {
+        received += 1;
+        receivedFrom[_origin] += 1;
+
+        (
+            messageType _messageType,
+            address _address,
+            string memory _string,
+            uint256 _uint256
+        ) = abi.decode(_message, (messageType, address, string, uint256));
+
+        //REP update
+        if (_messageType == messageType.REP) {
+            emit ReceivedMessageREP(
+                _origin,
+                _localDomain(),
+                _address,
+                _uint256
+            );
+            addressToREP[_address] = _uint256;
+        } else if (_messageType == messageType.WorldId) {
+            //WorldId update
+            emit ReceivedMessageWorldId(_origin, _localDomain(), _address);
+            addressToWorldIdVerified[_address] = true;
+        } else if (_messageType == messageType.ENS) {
+            //ENS update
+            emit ReceivedMessageENS(_origin, _localDomain(), _address, _string);
+            addressToENSVerified[_address] = true;
+            addressToENSName[_address] = _string;
+        }
     }
 
     // alignment preserving cast
@@ -276,41 +363,6 @@ contract deOracle is IUSDC, Router {
     // alignment preserving cast
     function bytes32ToAddress(bytes32 _buf) public pure returns (address) {
         return address(uint160(uint256(_buf)));
-    }
-
-    // ============ Internal functions ============
-
-    /**
-     * @notice Handles a message from a remote router.
-     * @dev Only called for messages sent from a remote router, as enforced by Router.sol.
-     * @param _origin The domain of the origin of the message.
-     * @param _sender The sender of the message.
-     * @param _message The message body.
-     */
-
-    //      you can use an enum as a type prefix on the message encoding
-    //      and do a sequence of if else in the handle implementation to switch on the message type
-    function _handle(
-        uint32 _origin,
-        bytes32 _sender,
-        bytes memory _message
-    ) internal override {
-        received += 1;
-        receivedFrom[_origin] += 1;
-
-        (address _address, uint256 _rep) = abi.decode(
-            _message,
-            (address, uint256)
-        );
-
-        emit ReceivedMessage(
-            _origin,
-            _localDomain(),
-            _sender,
-            string(_message)
-        );
-
-        addressToREP[_address] = _rep;
     }
 
     //////////////////BOUNTY / ERC20 ///////////////////////

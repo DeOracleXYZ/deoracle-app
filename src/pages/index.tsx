@@ -5,7 +5,7 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { VerificationResponse, WidgetProps } from "@worldcoin/id";
 import dynamic from "next/dynamic";
 import ConnectHeader from "../components/ConnectHeader";
-import { deOracleABI, erc20ABI } from "../constants/abis";
+import { deOracleABI } from "../constants/abis";
 import Head from "next/head";
 import RequestCreate from "../components/RequestCreate";
 import RequestCard from "../components/RequestCard";
@@ -46,6 +46,8 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
+  const mumbaiAddress = "0xa3fC29d7B4Cc03bD2819C46f5694D27ca89002a7";
+  const optimismAddress = "0x6553302Bcd9329369f09DF4f45C6e0e9c10aE246";
   const [deOracleAddress, setDeOracleAddress] = useState("");
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
@@ -96,7 +98,6 @@ export default function Home() {
 
   useEffect(() => {
     if(deOracleAddress){
-
     if(typeof(chainId) === "undefined") {
       setDeOracleREAD(
         new ethers.Contract(
@@ -118,30 +119,31 @@ export default function Home() {
             provider.getSigner()
           ))
   }
-        
 }
+
     
   }, [deOracleAddress])
 
 
   useEffect(() => {
+    //if connected or RPCprovider
     if(chainId || deOracleREAD) {
     if(typeof(chainId) === "undefined") {
-      setDeOracleAddress("0xBE206E63D5cD933D165183C9C834a45BE6e176ea");      
+      setDeOracleAddress(mumbaiAddress);     
     } else {
       try{
+        //if OP
         if (chainId === 69) {
-            setDeOracleAddress("0x7ecf20A28b2DFf9CaE85c060e9632ae5aF877209");           
+            setDeOracleAddress(optimismAddress);  
+            //if Mumbai         
         } else if (chainId === 80001) {
-            setDeOracleAddress("0xBE206E63D5cD933D165183C9C834a45BE6e176ea");
+            setDeOracleAddress(mumbaiAddress);
         }
       } catch(err) {
         console.log(err)
       }
     }
-    } else {
-      setDeOracleAddress("0xBE206E63D5cD933D165183C9C834a45BE6e176ea")
-    }
+    } 
   }, [chainId])
 
   useEffect(() => {
@@ -168,13 +170,12 @@ export default function Home() {
         ENSVerified && verifCount++;
         setVerficationCount(verifCount);
       };
-
       deOracleWRITE && (
         writeContractData(),
         updateVerifiedCount()
       )
 
-  }, [deOracleREAD]);
+  }, [deOracleREAD, deOracleWRITE, worldIdVerified, ENSVerified]);
 
   useEffect(() => {
     const updateRequestsCount = () => {
@@ -303,7 +304,6 @@ export default function Home() {
       }
     }
   };
-
   
   async function verifyENS() {
     let txReceipt;
