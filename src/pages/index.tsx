@@ -46,8 +46,8 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const mumbaiAddress = "0xBE206E63D5cD933D165183C9C834a45BE6e176ea";
-  const optimismAddress = "0x7ecf20A28b2DFf9CaE85c060e9632ae5aF877209";
+  const mumbaiAddress = "0xf90Ec8637BD6B07A2C249E0Dd1C7DE0D18b05df6";
+  const optimismAddress = "0xEF03B327627edc1B67cfe15E971C8381885734b1";
   const [deOracleAddress, setDeOracleAddress] = useState("");
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
@@ -105,6 +105,7 @@ export default function Home() {
           ))
   }
 }
+
     
   }, [deOracleAddress])
 
@@ -159,7 +160,7 @@ export default function Home() {
         updateVerifiedCount()
       )
 
-  }, [deOracleREAD, deOracleWRITE]);
+  }, [deOracleREAD, deOracleWRITE, worldIdVerified, ENSVerified]);
 
   useEffect(() => {
     const updateRequestsCount = () => {
