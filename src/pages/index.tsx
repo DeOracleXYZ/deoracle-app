@@ -46,8 +46,8 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const mumbaiAddress = "0xf90Ec8637BD6B07A2C249E0Dd1C7DE0D18b05df6";
-  const optimismAddress = "0xEF03B327627edc1B67cfe15E971C8381885734b1";
+  const mumbaiAddress = "0xa3fC29d7B4Cc03bD2819C46f5694D27ca89002a7";
+  const optimismAddress = "0x6553302Bcd9329369f09DF4f45C6e0e9c10aE246";
   const [deOracleAddress, setDeOracleAddress] = useState("");
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
@@ -289,7 +289,6 @@ export default function Home() {
       }
     }
   };
-
   
   async function verifyENS() {
     let txReceipt;

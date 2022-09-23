@@ -22,6 +22,45 @@ module.exports = {
       "inputs": [
         {
           "internalType": "address",
+          "name": "_abacusConnectionManager",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_interchainGasPaymaster",
+          "type": "address"
+        },
+        {
+          "internalType": "uint32",
+          "name": "_destinationDomain",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidNullifier",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "abacusConnectionManager",
+          "type": "address"
+        }
+      ],
+      "name": "AbacusConnectionManagerSet",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
           "name": "_spender",
           "type": "address"
         },
@@ -97,45 +136,6 @@ module.exports = {
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_abacusConnectionManager",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_interchainGasPaymaster",
-          "type": "address"
-        },
-        {
-          "internalType": "uint32",
-          "name": "_destinationDomain",
-          "type": "uint32"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "inputs": [],
-      "name": "InvalidNullifier",
-      "type": "error"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "abacusConnectionManager",
-          "type": "address"
-        }
-      ],
-      "name": "AbacusConnectionManagerSet",
-      "type": "event"
-    },
-    {
       "anonymous": false,
       "inputs": [
         {
@@ -208,22 +208,53 @@ module.exports = {
           "type": "uint32"
         },
         {
-          "indexed": true,
+          "indexed": false,
           "internalType": "uint32",
           "name": "destination",
           "type": "uint32"
         },
         {
-          "indexed": false,
-          "internalType": "bytes32",
-          "name": "sender",
-          "type": "bytes32"
+          "indexed": true,
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "string",
+          "name": "ensName",
+          "type": "string"
+        }
+      ],
+      "name": "ReceivedMessageENS",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint32",
+          "name": "origin",
+          "type": "uint32"
         },
         {
           "indexed": false,
-          "internalType": "string",
-          "name": "message",
-          "type": "string"
+          "internalType": "uint32",
+          "name": "destination",
+          "type": "uint32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "rep",
+          "type": "uint256"
         }
       ],
       "name": "ReceivedMessageREP",
@@ -239,16 +270,16 @@ module.exports = {
           "type": "uint32"
         },
         {
-          "indexed": true,
+          "indexed": false,
           "internalType": "uint32",
           "name": "destination",
           "type": "uint32"
         },
         {
-          "indexed": false,
-          "internalType": "bytes32",
-          "name": "sender",
-          "type": "bytes32"
+          "indexed": true,
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
         }
       ],
       "name": "ReceivedMessageWorldId",
@@ -292,6 +323,31 @@ module.exports = {
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint32",
+          "name": "origin",
+          "type": "uint32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "string",
+          "name": "ensName",
+          "type": "string"
+        }
+      ],
+      "name": "SentMessageENS",
+      "type": "event"
     },
     {
       "anonymous": false,
