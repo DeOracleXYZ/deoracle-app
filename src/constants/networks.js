@@ -1,7 +1,8 @@
 module.exports = {
   chainIdsMap: {
     80001: "MATIC",
-    420: "OPTIMISM",
+    420: "OP",
+    69: "ETH"
   },
 
   mumbai: {
