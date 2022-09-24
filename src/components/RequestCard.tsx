@@ -67,6 +67,8 @@ function RequestCard(props: any) {
           const ENS = await mainNetProvider.lookupAddress(origin);
           return ENS;
     }
+
+    console.log(bounty.toNumber())
   }, [])
 
   useEffect(() => {
@@ -221,7 +223,7 @@ function RequestCard(props: any) {
           <div className="request-info flex flex-nowrap overflow-scroll gap-5 justify-between text-purple-500 dark:text-purple-500/75 text-sm px-5 pt-2 pb-3">
             <p className="whitespace-nowrap">
               <b>Bounty:</b>
-              <br /> {parseInt(ethers.utils.formatUnits(bounty, 18)).toFixed(2)} USDC
+              <br /> {parseInt(ethers.utils.formatUnits(bounty.toNumber(), 6)).toFixed(2)} USDC
             </p>
             <p className="whitespace-nowrap">
               <b>Req. Reputation:</b>
