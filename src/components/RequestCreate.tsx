@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { erc20ABI } from "../constants/abis";
-import { Contract, ethers } from "ethers";
+import { BigNumber, Contract, ethers } from "ethers";
 import Spline from '@splinetool/react-spline';
 
 
@@ -43,10 +43,12 @@ function RequestCreate(props: any) {
 
   }, [formData.bounty]);
 
+
   async function approveUSDC() {
     if (usdcContract){
-  
-      let txReceipt = await usdcContract.approve(deOracleAddress, ethers.utils.parseUnits(formData.bounty.toString(), 18))
+      console.log(deOracleAddress)
+      const bountyInWei = ethers.utils.parseUnits(formData.bounty.toString(), 6)
+      let txReceipt = await usdcContract.approve(deOracleAddress, bountyInWei)
       setShowLoading(true)
       txReceipt = await txReceipt.wait();
 
@@ -102,17 +104,16 @@ function RequestCreate(props: any) {
     return dueDateUnixFinal;
   }
 
-  async function sendRequest(request: any) {
-    const { requestText, reputation, dueDateUnix } = request;
-    let {bounty} = request;
+  async function sendRequest() {
+    const { requestText, reputation, dueDateUnix, bounty } = formData;
+
     let txReceipt;
-    if(bounty !== 0){
-      bounty = ethers.utils.parseUnits(bounty, 18)
-    }
+      let bountyInWei = ethers.utils.parseUnits(bounty.toString(), 6)
+
     if(deOracleWRITE)
      txReceipt = await deOracleWRITE.submitRequest(
       requestText,
-      bounty,
+      bountyInWei,
       reputation,
       dueDateUnix
     )
@@ -148,7 +149,7 @@ function RequestCreate(props: any) {
   function handleSubmit(event: any) {
     event.preventDefault();
     formData.dueDateUnix = timeToUnix(formData.dueDate)
-    sendRequest(formData);
+    sendRequest();
   
   }
 
@@ -291,7 +292,7 @@ function RequestCreate(props: any) {
                 <button type="button" onClick={approveUSDC} className={`${showApprove ? "" : "hidden "}` + `${approved ? "hidden " : ""}` + " border drop-shadow-lg align-middle px-6 py-4 text-purple-600 dark:text-white/60 dark:hover:text-white/80 font-semibold rounded-full rounded-lg border-purple-400 bg-gradient-to-r from-purple-200 via-blue-200 to-purple-200 dark:from-purple-600/80 dark:via-blue-600/80 dark:to-purple-600/80 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60 my-3 mr-3"} disabled={showLoading}>Approve {formData.bounty} USDC</button>
 
                 <button type="submit" className="border drop-shadow-lg align-middle px-6 py-4 text-purple-600 dark:text-white/60 dark:hover:text-white/80 font-semibold rounded-full rounded-lg border-purple-400 bg-gradient-to-r from-purple-200 via-blue-200 to-purple-200 dark:from-purple-600/80 dark:via-blue-600/80 dark:to-purple-600/80 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60 my-3 mr-3" disabled={showApprove || disableSubmit}>Create Request</button>
-
+                                                              
                 <div className={`${showLoading ? "" : "hidden"}` + " inline whitespace-nowrap"}>
                   <svg className="animate-spin ml-1 mr-3 h-5 w-5 text-purple-400 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
