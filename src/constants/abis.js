@@ -4,24 +4,6 @@ module.exports = {
       "inputs": [
         {
           "internalType": "address",
-          "name": "_address",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "addREP",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
           "name": "_abacusConnectionManager",
           "type": "address"
         },
@@ -56,6 +38,24 @@ module.exports = {
       ],
       "name": "AbacusConnectionManagerSet",
       "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "addREP",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
       "inputs": [
@@ -268,6 +268,19 @@ module.exports = {
           "internalType": "uint32",
           "name": "origin",
           "type": "uint32"
+        }
+      ],
+      "name": "ReceivedMessageRequestList",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint32",
+          "name": "origin",
+          "type": "uint32"
         },
         {
           "indexed": false,
@@ -372,6 +385,19 @@ module.exports = {
         }
       ],
       "name": "SentMessageREP",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint32",
+          "name": "origin",
+          "type": "uint32"
+        }
+      ],
+      "name": "SentMessageRequestList",
       "type": "event"
     },
     {

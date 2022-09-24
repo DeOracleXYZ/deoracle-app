@@ -13,7 +13,7 @@ function RequestCard(props: any) {
     deOracleREAD,
     account,
   } = props;
-
+  console.log(requestData)
   const {
     id,
     bounty,
@@ -67,7 +67,7 @@ function RequestCard(props: any) {
           const ENS = await mainNetProvider.lookupAddress(origin);
           return ENS;
     }
-  }, [answerList.length])
+  }, [])
 
   useEffect(() => {
     const checkENSName = async () => {
@@ -106,7 +106,6 @@ function RequestCard(props: any) {
     setDatePosted(datePosted)
     setDateDue(dateDue)
   }, [answerList]);
-// }, [active, origin, timeStampDue, timeStampPosted, id,answerList]);
 
 
   useEffect(() => {

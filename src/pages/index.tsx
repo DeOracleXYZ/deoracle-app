@@ -42,8 +42,8 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const mumbaiAddress = "0xa3fC29d7B4Cc03bD2819C46f5694D27ca89002a7";
-  const optimismAddress = "0x6553302Bcd9329369f09DF4f45C6e0e9c10aE246";
+  const mumbaiAddress = "0x98beb03Dac002C52bfB9adCCf3043E87AE345D12";
+  const optimismAddress = "0x59552fB54b327D0f2785EC498eF0e02A2A294Efe";
   const mumbaiProvider = new ethers.providers.AlchemyProvider(
           0x13881,
           "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
@@ -197,8 +197,6 @@ export default function Home() {
         setAnswersCount(answerCount)
       }
     };
-
-  
 
     updateRequestsCount();
     updateAnswersCount();
