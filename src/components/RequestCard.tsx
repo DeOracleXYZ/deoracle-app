@@ -68,7 +68,6 @@ function RequestCard(props: any) {
           return ENS;
     }
 
-    console.log(bounty.toNumber())
   }, [])
 
   useEffect(() => {

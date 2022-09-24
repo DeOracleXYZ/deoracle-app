@@ -83,8 +83,8 @@ export default function Home() {
     theme: darkMode ? "dark" : "light",
     debug: true, // Recommended **only** for development
     onSuccess: (verificationResponse) => {
+      switchNetwork(mumbai);
       setProofResponse(verificationResponse);
-
     },
     onError: ({ code, detail }) => console.log({ code, detail }),
     onInitSuccess: () => console.log("Init successful"),
