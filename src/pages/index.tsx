@@ -12,8 +12,9 @@ import RequestCard from "../components/RequestCard";
 import { mumbai, kovan } from "../constants/networks";
 
 
+const supportedChainIds = [0x13881, 0x7a69, 69];
 const injected = new InjectedConnector({
-  supportedChainIds: [0x13881, 0x7a69, 69],
+  supportedChainIds: supportedChainIds,
 });
 
 const WorldIDWidget = dynamic<WidgetProps>(
@@ -27,15 +28,13 @@ export default function Home() {
     active: networkActive,
     error: networkError,
     activate: activateNetwork,
-    library,
-    library: active,
-    library: provider,
     account,
     chainId
   } = useWeb3React();
-
+  let   { library,
+  library: active,
+  library: provider} = useWeb3React();
   
-
   const id = useId();
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState("");
@@ -263,6 +262,11 @@ export default function Home() {
 
 
   async function connect() {
+    console.log("test")
+    if (window.ethereum.chainId && !supportedChainIds.includes(chainId) ) {
+      library = {provider:  window.ethereum};
+      await switchNetwork(mumbai);
+}
     //TODO: 
     try {
       await activate(injected)
