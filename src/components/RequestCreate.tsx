@@ -56,7 +56,6 @@ function RequestCreate(props: any) {
         // show Create Request button
         setShowApprove(false);
         setApproved(true);
-        console.log("Tx success:", txReceipt.status === 1)
       
 
       } else {
@@ -136,8 +135,6 @@ function RequestCreate(props: any) {
 
         refreshPage();
 
-        // show Create Request button
-        console.log("Tx success:", txReceipt.status === 1)
       
       } else {
         console.log("Approve tx Failed, check Metamask and try again.")

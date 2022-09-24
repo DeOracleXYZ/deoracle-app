@@ -45,10 +45,17 @@ export default function Home() {
   const [ENSName, setENSName] = useState("");
   const mumbaiAddress = "0xa3fC29d7B4Cc03bD2819C46f5694D27ca89002a7";
   const optimismAddress = "0x6553302Bcd9329369f09DF4f45C6e0e9c10aE246";
-  const [deOracleAddress, setDeOracleAddress] = useState("");
-  const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
+  const mumbaiProvider = new ethers.providers.AlchemyProvider(
+          0x13881,
+          "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
+        ); 
+  const [deOracleAddress, setDeOracleAddress] = useState(mumbaiAddress)
+  const [deOracleREAD, setDeOracleREAD] = useState(new ethers.Contract(
+    mumbaiAddress,
+    deOracleABI,
+    mumbaiProvider
+  ) as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
-  const [mumbaiProviderActive, setMubmaiProviderActive] = useState(false)
   const [requestList, setRequestList] = useState([] as any[]);
   const [answerList, setAnswerList] = useState([] as any[]);
   const [verificationCount, setVerficationCount] = useState(0);
@@ -94,76 +101,52 @@ export default function Home() {
   })
 
   useEffect(() => {
-    if(deOracleAddress){
-    if(typeof(chainId) === "undefined") {
-      const mumbaiProvider = new ethers.providers.AlchemyProvider(
-        0x13881,
-        "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
-      ); 
-      setMubmaiProviderActive(true);
-      console.log(mumbaiProviderActive, deOracleAddress, chainId)
-      setDeOracleREAD(
-        new ethers.Contract(
-        deOracleAddress,
-        deOracleABI,
-        mumbaiProvider
-      ))
-    } else {
-          setDeOracleREAD(
-            new ethers.Contract(
-            deOracleAddress,
+    //if connected or RPCprovider
+    if(!networkActive) {
+      setDeOracleAddress(mumbaiAddress);     
+       setDeOracleREAD( new ethers.Contract(
+              mumbaiAddress,
+              deOracleABI,
+              mumbaiProvider
+            ));
+    }
+          //if OP kovan   
+    if (chainId === 69) {
+            setDeOracleAddress(optimismAddress);  
+            setDeOracleREAD( new ethers.Contract(
+              optimismAddress,
+              deOracleABI,
+              provider
+            ));
+            setDeOracleWRITE( new ethers.Contract(
+              optimismAddress,
+              deOracleABI,
+              provider.getSigner()
+            ));
+        
+        }      //if Mumbai   
+    if (chainId === 80001) {
+        setDeOracleAddress(mumbaiAddress);
+          setDeOracleREAD( new ethers.Contract(
+            mumbaiAddress,
             deOracleABI,
             provider
-          ))
-          setDeOracleWRITE(
-            new ethers.Contract(
-            deOracleAddress,
+          ));
+          setDeOracleWRITE( new ethers.Contract(
+            mumbaiAddress,
             deOracleABI,
             provider.getSigner()
-          ))
-          setMubmaiProviderActive(false);
-          console.log("running")
-  }
-
-}
-
-
-    
-  }, [deOracleAddress])
-
-
-  useEffect(() => {
-    //if connected or RPCprovider
-    if(chainId || mumbaiProviderActive) {
-    if(typeof(chainId) === "undefined") {
-      setDeOracleAddress(mumbaiAddress);     
-    } else {
-      try{
-        //if OP
-        if (chainId === 69) {
-            setDeOracleAddress(optimismAddress);  
-            //if Mumbai         
-        } else if (chainId === 80001) {
-            setDeOracleAddress(mumbaiAddress);
-        }
-      } catch(err) {
-        console.log(err)
+          ));
       }
-    }
-    } 
-    if(!deOracleAddress)
-    setDeOracleAddress(mumbaiAddress)
-  }, [chainId])
+
+  }, [chainId, networkActive])
 
   useEffect(() => {
- 
-    if(!mumbaiProviderActive) {
       
       const readContractData = async () => {
         setRequestList(await deOracleREAD!.getRequestList());
         setAnswerList(await deOracleREAD!.getAnswerList());
     }
-
     deOracleREAD && 
      readContractData();
   
@@ -191,7 +174,7 @@ export default function Home() {
         updateVerifiedCount(),
         updateEarnedBountyCount()
       )
-      }
+      
   }, [deOracleREAD, deOracleWRITE, worldIdVerified, ENSVerified]);
 
   useEffect(() => {

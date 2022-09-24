@@ -112,18 +112,19 @@ function RequestCard(props: any) {
   useEffect(() => {
  
   const getAnswerIds = async () => {
-    setAnswerIds(await deOracleREAD.getRequestIdToAnswerIds(id.toNumber()))
+    let idNum = await id.toNumber();
+    setAnswerIds(await deOracleREAD.getRequestIdToAnswerIds(idNum))
+
   }
 
   deOracleREAD && 
     getAnswerIds()
 
   }, [deOracleREAD])
-// }, [provider, id, deOracleREAD])
 
   useEffect(() => {
 
-    answerList &&
+    answerList && answerIds &&
     answerList.map(function (answer: any, index: any) {
       if (answer.requestId.toNumber() == id.toNumber()) {
         if(answer.rewarded) {
@@ -155,9 +156,7 @@ function RequestCard(props: any) {
     const input = event.target.firstChild.firstChild
     const button = event.target.firstChild.lastChild
     const spinner = event.target.lastChild
-
-    // deOracleWRITE!.postAnswer(requestId, answerText);
-    console.log(deOracleWRITE)
+    
     if(deOracleWRITE)
      txReceipt = await deOracleWRITE.postAnswer(requestId, answerText);
 
@@ -165,8 +164,7 @@ function RequestCard(props: any) {
     input.setAttribute("disabled", "true")
     button.setAttribute("disabled", "true")
     spinner.classList.remove("hidden")
-    console.log(txReceipt)
-    console.log(await txReceipt)
+
     txReceipt = await txReceipt.wait();
       
      if(txReceipt.status === 1) {
@@ -178,7 +176,6 @@ function RequestCard(props: any) {
         setSendAnswerState((previousState: any) => !previousState)
 
         // show Create Request button
-        console.log("Tx success:", txReceipt.status === 1)
       
       } else {
         console.log("Approve tx Failed, check Metamask and try again.")
