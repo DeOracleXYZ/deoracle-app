@@ -3,6 +3,19 @@ module.exports = {
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "_answerId",
+          "type": "uint256"
+        }
+      ],
+      "name": "downVote",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "_abacusConnectionManager",
           "type": "address"
@@ -78,19 +91,6 @@ module.exports = {
           "type": "bool"
         }
       ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_answerId",
-          "type": "uint256"
-        }
-      ],
-      "name": "downVote",
-      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -197,6 +197,19 @@ module.exports = {
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint32",
+          "name": "origin",
+          "type": "uint32"
+        }
+      ],
+      "name": "ReceivedMessageAnswerList",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -336,6 +349,19 @@ module.exports = {
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint32",
+          "name": "origin",
+          "type": "uint32"
+        }
+      ],
+      "name": "SentMessageAnswerList",
+      "type": "event"
     },
     {
       "anonymous": false,
