@@ -34,10 +34,7 @@ export default function Home() {
     chainId
   } = useWeb3React();
 
-  const mumbaiProvider = new ethers.providers.AlchemyProvider(
-    0x13881,
-    "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
-  );
+  
 
   const id = useId();
   const [loaded, setLoaded] = useState(false);
@@ -51,6 +48,7 @@ export default function Home() {
   const [deOracleAddress, setDeOracleAddress] = useState("");
   const [deOracleREAD, setDeOracleREAD] = useState(null as Contract | null);
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
+  const [mumbaiProviderActive, setMubmaiProviderActive] = useState(false)
   const [requestList, setRequestList] = useState([] as any[]);
   const [answerList, setAnswerList] = useState([] as any[]);
   const [verificationCount, setVerficationCount] = useState(0);
@@ -98,6 +96,12 @@ export default function Home() {
   useEffect(() => {
     if(deOracleAddress){
     if(typeof(chainId) === "undefined") {
+      const mumbaiProvider = new ethers.providers.AlchemyProvider(
+        0x13881,
+        "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
+      ); 
+      setMubmaiProviderActive(true);
+      console.log(mumbaiProviderActive, deOracleAddress, chainId)
       setDeOracleREAD(
         new ethers.Contract(
         deOracleAddress,
@@ -117,8 +121,12 @@ export default function Home() {
             deOracleABI,
             provider.getSigner()
           ))
+          setMubmaiProviderActive(false);
+          console.log("running")
   }
+
 }
+
 
     
   }, [deOracleAddress])
@@ -126,7 +134,7 @@ export default function Home() {
 
   useEffect(() => {
     //if connected or RPCprovider
-    if(chainId || deOracleREAD) {
+    if(chainId || mumbaiProviderActive) {
     if(typeof(chainId) === "undefined") {
       setDeOracleAddress(mumbaiAddress);     
     } else {
@@ -148,18 +156,20 @@ export default function Home() {
   }, [chainId])
 
   useEffect(() => {
-  
+ 
+    if(!mumbaiProviderActive) {
+      
       const readContractData = async () => {
         setRequestList(await deOracleREAD!.getRequestList());
         setAnswerList(await deOracleREAD!.getAnswerList());
     }
 
-    deOracleREAD &&
+    deOracleREAD && 
      readContractData();
   
 
       const writeContractData = async () => {
-          setREP(await (await deOracleWRITE!.getREP()).toNumber());
+          setREP((await deOracleWRITE!.getREP()).toNumber());
           setWorldIdVerified(await deOracleWRITE!.addressToWorldIdVerified(account));
           setENSVerified(await deOracleWRITE!.addressToENSVerified(account));
           const data = await provider.getBalance(account);
@@ -171,11 +181,17 @@ export default function Home() {
         ENSVerified && verifCount++;
         setVerficationCount(verifCount);
       };
+      const updateEarnedBountyCount = async () => {
+        deOracleWRITE &&
+          setEarnedBountyCount( parseInt(ethers.utils.formatUnits((await deOracleWRITE.getBountyEarned()), 18)).toFixed(2) )
+      };
+
       deOracleWRITE && (
         writeContractData(),
-        updateVerifiedCount()
+        updateVerifiedCount(),
+        updateEarnedBountyCount()
       )
-
+      }
   }, [deOracleREAD, deOracleWRITE, worldIdVerified, ENSVerified]);
 
   useEffect(() => {
@@ -200,14 +216,11 @@ export default function Home() {
       }
     };
 
-    const updateEarnedBountyCount = async () => {
-      deOracleWRITE &&
-        setEarnedBountyCount( parseInt(ethers.utils.formatUnits((await deOracleWRITE.getBountyEarned()), 18)).toFixed(2) )
-    };
+  
 
     updateRequestsCount();
     updateAnswersCount();
-    updateEarnedBountyCount();
+
   }, [deOracleREAD, requestsCount, answersCount, earnedBountyCount]);
 
   useEffect(() => {

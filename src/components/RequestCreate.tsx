@@ -32,7 +32,7 @@ function RequestCreate(props: any) {
 
   useEffect(() => {
     provider &&
-    setUsdcContract(new ethers.Contract('0xe11A86849d99F524cAC3E7A0Ec1241828e332C62', erc20ABI ,provider.getSigner()));
+    setUsdcContract(new ethers.Contract('0x9aa7fEc87CA69695Dd1f879567CcF49F3ba417E2', erc20ABI ,provider.getSigner()));
   }, [provider]);
 
 

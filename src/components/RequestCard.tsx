@@ -157,6 +157,7 @@ function RequestCard(props: any) {
     const spinner = event.target.lastChild
 
     // deOracleWRITE!.postAnswer(requestId, answerText);
+    console.log(deOracleWRITE)
     if(deOracleWRITE)
      txReceipt = await deOracleWRITE.postAnswer(requestId, answerText);
 
@@ -164,7 +165,8 @@ function RequestCard(props: any) {
     input.setAttribute("disabled", "true")
     button.setAttribute("disabled", "true")
     spinner.classList.remove("hidden")
-    
+    console.log(txReceipt)
+    console.log(await txReceipt)
     txReceipt = await txReceipt.wait();
       
      if(txReceipt.status === 1) {
