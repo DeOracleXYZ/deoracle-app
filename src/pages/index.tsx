@@ -11,6 +11,11 @@ import RequestCreate from "../components/RequestCreate";
 import RequestCard from "../components/RequestCard";
 import { mumbai, kovan } from "../constants/networks";
 
+declare global {
+  interface Window{
+    ethereum:any
+  }
+}
 
 const supportedChainIds = [0x13881, 0x7a69, 69];
 const injected = new InjectedConnector({
@@ -261,7 +266,10 @@ export default function Home() {
 
   async function connect() {
     console.log("test")
-    if (window.ethereum.chainId && !supportedChainIds.includes(chainId) ) {
+
+
+
+    if (window.ethereum.chainId && !supportedChainIds.includes(chainId!) ) {
       library = {provider:  window.ethereum};
       await switchNetwork(mumbai);
 }

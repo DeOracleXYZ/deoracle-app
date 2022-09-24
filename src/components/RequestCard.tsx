@@ -13,7 +13,7 @@ function RequestCard(props: any) {
     deOracleREAD,
     account,
   } = props;
-  console.log(requestData)
+  
   const {
     id,
     bounty,
