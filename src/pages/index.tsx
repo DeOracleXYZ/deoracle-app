@@ -458,7 +458,11 @@ export default function Home() {
           <a className="text-slate-600 underline hover:no-underline hover:text-slate-500"
              href="https://calibration-faucet.filswan.com/#/dashboard" 
              target="_blank" 
-             rel="noreferrer">Faucet USDC</a> &nbsp; | &nbsp; <a href="#" className="text-slate-600 underline hover:no-underline hover:text-slate-500">Back to Top</a>
+             rel="noreferrer">Polygon Faucet USDC</a> &nbsp; | &nbsp; 
+          <a className="text-slate-600 underline hover:no-underline hover:text-slate-500"
+             href="https://kovan.optifaucet.com/" 
+             target="_blank" 
+             rel="noreferrer">Optimism Faucet USDC</a> &nbsp; | &nbsp; <a href="#" className="text-slate-600 underline hover:no-underline hover:text-slate-500">Back to Top</a>
         </p>
         <br />
       </footer>
