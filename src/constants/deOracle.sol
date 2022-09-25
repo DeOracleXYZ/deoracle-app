@@ -61,6 +61,7 @@ contract deOracle is IUSDC, Router {
         Request(0, "", address(this), 0, 0, false, 0, 0);
     Answer private blankAnswer = Answer(0, 0, "", address(this), false, 0, 0);
 
+    //dev accessControl
     mapping(address => bool) public addressToWorldIdVerified;
     mapping(address => bool) public addressToENSVerified;
     mapping(address => string) public addressToENSName;
@@ -174,7 +175,7 @@ contract deOracle is IUSDC, Router {
 
         requestIdToAddressToAnswered[_requestId][msg.sender] = true;
         addREP(msg.sender, 5);
-        //sendMessageAnswer(newAnswer, msg.sender);
+        sendMessageAnswer(newAnswer, msg.sender);
     }
 
     function addREP(address _address, uint256 _amount) private {
@@ -271,7 +272,6 @@ contract deOracle is IUSDC, Router {
             if (answerList[i].id == _answerId) {
                 answerPointer = answerList[i];
                 addREP(answerPointer.origin, 15);
-                addREP(msg.sender, 5);
             }
         }
         for (uint i = 0; i < requestList.length; i++) {
@@ -521,23 +521,6 @@ contract deOracle is IUSDC, Router {
         } else if (_messageType == messageType.Answer) {
             // RequestList update
             emit ReceivedMessageAnswer(_origin);
-            for (uint i = 0; i < answerList.length; i++) {
-                if (answerList[i].origin == _answer.origin) {
-                    require(
-                        keccak256(abi.encodePacked(answerList[i].answerText)) ==
-                            keccak256(abi.encodePacked(_answer.answerText)),
-                        "Answer cannot be changed!"
-                    );
-                    answerList[i] = _answer;
-                    requestIdToAnswerIds[_answer.requestId].push(_answer.id);
-                    answerIdToRequestId[_answer.id] = _answer.requestId;
-                    requestIdToAddressToAnswered[_answer.requestId][
-                        _answer.origin
-                    ] = true;
-                    answerIdToAddressToVoted[_answer.id][_address] = true;
-                    return;
-                }
-            }
             answerList.push(_answer);
             requestIdToAnswerIds[_answer.requestId].push(_answer.id);
             answerIdToRequestId[_answer.id] = _answer.requestId;
