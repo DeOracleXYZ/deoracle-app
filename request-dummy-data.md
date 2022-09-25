@@ -20,7 +20,7 @@ Passed! 99.99% For (2.13M). 0.01% - Against (277.09). 0% - Abstain (38.32)
 No.
 
 # What will Ethereum price be in 2025?
-69.420,80085
+$69.420,80085
 
 # How many times a year the human eye blinks?
 The human eye blinks an average of 4,200,000 times a year. This means if you were given a nickel for every time you blinked you would make $210,000 annually.

@@ -172,7 +172,7 @@ export default function ConnectHeader(props: any) {
           <p className="pb-3">
             <b>My Wallet:</b>{" "}
             <a
-              href={"https://mumbai.polygonscan.com/address/" + account}
+              href={((chainId === 80001) ? "https://mumbai.polygonscan.com/address/" : "https://kovan-optimistic.etherscan.io/address/") + account}
               className="underline hover:no-underline text-slate-500 dark:text-slate-400 hover:text-slate-400 dark:hover:text-slate-300"
               target="_blank"
               rel="noreferrer"
