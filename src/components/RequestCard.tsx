@@ -9,6 +9,7 @@ function RequestCard(props: any) {
     updateAnswerFormData,
     setSendAnswerState,
     provider,
+    chainId,
     deOracleWRITE,
     deOracleREAD,
     account,
@@ -68,7 +69,7 @@ function RequestCard(props: any) {
           return ENS;
     }
 
-  }, [])
+  }, [answerList])
 
   useEffect(() => {
     const checkENSName = async () => {
@@ -249,7 +250,10 @@ function RequestCard(props: any) {
               <b>Posted by:</b>
               <br />
               <a
-                href={"https://mumbai.polygonscan.com/address/" + `${origin}`}
+                href={(chainId === 69) ? "https://kovan-optimistic.etherscan.io/address/"
+                +
+               `${origin}` : "https://mumbai.polygonscan.com/address/" + `${origin}`
+             }
                 className="underline hover:no-underline hover:text-purple-400"
                 target="_blank"
                 rel="noreferrer"
@@ -298,9 +302,9 @@ function RequestCard(props: any) {
                         <p className="text-xs text-slate-400 text-left md:text-right w-full md:w-auto">
                           <b>Answered by:</b>{" "}
                           <a
-                            href={
-                              "https://mumbai.polygonscan.com/address/" +
-                              `${answer.origin}`
+                             href={(chainId === 69) ? "https://kovan-optimistic.etherscan.io/address/"
+                               +
+                              `${answer.origin}` : "https://mumbai.polygonscan.com/address/" + `${answer.origin}`
                             }
                             className="underline hover:no-underline hover:text-slate-500"
                             target="_blank"

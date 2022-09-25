@@ -5,7 +5,7 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { VerificationResponse, WidgetProps } from "@worldcoin/id";
 import dynamic from "next/dynamic";
 import ConnectHeader from "../components/ConnectHeader";
-import { deOracleABI } from "../constants/abis";
+import { deOracleABI, usdcABI } from "../constants/abis";
 import Head from "next/head";
 import RequestCreate from "../components/RequestCreate";
 import RequestCard from "../components/RequestCard";
@@ -47,8 +47,8 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const mumbaiAddress = "0x84A502015Fdafb1697a36857A3294fE456e94e76";
-  const optimismAddress = "0x69e9EFfc0c8351566b2FeBfA3acFc2bAC437439e";
+  const mumbaiAddress = "0x50929F1193502b7D072D9E910E56Cd1106eC921A";
+  const optimismAddress = "0x050DF5a780a3dA4372D572cef0EC5181b2437BC7";
   const mumbaiProvider = new ethers.providers.AlchemyProvider(
           0x13881,
           "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
@@ -354,6 +354,7 @@ export default function Home() {
           deOracleWRITE={deOracleWRITE}
           deOracleREAD={deOracleREAD}
           account={account}
+          chainId={chainId}
         />
       );
     });
@@ -370,6 +371,11 @@ export default function Home() {
       setDarkMode(true)
     }
 
+  }
+
+  function mintUsdc() {
+    const usdcContract = new ethers.Contract("0xFC07D8Ab694afF02301eddBe1c308Fe4a68F6121", usdcABI, provider.getSigner())
+    usdcContract.mint(account, "100000000000000000000")
   }
 
 
@@ -448,14 +454,10 @@ export default function Home() {
         <br />
 
         <p className="text-slate-600 ">
-          <a className="text-slate-600 underline hover:no-underline hover:text-slate-500"
-             href="https://calibration-faucet.filswan.com/#/dashboard" 
-             target="_blank" 
-             rel="noreferrer">Polygon Faucet USDC</a> &nbsp; | &nbsp; 
-          <a className="text-slate-600 underline hover:no-underline hover:text-slate-500"
-             href="https://kovan.optifaucet.com/" 
-             target="_blank" 
-             rel="noreferrer">Optimism Faucet USDC</a> &nbsp; | &nbsp; <a href="#" className="text-slate-600 underline hover:no-underline hover:text-slate-500">Back to Top</a>
+          <a className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500"
+             onClick={() => {networkActive && mintUsdc()}}
+             rel="noreferrer">Faucet USDC</a> &nbsp; | &nbsp; 
+          <a href="#" className="text-slate-600 underline hover:no-underline hover:text-slate-500">Back to Top</a>
         </p>
         <br />
       </footer>

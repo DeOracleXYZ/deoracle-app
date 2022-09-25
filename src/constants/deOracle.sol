@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.14;
+pragma solidity ^0.8.17;
 
 import {Router} from "@hyperlane-xyz/app/contracts/Router.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
 
 interface IWorldID {
     function verifyProof(
@@ -36,7 +35,7 @@ contract deOracle is IUSDC, Router {
     //requestIdCounter AnswerIdCounter
     uint256 requestCount = 0;
     uint256 answerCount = 0;
-    IUSDC private usdcToken = IUSDC(0xe11A86849d99F524cAC3E7A0Ec1241828e332C62);
+    IUSDC private usdcToken = IUSDC(0x9aa7fEc87CA69695Dd1f879567CcF49F3ba417E2);
 
     struct Request {
         uint256 id;
@@ -117,6 +116,7 @@ contract deOracle is IUSDC, Router {
         requestList.push(newRequest);
         requestIdToRequest[newRequest.id] = requestList[newRequest.id];
         addREP(msg.sender, 10);
+        sendMessageRequestList();
     }
 
     function postAnswer(uint256 _requestId, string memory _answerText) public {
@@ -153,6 +153,7 @@ contract deOracle is IUSDC, Router {
 
         requestIdToAddressToAnswered[_requestId][msg.sender] = true;
         addREP(msg.sender, 5);
+        sendMessageAnswerList();
     }
 
     //should be private testing
@@ -252,7 +253,9 @@ contract deOracle is IUSDC, Router {
     enum messageType {
         REP,
         WorldId,
-        ENS
+        ENS,
+        RequestList,
+        AnswerList
     }
 
     event SentMessageREP(
@@ -266,6 +269,8 @@ contract deOracle is IUSDC, Router {
         address indexed addr,
         string indexed ensName
     );
+    event SentMessageRequestList(uint32 indexed origin);
+    event SentMessageAnswerList(uint32 indexed origin);
     event ReceivedMessageREP(
         uint32 indexed origin,
         uint32 destination,
@@ -283,6 +288,8 @@ contract deOracle is IUSDC, Router {
         address indexed addr,
         string indexed ensName
     );
+    event ReceivedMessageRequestList(uint32 indexed origin);
+    event ReceivedMessageAnswerList(uint32 indexed origin);
 
     //sync REP change
     function sendMessageREP(address _address, uint256 _rep) internal {
@@ -290,7 +297,14 @@ contract deOracle is IUSDC, Router {
         sentTo[destinationDomain] += 1;
         _dispatchWithGas(
             destinationDomain,
-            abi.encode(messageType.REP, _address, "", _rep),
+            abi.encode(
+                messageType.REP,
+                _address,
+                "",
+                _rep,
+                new Request[](0),
+                new Answer[](0)
+            ),
             msg.value
         );
         emit SentMessageREP(_localDomain(), _address, _rep);
@@ -302,21 +316,72 @@ contract deOracle is IUSDC, Router {
         sentTo[destinationDomain] += 1;
         _dispatchWithGas(
             destinationDomain,
-            abi.encode(messageType.WorldId, _address, "", 0),
+            abi.encode(
+                messageType.WorldId,
+                _address,
+                "",
+                0,
+                new Request[](0),
+                new Answer[](0)
+            ),
             msg.value
         );
         emit SentMessageWorldId(_localDomain(), _address);
     }
 
+    //TESTING with no encodedList
     function sendMessageENS(address _address, string memory _ensName) internal {
         sent += 1;
         sentTo[destinationDomain] += 1;
         _dispatchWithGas(
             destinationDomain,
-            abi.encode(messageType.ENS, _address, _ensName, 0),
+            abi.encode(
+                messageType.ENS,
+                _address,
+                _ensName,
+                0,
+                new Request[](0),
+                new Answer[](0)
+            ),
             msg.value
         );
         emit SentMessageENS(_localDomain(), _address, _ensName);
+    }
+
+    function sendMessageRequestList() internal {
+        sent += 1;
+        sentTo[destinationDomain] += 1;
+        _dispatchWithGas(
+            destinationDomain,
+            abi.encode(
+                messageType.RequestList,
+                address(this),
+                "",
+                0,
+                requestList,
+                new Answer[](0)
+            ),
+            msg.value
+        );
+        emit SentMessageRequestList(_localDomain());
+    }
+
+    function sendMessageAnswerList() internal {
+        sent += 1;
+        sentTo[destinationDomain] += 1;
+        _dispatchWithGas(
+            destinationDomain,
+            abi.encode(
+                messageType.AnswerList,
+                address(this),
+                "",
+                0,
+                new Request[](0),
+                answerList
+            ),
+            msg.value
+        );
+        emit SentMessageAnswerList(_localDomain());
     }
 
     function _handle(
@@ -331,8 +396,13 @@ contract deOracle is IUSDC, Router {
             messageType _messageType,
             address _address,
             string memory _string,
-            uint256 _uint256
-        ) = abi.decode(_message, (messageType, address, string, uint256));
+            uint256 _uint256,
+            Request[] memory _requestList,
+            Answer[] memory _answerList
+        ) = abi.decode(
+                _message,
+                (messageType, address, string, uint256, Request[], Answer[])
+            );
 
         //REP update
         if (_messageType == messageType.REP) {
@@ -352,6 +422,26 @@ contract deOracle is IUSDC, Router {
             emit ReceivedMessageENS(_origin, _localDomain(), _address, _string);
             addressToENSVerified[_address] = true;
             addressToENSName[_address] = _string;
+        } else if (_messageType == messageType.RequestList) {
+            // RequestList update
+            emit ReceivedMessageRequestList(_origin);
+            for (uint i = 0; i < _requestList.length; i++) {
+                if (i < requestList.length) {
+                    requestList[i] = _requestList[i];
+                } else {
+                    requestList.push(_requestList[i]);
+                }
+            }
+        } else if (_messageType == messageType.AnswerList) {
+            // RequestList update
+            emit ReceivedMessageAnswerList(_origin);
+            for (uint i = 0; i < _answerList.length; i++) {
+                if (i < answerList.length) {
+                    answerList[i] = _answerList[i];
+                } else {
+                    answerList.push(_answerList[i]);
+                }
+            }
         }
     }
 
@@ -365,6 +455,7 @@ contract deOracle is IUSDC, Router {
         return address(uint160(uint256(_buf)));
     }
 
+    /////////////////////////////////////////////////////
     //////////////////BOUNTY / ERC20 ///////////////////////
     ///////////////////////////////////////////////////////
     function approve(address _spender, uint256 _amount) public returns (bool) {

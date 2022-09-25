@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { erc20ABI } from "../constants/abis";
+import { usdcABI } from "../constants/abis";
 import { BigNumber, Contract, ethers } from "ethers";
 import Spline from '@splinetool/react-spline';
 
@@ -32,7 +32,7 @@ function RequestCreate(props: any) {
 
   useEffect(() => {
     provider &&
-    setUsdcContract(new ethers.Contract('0x9aa7fEc87CA69695Dd1f879567CcF49F3ba417E2', erc20ABI ,provider.getSigner()));
+    setUsdcContract(new ethers.Contract('0xFC07D8Ab694afF02301eddBe1c308Fe4a68F6121', usdcABI ,provider.getSigner()));
   }, [provider]);
 
 
@@ -47,7 +47,8 @@ function RequestCreate(props: any) {
   async function approveUSDC() {
     if (usdcContract){
       console.log(deOracleAddress)
-      const bountyInWei = ethers.utils.parseUnits(formData.bounty.toString(), 6)
+      const bountyInWei = ethers.utils.parseUnits(formData.bounty.toString(), 18)
+
       let txReceipt = await usdcContract.approve(deOracleAddress, bountyInWei)
       setShowLoading(true)
       txReceipt = await txReceipt.wait();
@@ -108,7 +109,7 @@ function RequestCreate(props: any) {
     const { requestText, reputation, dueDateUnix, bounty } = formData;
 
     let txReceipt;
-      let bountyInWei = ethers.utils.parseUnits(bounty.toString(), 6)
+      let bountyInWei = ethers.utils.parseUnits(bounty.toString(), 18)
 
     if(deOracleWRITE)
      txReceipt = await deOracleWRITE.submitRequest(
