@@ -242,7 +242,7 @@ contract deOracle is IUSDC, Router {
                 answerList[i].upVotes += 1;
                 addREP(msg.sender, 1);
                 addREP(answerList[i].origin, 3);
-                Answer memory answerPointer = answerList[i];
+                // Answer memory answerPointer = answerList[i];
                 // sendMessageAnswer(answerPointer, msg.sender);
             }
         }
@@ -259,7 +259,7 @@ contract deOracle is IUSDC, Router {
                 answerList[i].downVotes += 1;
                 addREP(msg.sender, 1);
                 deductREP(answerList[i].origin, 3);
-                Answer memory answerPointer = answerList[i];
+                // Answer memory answerPointer = answerList[i];
                 // sendMessageAnswer(answerPointer, msg.sender);
             }
         }
