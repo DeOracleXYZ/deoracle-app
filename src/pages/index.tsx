@@ -458,10 +458,13 @@ export default function Home() {
         <br />
         <br />
 
-        <p className="text-slate-600 ">
-          <a className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500"
-             onClick={() => {networkActive && mintUsdc()}}
-             rel="noreferrer">Faucet USDC</a> &nbsp; | &nbsp; 
+        <p className="text-slate-600 "> <b>Faucet:</b> &nbsp;&nbsp;
+          <a className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500" onClick={() => {networkActive && mintUsdc()}}>USDC</a>&nbsp;.&nbsp; 
+          <a className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500" href="https://faucet.polygon.technology/" target="_blank" rel="noreferrer">MATIC</a> &nbsp;.&nbsp; 
+          <a className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500" href="https://kovan.optifaucet.com/" target="_blank" rel="noreferrer">oETH</a> &nbsp; | &nbsp; 
+
+
+
           <a href="#" className="text-slate-600 underline hover:no-underline hover:text-slate-500">Back to Top</a>
         </p>
         <br />
