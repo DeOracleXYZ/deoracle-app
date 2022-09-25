@@ -84,10 +84,10 @@ function RequestCard(props: any) {
       setRequestENSName(await checkENS(origin));
 
     }
-!requestENSName &&
+
    checkENSName();
 
-  }, [])
+  }, [deOracleREAD])
 
   useEffect(() => {
     active ? setRequestStatus("bg-green-400 dark:bg-green-400/60") : setRequestStatus("bg-red-400 dark:bg-red-400/60");
