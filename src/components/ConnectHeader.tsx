@@ -56,13 +56,14 @@ export default function ConnectHeader(props: any) {
         style={{ borderRadius: 16 + "px", zIndex: 999 }}
       >
         <div className="justify-self-start h-24 pt-4">
+          <a href="">
          <Image
           src={"/logo"+`${darkMode ? "-dark" : ""}`+".svg"}
           alt="deOracle.xyz Logo"
           width={342}
           height={80}
           style={{ textAlign: "left" }}
-        />
+        /></a>
         </div>
         {active ? (
           <>
