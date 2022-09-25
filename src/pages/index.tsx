@@ -88,8 +88,7 @@ export default function Home() {
     debug: true, // Recommended **only** for development
     onSuccess: (verificationResponse) => {
       switchNetwork(mumbai);
-      deOracleWRITE!.setWorldIdVerified(account);
-      //setProofResponse(verificationResponse);
+      setProofResponse(verificationResponse);
     },
     onError: ({ code, detail }) => console.log({ code, detail }),
     onInitSuccess: () => console.log("Init successful"),
