@@ -196,7 +196,7 @@ export default function ConnectHeader(props: any) {
           </div>
           <hr />
           <p className="pt-3 text-sm">
-            <b>Earned Bounty:</b> <span className="text-slate-500 dark:text-slate-400">{earnedBountyCount} USDC</span>
+            <b>Earned Bounty:</b> <span className="text-slate-500 dark:text-slate-400">{Number(earnedBountyCount).toFixed(0)} USDC</span>
           </p>
           <p className="py-1 text-sm">
             <b>Answers:</b> <span className="text-slate-500 dark:text-slate-400">{answersCount}</span>

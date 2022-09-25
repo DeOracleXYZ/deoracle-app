@@ -10,6 +10,7 @@ function RequestCard(props: any) {
     answerFormData,
     updateAnswerFormData,
     setSendAnswerState,
+    sendAnswerState,
     provider,
     chainId,
     deOracleWRITE,
@@ -55,7 +56,7 @@ function RequestCard(props: any) {
 
   useEffect(() => {
     id.toNumber() < 1869622600 ? setChainOrigin(kovan) : setChainOrigin(mumbai)
-  })
+  }, [])
 
   useEffect(() => {
     async function getENSNames() {
@@ -287,7 +288,7 @@ function RequestCard(props: any) {
             <div className={`${!showMe ? "hidden" : ""}` + " px-5 py-5"}>
               {answerList &&
                 answerList.map(function (answer: any) {
-                  if (answer.requestId.toNumber() == id.toNumber()) {
+                  if (answer.requestId.toNumber() == id.toNumber()  && chainOrigin.chainId == chainId ) {
                     return (
                       <div
                         key={answer.id.toNumber()}
@@ -328,11 +329,51 @@ function RequestCard(props: any) {
                         </p>
                       </div>
                     );
+                  } else if (answer.requestId.toNumber() == id.toNumber()) {
+                    return (
+                      <div
+                        key={answer.id.toNumber()}
+                        className="border-b border-slate-200 dark:border-white/10 flex flex-wrap md:flex-nowrap gap-5 text-sm py-3 items-center"
+                      >
+                        <div className="flex-none font-bold w-full md:w-auto">
+                        <p className="">
+                          <button name={answer.id.toNumber()} onClick={() => handleSwitchNetwork()} className="rounded-l-xl px-3 py-2 border-2 border-green-400 dark:border-green-400/70 dark:hover:border-green-500/70  text-green-400 hover:border-green-500 hover:text-green-500 dark:bg-slate-900">
+                            +{answer.upVotes.toNumber()}
+                          </button>
+                          <button name={answer.id.toNumber()} onClick={() => handleSwitchNetwork()} className={`${requestOwner ? " " : "hidden "}` + `${hasReward ? "hidden " : " "}` + " px-3 py-2 border-2 border-blue-400 dark:border-blue-400/70 dark:hover:border-blue-500/70 text-blue-400 hover:border-blue-500 hover:text-blue-500 dark:bg-slate-900"} title="Accept Answer">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 inline-block"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          </button>
+                          <button name={answer.id.toNumber()} onClick={() => handleSwitchNetwork()} className="rounded-r-xl px-3 py-2 dark:bg-slate-900 border-2 border-red-400 dark:border-red-400/70 dark:hover:border-red-500/70 text-red-400 hover:border-red-500 hover:text-red-500">
+                            -{answer.downVotes.toNumber()}
+                          </button>
+                        </p>
+                        </div>
+                        <div className="grow w-full md:w-auto dark:text-slate-300">
+                        <p className="text-base md:text-lg font-bold">
+                          {answer.answerText}
+                        </p>
+                        <p className={`${answer.rewarded ? "" : "hidden"}` + " mt-2 text-blue-500 text-xs text-left"}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 inline-block align-middle" style={{marginTop: "-1.5px"}}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> Accepted Answer</p>
+                        </div>
+                        <p className="text-xs text-slate-400 text-left md:text-right w-full md:w-auto">
+                          <b>Answered by:</b>{" "}
+                          <a
+                             href={(chainId === 69) ? "https://kovan-optimistic.etherscan.io/address/"
+                               +
+                              `${answer.origin}` : "https://mumbai.polygonscan.com/address/" + `${answer.origin}`
+                            }
+                            className="underline hover:no-underline hover:text-slate-500"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {  ENSFetched && answerOriginToENS[answer.origin] ? answerOriginToENS[answer.origin] : answer.origin.substring(0, 6) + "..." + answer.origin.slice(-4)}
+                          </a>
+                        </p>
+                      </div>
+                    );
                   }
                 }
                 )}
-
-              <form onSubmit={handleSubmit}>
+          {chainOrigin && chainOrigin.chainId == chainId ? (<form onSubmit={handleSubmit}>
                 <div className="flex gap-0 justify-between text-purple-500 py-3 relative">
                   <input
                     type="text"
@@ -360,7 +401,34 @@ function RequestCard(props: any) {
                   </div>
                 </div>
 
-              </form>
+              </form>) :(<><div className="flex gap-0 justify-between text-purple-500 py-3 relative">
+                  <input
+                    type="text"
+                    name="newAnswer1"
+                    onChange={handleChange}
+                    required
+                    placeholder="Your answer..."
+                    className="w-full pl-4 pr-24 py-3 rounded-full border border-purple-300  hover:border-purple-400 dark:border-purple-300/50 dark:hover:border-purple-400/80 dark:bg-slate-900 focus:outline-purple-500 dark:focus:outline-purple-400/80 dark:focus:outline-none dark:focus:outline-2 placeholder:text-purple-300 dark:placeholder:text-purple-300/40" style={{outlineOffset: '0'}}
+                  />
+                  <button
+                    type="submit"
+                    onClick={() => handleSwitchNetwork()}
+                    className="absolute right-0 px-5 border rounded-full drop-shadow-lg align-middle px-6 py-4 text-purple-600 dark:text-white/60 dark:hover:text-white/80 font-semibold border-purple-400 bg-gradient-to-r from-purple-200 via-blue-200 to-purple-200 dark:from-purple-600/80 dark:via-blue-600/80 dark:to-purple-600/80 hover:border-purple-500 hover:text-purple-700 transition-all ease-in-out duration-500 bg-size-200 bg-pos-0 hover:bg-pos-100 disabled:opacity-60" style={{paddingTop: "12px", paddingBottom: "12px"}}
+                  >
+                    Send
+                  </button>
+                </div>
+
+                <div className="grid hidden">
+                  <div className="place-self-end inline whitespace-nowrap">
+                    <svg className="animate-spin ml-1 mr-3 h-5 w-5 text-purple-400 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span className="text-purple-600">Processing...</span>
+                  </div>
+                </div> </>)}
+              
             </div>
 
             <div className="text-center">
@@ -381,20 +449,36 @@ function RequestCard(props: any) {
                 answers ({answerIds.length})
                 </>
                 </button>
-                ) :
-                <button
-                className={
-                  "w-full py-5 px-5 text-sm text-black font-semibold underline-offset-4 underline decoration-1 hover:text-slate-700 border-t border-transparent hover:no-underline bg-slate-100/50 hover:bg-slate-50/25 dark:bg-slate-800/50 dark:hover:bg-slate-800/25 dark:text-slate-500 dark:hover:text-slate-400" +
-                  `${showMe ? " hover:border-slate-200 dark:hover:border-slate-700" : ""}`
-                }
-                style={{ borderRadius: "0 0 15px 15px" }}
-                onClick={handleSwitchNetwork}
-              > 
+                ) :(
+                  <button
+                    className={
+                      "w-full py-5 px-5 text-sm text-black font-semibold underline-offset-4 underline decoration-1 hover:text-slate-700 border-t border-transparent hover:no-underline bg-slate-100/50 hover:bg-slate-50/25 dark:bg-slate-800/50 dark:hover:bg-slate-800/25 dark:text-slate-500 dark:hover:text-slate-400" +
+                      `${showMe ? " hover:border-slate-200 dark:hover:border-slate-700" : ""}`
+                    }
+                    style={{ borderRadius: "0 0 15px 15px" }}
+                    onClick={toggle}
+                  > 
+                    
+                    <>
+                    <span className={`${showMe ? "hidden" : ""}`}>Show </span>
+                    <span className={`${!showMe ? "hidden" : ""}`}>Hide </span>
+                    answers ({answerIds.length})
+                    </>
+                    </button>
+                    )
+              //   <button
+              //   className={
+              //     "w-full py-5 px-5 text-sm text-black font-semibold underline-offset-4 underline decoration-1 hover:text-slate-700 border-t border-transparent hover:no-underline bg-slate-100/50 hover:bg-slate-50/25 dark:bg-slate-800/50 dark:hover:bg-slate-800/25 dark:text-slate-500 dark:hover:text-slate-400" +
+              //     `${showMe ? " hover:border-slate-200 dark:hover:border-slate-700" : ""}`
+              //   }
+              //   style={{ borderRadius: "0 0 15px 15px" }}
+              //   onClick={handleSwitchNetwork}
+              // > 
                 
-                <>
-                <p>Switch Networks</p>
-                </>
-                </button>
+              //   <>
+              //   <p>Switch Networks</p>
+              //   </>
+              //   </button>
                 
                  }
                
