@@ -365,7 +365,7 @@ function RequestCard(props: any) {
 
             <div className="text-center">
 
-            {(chainId && chainOrigin.chainId == chainId) ?  (
+            {(chainId && chainOrigin && chainOrigin.chainId == chainId) || !chainId ?  (
               <button
                 className={
                   "w-full py-5 px-5 text-sm text-black font-semibold underline-offset-4 underline decoration-1 hover:text-slate-700 border-t border-transparent hover:no-underline bg-slate-100/50 hover:bg-slate-50/25 dark:bg-slate-800/50 dark:hover:bg-slate-800/25 dark:text-slate-500 dark:hover:text-slate-400" +
