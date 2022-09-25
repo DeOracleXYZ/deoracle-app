@@ -3,6 +3,30 @@ module.exports = {
     {
       "inputs": [
         {
+          "internalType": "address",
+          "name": "_spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "uint256",
           "name": "_answerId",
           "type": "uint256"
@@ -15,16 +39,6 @@ module.exports = {
     },
     {
       "inputs": [
-        {
-          "internalType": "address",
-          "name": "_abacusConnectionManager",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_interchainGasPaymaster",
-          "type": "address"
-        },
         {
           "internalType": "uint32",
           "name": "_destinationDomain",
@@ -51,48 +65,6 @@ module.exports = {
       ],
       "name": "AbacusConnectionManagerSet",
       "type": "event"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_address",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "addREP",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_spender",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "approve",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
     },
     {
       "inputs": [
@@ -208,7 +180,32 @@ module.exports = {
           "type": "uint32"
         }
       ],
-      "name": "ReceivedMessageAnswerList",
+      "name": "ReceivedMessageAnswer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint32",
+          "name": "origin",
+          "type": "uint32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "bounty",
+          "type": "uint256"
+        }
+      ],
+      "name": "ReceivedMessageBounty",
       "type": "event"
     },
     {
@@ -283,7 +280,7 @@ module.exports = {
           "type": "uint32"
         }
       ],
-      "name": "ReceivedMessageRequestList",
+      "name": "ReceivedMessageRequest",
       "type": "event"
     },
     {
@@ -360,7 +357,32 @@ module.exports = {
           "type": "uint32"
         }
       ],
-      "name": "SentMessageAnswerList",
+      "name": "SentMessageAnswer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint32",
+          "name": "origin",
+          "type": "uint32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "bounty",
+          "type": "uint256"
+        }
+      ],
+      "name": "SentMessageBounty",
       "type": "event"
     },
     {
@@ -423,7 +445,7 @@ module.exports = {
           "type": "uint32"
         }
       ],
-      "name": "SentMessageRequestList",
+      "name": "SentMessageRequest",
       "type": "event"
     },
     {
@@ -760,6 +782,19 @@ module.exports = {
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "answerCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "uint256",
@@ -778,55 +813,6 @@ module.exports = {
           "internalType": "bool",
           "name": "",
           "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "answerIdToAnswer",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "id",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "requestId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "string",
-          "name": "answerText",
-          "type": "string"
-        },
-        {
-          "internalType": "address",
-          "name": "origin",
-          "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "rewarded",
-          "type": "bool"
-        },
-        {
-          "internalType": "uint256",
-          "name": "upVotes",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "downVotes",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -1160,6 +1146,19 @@ module.exports = {
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "requestCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "uint256",
@@ -1201,60 +1200,6 @@ module.exports = {
         {
           "internalType": "uint256",
           "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "requestIdToRequest",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "id",
-          "type": "uint256"
-        },
-        {
-          "internalType": "string",
-          "name": "requestText",
-          "type": "string"
-        },
-        {
-          "internalType": "address",
-          "name": "origin",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "bounty",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "reputation",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bool",
-          "name": "active",
-          "type": "bool"
-        },
-        {
-          "internalType": "uint256",
-          "name": "timeStampPosted",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "timeStampDue",
           "type": "uint256"
         }
       ],

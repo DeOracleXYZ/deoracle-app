@@ -32,10 +32,10 @@ interface IUSDC {
 contract deOracle is IUSDC, Router {
     using ByteHasher for bytes;
 
-    //requestIdCounter AnswerIdCounter
-    uint256 requestCount = 0;
-    uint256 answerCount = 0;
-    IUSDC private usdcToken = IUSDC(0x9aa7fEc87CA69695Dd1f879567CcF49F3ba417E2);
+    //requestIdCounter AnswerIdCounter TEMP modified TODO
+    uint256 public requestCount;
+    uint256 public answerCount;
+    IUSDC private usdcToken = IUSDC(0xFC07D8Ab694afF02301eddBe1c308Fe4a68F6121);
 
     struct Request {
         uint256 id;
@@ -57,6 +57,10 @@ contract deOracle is IUSDC, Router {
         uint256 downVotes;
     }
 
+    Request private blankRequest =
+        Request(0, "", address(this), 0, 0, false, 0, 0);
+    Answer private blankAnswer = Answer(0, 0, "", address(this), false, 0, 0);
+
     mapping(address => bool) public addressToWorldIdVerified;
     mapping(address => bool) public addressToENSVerified;
     mapping(address => string) public addressToENSName;
@@ -72,25 +76,38 @@ contract deOracle is IUSDC, Router {
     // ID's to opposite ID answer -> request vice versa
     mapping(uint256 => uint256[]) public requestIdToAnswerIds;
     mapping(uint256 => uint256) public answerIdToRequestId;
-    // ID's to structs id -> Request/Answer
-    mapping(uint256 => Request) public requestIdToRequest;
-    mapping(uint256 => Answer) public answerIdToAnswer;
 
     Request[] public requestList;
     Answer[] public answerList;
 
-    constructor(
-        address _abacusConnectionManager,
-        address _interchainGasPaymaster,
-        uint32 _destinationDomain
-    ) {
+    constructor(uint32 _destinationDomain) {
         // Transfer ownership of the contract to deployer
         _transferOwnership(msg.sender);
-        // Set the addresses for the ACM and IGP
-        // Alternatively, this could be done later in an initialize method
-        _setAbacusConnectionManager(_abacusConnectionManager);
-        _setInterchainGasPaymaster(_interchainGasPaymaster);
+
         destinationDomain = _destinationDomain;
+
+        //mumbai => opkovan
+        if (_destinationDomain == 0x6f702d6b) {
+            _setAbacusConnectionManager(
+                0xb636B2c65A75d41F0dBe98fB33eb563d245a241a
+            );
+            _setInterchainGasPaymaster(
+                0x9A27744C249A11f68B3B56f09D280599585DFBb8
+            );
+        }
+        //opkovan => mumbai
+        if (_destinationDomain == 80001) {
+            _setAbacusConnectionManager(
+                0x740bEd6E4eEc7c57a2818177Fba3f9E896D5DE1c
+            );
+            _setInterchainGasPaymaster(
+                0xD7D2B0f61B834D98772e938Fa64425587C0f3481
+            );
+        }
+
+        //randomize Ids
+        requestCount = _destinationDomain;
+        answerCount = _destinationDomain;
     }
 
     function submitRequest(
@@ -114,23 +131,28 @@ contract deOracle is IUSDC, Router {
         });
         requestCount++;
         requestList.push(newRequest);
-        requestIdToRequest[newRequest.id] = requestList[newRequest.id];
         addREP(msg.sender, 10);
-        sendMessageRequestList();
+        sendMessageRequest(newRequest);
     }
 
     function postAnswer(uint256 _requestId, string memory _answerText) public {
+        bool exists;
+        Request memory requestPointer;
+        for (uint i = 0; i < requestList.length; i++) {
+            if (requestList[i].id == _requestId) {
+                exists = true;
+                requestPointer = requestList[i];
+            }
+        }
+        require(exists == true, "Request already answered or doesnt exist");
+        require(requestPointer.active == true, "Request is no longer active.");
         require(
-            addressToREP[msg.sender] >= requestList[_requestId].reputation,
+            addressToREP[msg.sender] >= requestPointer.reputation,
             "Not enough REP to answer."
         );
         require(
-            msg.sender != requestList[_requestId].origin,
+            requestPointer.origin != msg.sender,
             "You cant answer your own request."
-        );
-        require(
-            requestList[_requestId].active == true,
-            "Request already answered."
         );
         require(
             requestIdToAddressToAnswered[_requestId][msg.sender] == false,
@@ -147,25 +169,22 @@ contract deOracle is IUSDC, Router {
         });
         answerCount++;
         answerList.push(newAnswer);
-        answerIdToAnswer[newAnswer.id] = answerList[newAnswer.id];
         answerIdToRequestId[newAnswer.id] = newAnswer.requestId;
         requestIdToAnswerIds[_requestId].push(newAnswer.id);
 
         requestIdToAddressToAnswered[_requestId][msg.sender] = true;
         addREP(msg.sender, 5);
-        sendMessageAnswerList();
+        //sendMessageAnswer(newAnswer, msg.sender);
     }
 
-    //should be private testing
-    function addREP(address _address, uint256 _amount) public {
+    function addREP(address _address, uint256 _amount) private {
         addressToREP[_address] += _amount;
         sendMessageREP(_address, addressToREP[_address]);
-        //      you can use an enum as a type prefix on the message encoding
-        //      and do a sequence of if else in the handle implementation to switch on the message type
     }
 
     function deductREP(address _address, uint256 _amount) private {
         addressToREP[_address] -= _amount;
+        sendMessageREP(_address, addressToREP[_address]);
     }
 
     function getRequestList() public view returns (Request[] memory) {
@@ -211,37 +230,72 @@ contract deOracle is IUSDC, Router {
         addREP(msg.sender, 50);
     }
 
-    function upVote(uint256 _answerId) public eligibleVoter(_answerId, 50) {
-        Answer storage answerPointer = answerList[_answerId];
-        answerPointer.upVotes += 1;
-
-        addREP(msg.sender, 1);
-        addREP(answerPointer.origin, 3);
+    function upVote(uint256 _answerId) public {
+        for (uint i = 0; i < answerList.length; i++) {
+            if (answerList[i].id == _answerId) {
+                require(msg.sender != answerList[i].origin);
+                require(
+                    answerIdToAddressToVoted[_answerId][msg.sender] == false
+                );
+                answerIdToAddressToVoted[_answerId][msg.sender] = true;
+                answerList[i].upVotes += 1;
+                addREP(msg.sender, 1);
+                addREP(answerList[i].origin, 3);
+                Answer memory answerPointer = answerList[i];
+                // sendMessageAnswer(answerPointer, msg.sender);
+            }
+        }
     }
 
-    function downVote(uint256 _answerId) public eligibleVoter(_answerId, 50) {
-        Answer storage answerPointer = answerList[_answerId];
-        answerPointer.downVotes += 1;
-        addREP(msg.sender, 1);
-        deductREP(answerPointer.origin, 3);
+    function downVote(uint256 _answerId) public {
+        for (uint i = 0; i < answerList.length; i++) {
+            if (answerList[i].id == _answerId) {
+                require(msg.sender != answerList[i].origin);
+                require(
+                    answerIdToAddressToVoted[_answerId][msg.sender] == false
+                );
+                answerIdToAddressToVoted[_answerId][msg.sender] = true;
+                answerList[i].downVotes += 1;
+                addREP(msg.sender, 1);
+                deductREP(answerList[i].origin, 3);
+                Answer memory answerPointer = answerList[i];
+                // sendMessageAnswer(answerPointer, msg.sender);
+            }
+        }
     }
 
     function selectAnswer(uint256 _answerId) public {
-        Request storage requestPointer = requestList[
-            answerIdToRequestId[_answerId]
-        ];
-        require(requestPointer.active == true);
-        require(msg.sender == requestPointer.origin);
-        Answer storage answerPointer = answerList[_answerId];
-        addREP(answerPointer.origin, 15);
-        addREP(msg.sender, 5);
-        if (requestPointer.bounty > 0) {
-            usdcToken.transfer(answerPointer.origin, requestPointer.bounty);
-            addressToBountyEarned[answerPointer.origin] += requestPointer
-                .bounty;
+        Request memory requestPointer;
+        Answer memory answerPointer;
+        for (uint i = 0; i < answerList.length; i++) {
+            if (answerList[i].id == _answerId) {
+                answerPointer = answerList[i];
+                addREP(answerPointer.origin, 15);
+                addREP(msg.sender, 5);
+            }
         }
-        requestPointer.active = false;
-        answerPointer.rewarded = true;
+        for (uint i = 0; i < requestList.length; i++) {
+            if (requestList[i].id == answerIdToRequestId[_answerId]) {
+                requestPointer = requestList[i];
+                require(requestPointer.active == true);
+                require(msg.sender == requestPointer.origin);
+                requestList[i].active = false;
+                if (requestPointer.bounty > 0) {
+                    usdcToken.transfer(
+                        answerPointer.origin,
+                        requestPointer.bounty
+                    );
+                    addressToBountyEarned[
+                        answerPointer.origin
+                    ] += requestPointer.bounty;
+                    sendMessageBounty(
+                        answerPointer.origin,
+                        requestPointer.bounty
+                    );
+                    answerList[i].rewarded = true;
+                }
+            }
+        }
     }
 
     /////////////////////////HyperLane/////////////////////
@@ -254,8 +308,10 @@ contract deOracle is IUSDC, Router {
         REP,
         WorldId,
         ENS,
-        RequestList,
-        AnswerList
+        Request,
+        Answer,
+        selectAnswer,
+        Bounty
     }
 
     event SentMessageREP(
@@ -269,8 +325,13 @@ contract deOracle is IUSDC, Router {
         address indexed addr,
         string indexed ensName
     );
-    event SentMessageRequestList(uint32 indexed origin);
-    event SentMessageAnswerList(uint32 indexed origin);
+    event SentMessageBounty(
+        uint32 indexed origin,
+        address indexed addr,
+        uint256 indexed bounty
+    );
+    event SentMessageRequest(uint32 indexed origin);
+    event SentMessageAnswer(uint32 indexed origin);
     event ReceivedMessageREP(
         uint32 indexed origin,
         uint32 destination,
@@ -288,8 +349,13 @@ contract deOracle is IUSDC, Router {
         address indexed addr,
         string indexed ensName
     );
-    event ReceivedMessageRequestList(uint32 indexed origin);
-    event ReceivedMessageAnswerList(uint32 indexed origin);
+    event ReceivedMessageBounty(
+        uint32 indexed origin,
+        address indexed addr,
+        uint256 indexed bounty
+    );
+    event ReceivedMessageRequest(uint32 indexed origin);
+    event ReceivedMessageAnswer(uint32 indexed origin);
 
     //sync REP change
     function sendMessageREP(address _address, uint256 _rep) internal {
@@ -302,8 +368,8 @@ contract deOracle is IUSDC, Router {
                 _address,
                 "",
                 _rep,
-                new Request[](0),
-                new Answer[](0)
+                blankRequest,
+                blankAnswer
             ),
             msg.value
         );
@@ -321,8 +387,8 @@ contract deOracle is IUSDC, Router {
                 _address,
                 "",
                 0,
-                new Request[](0),
-                new Answer[](0)
+                blankRequest,
+                blankAnswer
             ),
             msg.value
         );
@@ -340,48 +406,68 @@ contract deOracle is IUSDC, Router {
                 _address,
                 _ensName,
                 0,
-                new Request[](0),
-                new Answer[](0)
+                blankRequest,
+                blankAnswer
             ),
             msg.value
         );
         emit SentMessageENS(_localDomain(), _address, _ensName);
     }
 
-    function sendMessageRequestList() internal {
+    function sendMessageBounty(address _address, uint256 _bounty) internal {
         sent += 1;
         sentTo[destinationDomain] += 1;
         _dispatchWithGas(
             destinationDomain,
             abi.encode(
-                messageType.RequestList,
-                address(this),
+                messageType.Bounty,
+                _address,
                 "",
-                0,
-                requestList,
-                new Answer[](0)
+                _bounty,
+                blankRequest,
+                blankAnswer
             ),
             msg.value
         );
-        emit SentMessageRequestList(_localDomain());
+        emit SentMessageBounty(_localDomain(), _address, _bounty);
     }
 
-    function sendMessageAnswerList() internal {
+    function sendMessageRequest(Request memory _request) internal {
         sent += 1;
         sentTo[destinationDomain] += 1;
         _dispatchWithGas(
             destinationDomain,
             abi.encode(
-                messageType.AnswerList,
+                messageType.Request,
                 address(this),
                 "",
                 0,
-                new Request[](0),
-                answerList
+                _request,
+                blankAnswer
             ),
             msg.value
         );
-        emit SentMessageAnswerList(_localDomain());
+        emit SentMessageRequest(_localDomain());
+    }
+
+    function sendMessageAnswer(Answer memory _answer, address _votedAddress)
+        internal
+    {
+        sent += 1;
+        sentTo[destinationDomain] += 1;
+        _dispatchWithGas(
+            destinationDomain,
+            abi.encode(
+                messageType.Answer,
+                _votedAddress,
+                "",
+                0,
+                blankRequest,
+                _answer
+            ),
+            msg.value
+        );
+        emit SentMessageAnswer(_localDomain());
     }
 
     function _handle(
@@ -397,11 +483,11 @@ contract deOracle is IUSDC, Router {
             address _address,
             string memory _string,
             uint256 _uint256,
-            Request[] memory _requestList,
-            Answer[] memory _answerList
+            Request memory _request,
+            Answer memory _answer
         ) = abi.decode(
                 _message,
-                (messageType, address, string, uint256, Request[], Answer[])
+                (messageType, address, string, uint256, Request, Answer)
             );
 
         //REP update
@@ -422,26 +508,47 @@ contract deOracle is IUSDC, Router {
             emit ReceivedMessageENS(_origin, _localDomain(), _address, _string);
             addressToENSVerified[_address] = true;
             addressToENSName[_address] = _string;
-        } else if (_messageType == messageType.RequestList) {
+        } else if (_messageType == messageType.Request) {
             // RequestList update
-            emit ReceivedMessageRequestList(_origin);
-            for (uint i = 0; i < _requestList.length; i++) {
-                if (i < requestList.length) {
-                    requestList[i] = _requestList[i];
-                } else {
-                    requestList.push(_requestList[i]);
+            emit ReceivedMessageRequest(_origin);
+            for (uint i = 0; i < requestList.length; i++) {
+                if (requestList[i].id == _request.id) {
+                    requestList[i] = _request;
+                    return;
                 }
             }
-        } else if (_messageType == messageType.AnswerList) {
+            requestList.push(_request);
+        } else if (_messageType == messageType.Answer) {
             // RequestList update
-            emit ReceivedMessageAnswerList(_origin);
-            for (uint i = 0; i < _answerList.length; i++) {
-                if (i < answerList.length) {
-                    answerList[i] = _answerList[i];
-                } else {
-                    answerList.push(_answerList[i]);
+            emit ReceivedMessageAnswer(_origin);
+            for (uint i = 0; i < answerList.length; i++) {
+                if (answerList[i].origin == _answer.origin) {
+                    require(
+                        keccak256(abi.encodePacked(answerList[i].answerText)) ==
+                            keccak256(abi.encodePacked(_answer.answerText)),
+                        "Answer cannot be changed!"
+                    );
+                    answerList[i] = _answer;
+                    requestIdToAnswerIds[_answer.requestId].push(_answer.id);
+                    answerIdToRequestId[_answer.id] = _answer.requestId;
+                    requestIdToAddressToAnswered[_answer.requestId][
+                        _answer.origin
+                    ] = true;
+                    answerIdToAddressToVoted[_answer.id][_address] = true;
+                    return;
                 }
             }
+            answerList.push(_answer);
+            requestIdToAnswerIds[_answer.requestId].push(_answer.id);
+            answerIdToRequestId[_answer.id] = _answer.requestId;
+            requestIdToAddressToAnswered[_answer.requestId][
+                _answer.origin
+            ] = true;
+            answerIdToAddressToVoted[_answer.id][_address] = true;
+        } else if (_messageType == messageType.Bounty) {
+            // RequestList update
+            emit ReceivedMessageBounty(_origin, _address, _uint256);
+            addressToBountyEarned[_address] += _uint256;
         }
     }
 
@@ -522,15 +629,6 @@ contract deOracle is IUSDC, Router {
         setWorldIdVerified(signal);
 
         ///add address to array of verified addresses
-    }
-
-    //has not voted, and REP requirement.  Also sets voted to TRUE
-    modifier eligibleVoter(uint256 _answerId, uint256 _minREP) {
-        require(msg.sender != answerIdToAnswer[_answerId].origin);
-        require(answerIdToAddressToVoted[_answerId][msg.sender] == false);
-        // require(addressToREP[msg.sender] >= _minREP);
-        answerIdToAddressToVoted[_answerId][msg.sender] = true;
-        _;
     }
 
     // A counter of how many messages have been sent from this contract.

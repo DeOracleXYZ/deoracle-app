@@ -47,8 +47,8 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const mumbaiAddress = "0x50929F1193502b7D072D9E910E56Cd1106eC921A";
-  const optimismAddress = "0x050DF5a780a3dA4372D572cef0EC5181b2437BC7";
+  const mumbaiAddress = "0x449968bF22032a5ae6C2306F3E67cc7e116216E5";
+  const optimismAddress = "0xe5Dc949D4fc0BBD80344089e8f4a0F4e422263E0";
   const mumbaiProvider = new ethers.providers.AlchemyProvider(
           0x13881,
           "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
@@ -103,6 +103,11 @@ export default function Home() {
       setDarkMode(false)
     }
   })
+  useEffect(() => {
+    if(sendAnswerState) {
+      window.location.reload();
+    }
+  }, [sendAnswerState])
 
   useEffect(() => {
     //if connected or RPCprovider
@@ -172,7 +177,6 @@ export default function Home() {
         deOracleWRITE &&
           setEarnedBountyCount( parseInt(ethers.utils.formatUnits((await deOracleWRITE.getBountyEarned()), 18)).toFixed(2) )
       };
-
       deOracleWRITE && (
         writeContractData(),
         updateVerifiedCount(),
@@ -265,7 +269,6 @@ export default function Home() {
 
 
   async function connect() {
-    console.log("test")
 
 
 

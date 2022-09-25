@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 function RequestCard(props: any) {
   const {
@@ -34,7 +35,7 @@ function RequestCard(props: any) {
   const [requestOwner, setRequestOwner] = useState(false);
   const [answerIds, setAnswerIds] = useState([]);  
   const [hasReward, setHasReward] = useState(false);
-  const [requestENSName, setRequestENSName] = useState("");
+  const [requestENSName, setRequestENSName] = useState("" as string | null);
   const [answerOriginToENS, setAnswerOriginToENS]:[any, any] = useState({});
   const [ENSFetched, setENSFetched] = useState(false);
   const mainNetProvider = new ethers.providers.AlchemyProvider(
@@ -53,6 +54,7 @@ function RequestCard(props: any) {
       let ENS: string | null;
         answerList.map(async (answerArray: any) => {
           ENS = await checkENS(answerArray.origin);
+          console.log(ENS)
           setAnswerOriginToENS((prevState: any) => ({
               ...prevState,
               [answerArray.origin]: ENS
@@ -69,14 +71,14 @@ function RequestCard(props: any) {
           return ENS;
     }
 
-  }, [answerList])
-
-  useEffect(() => {
+    
     const checkENSName = async () => {
-      setRequestENSName(await deOracleREAD.addressToENSName(origin));
+      setRequestENSName(await checkENS(origin));
+
     }
-    deOracleREAD &&
+!requestENSName &&
    checkENSName();
+
   }, [])
 
   useEffect(() => {
@@ -107,7 +109,7 @@ function RequestCard(props: any) {
 
     setDatePosted(datePosted)
     setDateDue(dateDue)
-  }, [answerList]);
+  }, [answerList ]);
 
 
   useEffect(() => {
@@ -217,13 +219,13 @@ function RequestCard(props: any) {
       {requestData ? (
         <div className="request-box mb-3">
           <p className="text-xl md:text-2xl pt-5 pb-3 px-5 dark:text-slate-300">
-            <b>{requestText}</b>
+            <b>{requestText}</b>     {id.toNumber() < 1869622600 ? <Image width="25px" height="25px" src="logo-op.svg" /> : <Image width="25px" height="25px" src="logo-polygon.svg" />}
           </p>
           <hr className="my-2" />
           <div className="request-info flex flex-nowrap overflow-scroll gap-5 justify-between text-purple-500 dark:text-purple-500/75 text-sm px-5 pt-2 pb-3">
             <p className="whitespace-nowrap">
               <b>Bounty:</b>
-              <br /> {parseInt(ethers.utils.formatUnits(bounty.toNumber(), 6)).toFixed(2)} USDC
+              <br /> {parseInt(ethers.utils.formatUnits(bounty, 18))} USDC
             </p>
             <p className="whitespace-nowrap">
               <b>Req. Reputation:</b>

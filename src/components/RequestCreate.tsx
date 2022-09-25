@@ -46,7 +46,6 @@ function RequestCreate(props: any) {
 
   async function approveUSDC() {
     if (usdcContract){
-      console.log(deOracleAddress)
       const bountyInWei = ethers.utils.parseUnits(formData.bounty.toString(), 18)
 
       let txReceipt = await usdcContract.approve(deOracleAddress, bountyInWei)
@@ -107,7 +106,6 @@ function RequestCreate(props: any) {
 
   async function sendRequest() {
     const { requestText, reputation, dueDateUnix, bounty } = formData;
-
     let txReceipt;
       let bountyInWei = ethers.utils.parseUnits(bounty.toString(), 18)
 
@@ -134,6 +132,8 @@ function RequestCreate(props: any) {
           dueDate: "",
           dueDateUnix: 0,
         });
+
+        toggle();
 
         refreshPage();
 
