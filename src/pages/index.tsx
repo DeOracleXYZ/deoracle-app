@@ -47,10 +47,10 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const mumbaiAddress = "0x749eEb0Bc9C19F9A59Aa7614e0a3E973D49D863D"; //DEV
-  const optimismAddress = "0x749eEb0Bc9C19F9A59Aa7614e0a3E973D49D863D"; //DEV
-  // const mumbaiAddress = "0xc9C58C765a5c7e5a5452c0514Df962A9898478CF"; // LIVE
-  // const optimismAddress = "0xc9C58C765a5c7e5a5452c0514Df962A9898478CF"; //LIVE
+  // const mumbaiAddress = "0x749eEb0Bc9C19F9A59Aa7614e0a3E973D49D863D"; //DEV
+  // const optimismAddress = "0x749eEb0Bc9C19F9A59Aa7614e0a3E973D49D863D"; //DEV
+  const mumbaiAddress = "0xc9C58C765a5c7e5a5452c0514Df962A9898478CF"; // LIVE
+  const optimismAddress = "0xc9C58C765a5c7e5a5452c0514Df962A9898478CF"; //LIVE
   const mumbaiProvider = new ethers.providers.AlchemyProvider(
           0x13881,
           "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
@@ -86,7 +86,8 @@ export default function Home() {
     debug: true, // Recommended **only** for development
     onSuccess: (verificationResponse) => {
       switchNetwork(mumbai);
-      setProofResponse(verificationResponse);
+      deOracleWRITE!.setWorldIdVerified(account);
+      //setProofResponse(verificationResponse);
     },
     onError: ({ code, detail }) => console.log({ code, detail }),
     onInitSuccess: () => console.log("Init successful"),
