@@ -47,8 +47,8 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const mumbaiAddress = "0x38525893776469bB89CD5B99A71D813Ce0836471";
-  const optimismAddress = "0xdEFd539aC136877d37052DCC1160F8B7A4DFC5C8";
+  const mumbaiAddress = "0x749eEb0Bc9C19F9A59Aa7614e0a3E973D49D863D";
+  const optimismAddress = "0x749eEb0Bc9C19F9A59Aa7614e0a3E973D49D863D";
   const mumbaiProvider = new ethers.providers.AlchemyProvider(
           0x13881,
           "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
