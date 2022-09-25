@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { kovan, mumbai } from "../constants/networks";
 
 function RequestCard(props: any) {
   const {
@@ -14,6 +15,8 @@ function RequestCard(props: any) {
     deOracleWRITE,
     deOracleREAD,
     account,
+    switchNetworkKovan,
+    switchNetworkMumbai
   } = props;
   
   const {
@@ -38,6 +41,7 @@ function RequestCard(props: any) {
   const [requestENSName, setRequestENSName] = useState("" as string | null);
   const [answerOriginToENS, setAnswerOriginToENS]:[any, any] = useState({});
   const [ENSFetched, setENSFetched] = useState(false);
+  const [chainOrigin, setChainOrigin] = useState<any>();
   const mainNetProvider = new ethers.providers.AlchemyProvider(
     1,
     "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
@@ -50,11 +54,14 @@ function RequestCard(props: any) {
   }
 
   useEffect(() => {
+    id.toNumber() < 1869622600 ? setChainOrigin(kovan) : setChainOrigin(mumbai)
+  })
+
+  useEffect(() => {
     async function getENSNames() {
       let ENS: string | null;
         answerList.map(async (answerArray: any) => {
           ENS = await checkENS(answerArray.origin);
-          console.log(ENS)
           setAnswerOriginToENS((prevState: any) => ({
               ...prevState,
               [answerArray.origin]: ENS
@@ -205,6 +212,10 @@ function RequestCard(props: any) {
     }
   };
 
+  function handleSwitchNetwork() {
+    chainOrigin == mumbai ? switchNetworkMumbai() : switchNetworkKovan();
+  }
+
   const acceptAnswer = (event: any) => {
     try {
      event.currentTarget.name &&
@@ -353,6 +364,8 @@ function RequestCard(props: any) {
             </div>
 
             <div className="text-center">
+
+            {(chainId && chainOrigin.chainId == chainId) ?  (
               <button
                 className={
                   "w-full py-5 px-5 text-sm text-black font-semibold underline-offset-4 underline decoration-1 hover:text-slate-700 border-t border-transparent hover:no-underline bg-slate-100/50 hover:bg-slate-50/25 dark:bg-slate-800/50 dark:hover:bg-slate-800/25 dark:text-slate-500 dark:hover:text-slate-400" +
@@ -360,11 +373,33 @@ function RequestCard(props: any) {
                 }
                 style={{ borderRadius: "0 0 15px 15px" }}
                 onClick={toggle}
-              >
-                <span className={`${showMe ? "hidden" : ""}`}>Show</span>{" "}
-                <span className={`${!showMe ? "hidden" : ""}`}>Hide</span>{" "}
+              > 
+                
+                <>
+                <span className={`${showMe ? "hidden" : ""}`}>Show </span>
+                <span className={`${!showMe ? "hidden" : ""}`}>Hide </span>
                 answers ({answerIds.length})
-              </button>
+                </>
+                </button>
+                ) :
+                <button
+                className={
+                  "w-full py-5 px-5 text-sm text-black font-semibold underline-offset-4 underline decoration-1 hover:text-slate-700 border-t border-transparent hover:no-underline bg-slate-100/50 hover:bg-slate-50/25 dark:bg-slate-800/50 dark:hover:bg-slate-800/25 dark:text-slate-500 dark:hover:text-slate-400" +
+                  `${showMe ? " hover:border-slate-200 dark:hover:border-slate-700" : ""}`
+                }
+                style={{ borderRadius: "0 0 15px 15px" }}
+                onClick={handleSwitchNetwork}
+              > 
+                
+                <>
+                <p>Switch Networks</p>
+                </>
+                </button>
+                
+                 }
+               
+               
+        
             </div>
           </div>
         </div>

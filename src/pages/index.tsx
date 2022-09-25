@@ -358,6 +358,8 @@ export default function Home() {
           deOracleREAD={deOracleREAD}
           account={account}
           chainId={chainId}
+          switchNetworkMumbai={() => switchNetwork(mumbai)}
+          switchNetworkKovan={() => switchNetwork(kovan)}
         />
       );
     });
