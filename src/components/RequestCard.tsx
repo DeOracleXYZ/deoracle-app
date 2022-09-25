@@ -378,7 +378,7 @@ function RequestCard(props: any) {
                   }
                 }
                 )}
-          {chainId && chainOrigin && chainOrigin.chainId == chainId ? (<form onSubmit={handleSubmit}>
+          {chainOrigin && chainOrigin.chainId == chainId ? (<form onSubmit={handleSubmit}>
                 <div className="flex gap-0 justify-between text-purple-500 py-3 relative">
                   <input
                     type="text"
