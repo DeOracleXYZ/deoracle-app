@@ -30,3 +30,26 @@ An ostrich's eye is bigger than its brain. This could be why the birds often run
 
 # How many flavours of Kit Kats are in Japan?
 Japan has over 200 flavours of Kit Kats. They're exclusively created for different regions, cities, and seasons. There are some tasty-sounding ones like banana, blueberry cheesecake and Oreo ice cream, as well as some very questionable ones like baked potato, melon and cheese, wasabi, and vegetable juice.
+
+# Was there recently a hack on Curve Finance?
+Yes Curve Finance was hacked August 10th 2022 for $450,000
+
+# Did address 0xb1ccec1b17881fc9606da385f3baa8e693511ba730739fd973439d1f1d3b79e2 successfuly bridge their tokens to x-Chain ? 
+Yes
+
+# What is the current USA infaltion rate?
+8.25%
+
+# in what season did Michael Scott leave in the office?
+Season 7
+
+
+
+# Notes:
+Current implementation is openended, future implementations will include type formated answers.(number, boolean, multiple choice, dates).
+
+Use cases include prediction markets, insurance arbitration, legal mediation, on-chain disputes, DAO voting / governance, blockchain trivia and play to earn.
+
+Your on-chain identity and deOracle REP is accesible across multiple blockchains.  Secured and transmited by Hyperlane (Abacus).  Currently on Polygon & Optimism (testnets).
+
+
