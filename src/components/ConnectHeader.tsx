@@ -185,7 +185,7 @@ export default function ConnectHeader(props: any) {
             <b>Verification ({verificationCount}/2):</b>
           </p>
           <div className="pb-4">
-            {(verificationCount == 2) && <p className="italic text-sm pr-24 font-bold text-slate-500 dark:text-slate-400">⭐️ Your identity has been verified with Worldcoin and ENS.</p>  }
+            {(verificationCount == 2) && <p className="italic text-sm font-bold text-slate-500 dark:text-slate-400">⭐️ Your identity has been verified<br /> with Worldcoin and ENS.</p>  }
             {!worldIdVerified && WorldIDWidget}
 
             {(!ENSName && !ENSVerified) &&  <a href="https://ens.domains/" target="_blank" 
