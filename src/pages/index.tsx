@@ -51,9 +51,8 @@ export default function Home() {
   // const optimismAddress = "0x749eEb0Bc9C19F9A59Aa7614e0a3E973D49D863D"; //DEV
   // const mumbaiAddress = "0xc9C58C765a5c7e5a5452c0514Df962A9898478CF"; // DEV2
   // const optimismAddress = "0xc9C58C765a5c7e5a5452c0514Df962A9898478CF"; //DEV2
-  const mumbaiAddress = "0xBC5F45bd0bDC138b7f04421aeE3C23207fAab4ec"; // LIVE
-  const optimismAddress = "0xBC5F45bd0bDC138b7f04421aeE3C23207fAab4ec"; //LIVE
-  0xBC5F45bd0bDC138b7f04421aeE3C23207fAab4ec
+  const mumbaiAddress = "0x588C563Fd1be887f4C569EC81f45786c23CfE7Ef"; // LIVE
+  const optimismAddress = "0x588C563Fd1be887f4C569EC81f45786c23CfE7Ef"; //LIVE
   const mumbaiProvider = new ethers.providers.AlchemyProvider(
           0x13881,
           "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
