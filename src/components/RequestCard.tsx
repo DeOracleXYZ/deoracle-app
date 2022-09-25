@@ -231,7 +231,12 @@ function RequestCard(props: any) {
       {requestData ? (
         <div className="request-box mb-3">
           <p className="text-xl md:text-2xl pt-4 pb-3 px-5 dark:text-slate-300">
-                 {id.toNumber() < 1869622600 ? <Image width="25px" height="25px" src="logo-op.svg" /> : <Image width="25px" height="25px" src="logo-polygon.svg" />}<b className="pl-4">{requestText}</b>
+                  <span className="inline-block align-[-5px] opacity-60">
+                  {id.toNumber() < 1869622600 
+                    ? <Image width="24px" height="24px" src="logo-op.svg" /> 
+                    : <Image width="24px" height="24px" src="logo-polygon.svg" />}
+                  </span>
+                  <b className="pl-4">{requestText}</b>
           </p>
           <hr className="my-2" />
           <div className="request-info flex flex-nowrap overflow-scroll gap-5 justify-between text-purple-500 dark:text-purple-500/75 text-sm px-5 pt-2 pb-3">
