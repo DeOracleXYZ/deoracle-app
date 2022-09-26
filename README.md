@@ -4,17 +4,17 @@ deOracle.xyz is a decentralised P2P oracle platform with a cross-chain reputatio
 
 deOracle is useful for Smart Contract and dApp developers who are looking for wide scope data feeds not supported by mainstream oracles. Use cases: prediction markets, betting, lotteries, raffles, etc.
 
-.
+
 
 POST REQUESTS (WIDE SCOPE DATA)
 Post request to oracles with description, bounty (USDC), min. required reputation (RP) and due date. Requester accepts a valid answer to release the bounty to said oracle's wallet address. Request and answer data is brought on-chain for use in smart contracts.
 
-.
+
 
 P2P ORACLE ANSWERS
 Oracles browse through requests and post verified answers to earn bounties and build reputation. Community votes on the answers (via upvotes, downvotes) which affects the oracle's reputation.
 
-.
+
 
 CROSS-CHAIN REPUTATION
 Verify your identity with Worldcoin and ENS on Polygon. Build up your reputation by posting valid answers. Hop chains to Optimism and your reputation points follow you. deOracle Reputation can be implemented by other on-chain protocols.
@@ -37,7 +37,7 @@ Your on-chain identity and deOracle REP is accesible across multiple blockchains
 - **Crosschain:** Abacus / Hyperlane
 - **Front-end:** Next.js, Tailwind CSS, Ethers.js
 
-.
+
 
 ## Features:
 
@@ -48,9 +48,11 @@ Your on-chain identity and deOracle REP is accesible across multiple blockchains
 - Community votes on oracle answers (upvotes, downvotes)
 
 
-.
+
 
 ## Getting Started
+
+Live at https://deOracle.xyz
 
 Install dependencies, run only once:
 
