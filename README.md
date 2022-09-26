@@ -10,7 +10,7 @@ deOracle is useful for Smart Contract and dApp developers who are looking for wi
 Post request to oracles with description, bounty (USDC), min. required reputation (RP) and due date. Requester accepts a valid answer to release the bounty to said oracle's wallet address. Request and answer data is brought on-chain for use in smart contracts.
 
 
-#### 2. P2P Oracle Answers
+### 2. P2P Oracle Answers
 
 Oracles browse through requests and post verified answers to earn bounties and build reputation. Community votes on the answers (via upvotes, downvotes) which affects the oracle's reputation.
 
