@@ -11,7 +11,7 @@ async function main() {
   console.log("deOracle address:", deOracle.address);
 }
 
-//last deploy: 0xC5F21a54574aA0d0d72b5B122c2B25b53417f3B6
+//last deploy: 0x45Fc8fAC2E806A1AD4CbC9EcC125478897c7A100
 
 main()
   .then(() => process.exit(0))

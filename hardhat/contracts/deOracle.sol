@@ -175,10 +175,7 @@ contract deOracle is IUSDC {
         return addressToBountyEarned[msg.sender];
     }
 
-    //TODO: internal?
-    function setWorldIdVerified(address _address) public {
-        //TODO: testMe
-        require(msg.sender == 0xABB70f7F39035586Da57B3c8136035f87AC0d2Aa);
+    function setWorldIdVerified(address _address) internal {
         addressToWorldIdVerified[_address] = true;
         addREP(_address, 100);
     }
