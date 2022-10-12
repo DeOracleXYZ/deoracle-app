@@ -31,10 +31,11 @@ export default function ConnectHeader(props: any) {
   const [shortWallet, setShortWallet] = useState("");
 
   useEffect(() => {
-    if(account) {
-      ENSName ? setShortWallet(ENSName) :
-      setShortWallet(account.substring(0, 6) + "..." + account.slice(-4));
-    }    
+    if (account) {
+      ENSName
+        ? setShortWallet(ENSName)
+        : setShortWallet(account.substring(0, 6) + "..." + account.slice(-4));
+    }
   }, [setShortWallet, account, ENSName]);
 
   function toggle() {
@@ -57,13 +58,14 @@ export default function ConnectHeader(props: any) {
       >
         <div className="justify-self-start h-24 pt-4">
           <a href="">
-         <Image
-          src={"/logo"+`${darkMode ? "-dark" : ""}`+".svg"}
-          alt="deOracle.xyz Logo"
-          width={342}
-          height={80}
-          style={{ textAlign: "left" }}
-        /></a>
+            <Image
+              src={"/logo" + `${darkMode ? "-dark" : ""}` + ".svg"}
+              alt="deOracle.xyz Logo"
+              width={342}
+              height={80}
+              style={{ textAlign: "left" }}
+            />
+          </a>
         </div>
         {active ? (
           <>
@@ -81,63 +83,71 @@ export default function ConnectHeader(props: any) {
                   </span>
                   <span className="text-xs md:text-lg">
                     {" "}
-                    - {Number(balance).toFixed(2)} <small className="text-xs">{chainIdsMap[chainId]}</small>
+                    - {Number(balance).toFixed(2)}{" "}
+                    <small className="text-xs">{chainIdsMap[chainId]}</small>
                   </span>
                 </p>
                 <div className="grid place-content-end md:place-items-right grid-cols-1 gap-1 mt-1">
                   <p className="text-slate-700 dark:text-slate-300 text-xs md:text-sm text-right">
                     <span className="inline-block align-top">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill={verificationCount ? "#f7eb02" : "none"}
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="inline-block w-4 h-4 mb-1"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
-                      />
-                    </svg>&nbsp; 
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill={verificationCount ? "#f7eb02" : "none"}
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="inline-block w-4 h-4 mb-1"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+                        />
+                      </svg>
+                      &nbsp;
                     </span>
-                    <span className="inline-block align-top">Reputation: <b>{REP} RP</b></span>
+                    <span className="inline-block align-top">
+                      Reputation: <b>{REP} RP</b>
+                    </span>
                     <span>&nbsp;</span>
-                    
+
                     {/* <span className="inline-block align-top mb-2">Verification {verificationCount
                       ? "(" + verificationCount + "/2)"
                       : "(0/2)"}: </span> */}
                     <span className="whitespace-nowrap">
                       <span className="ml-2 inline-block align-baseline">
-                      <Image
-                        className={worldIdCondition}
-                        onClick={() =>
-                          console.log(
-                            worldIdVerified
-                              ? "World ID verified."
-                              : "Not World ID verified."
-                          )
-                        }
-                        src="/world-id.svg"
-                        height="18"
-                        width="18"
-                        alt="WorldCoin"
-                        title="WorldCoin ID Verification"
-                      />
+                        <Image
+                          className={worldIdCondition}
+                          onClick={() =>
+                            console.log(
+                              worldIdVerified
+                                ? "World ID verified."
+                                : "Not World ID verified."
+                            )
+                          }
+                          src="/world-id.svg"
+                          height="18"
+                          width="18"
+                          alt="WorldCoin"
+                          title="WorldCoin ID Verification"
+                        />
                       </span>
                       <span className="ml-2 inline-block align-baseline">
-                      <Image
-                        className={ENSCondition}
-                        onClick={() =>
-                          console.log(ENSVerified ? "ENS verified." : "Not ENS verified.")
-                        }
-                        src="/ens.svg"
-                        height="18"
-                        width="18"
-                        alt="ENS"
-                        title="ENS Verification"
-                      />
+                        <Image
+                          className={ENSCondition}
+                          onClick={() =>
+                            console.log(
+                              ENSVerified
+                                ? "ENS verified."
+                                : "Not ENS verified."
+                            )
+                          }
+                          src="/ens.svg"
+                          height="18"
+                          width="18"
+                          alt="ENS"
+                          title="ENS Verification"
+                        />
                       </span>
                     </span>
                   </p>
@@ -172,7 +182,7 @@ export default function ConnectHeader(props: any) {
           <p className="pb-3">
             <b>My Wallet:</b>{" "}
             <a
-              href={((chainId === 80001) ? "https://mumbai.polygonscan.com/address/" : "https://kovan-optimistic.etherscan.io/address/") + account}
+              href={"https://mumbai.polygonscan.com/address/" + account}
               className="underline hover:no-underline text-slate-500 dark:text-slate-400 hover:text-slate-400 dark:hover:text-slate-300"
               target="_blank"
               rel="noreferrer"
@@ -185,25 +195,98 @@ export default function ConnectHeader(props: any) {
             <b>Verification ({verificationCount}/2):</b>
           </p>
           <div className="pb-4">
-            {(verificationCount == 2) && <p className="italic text-sm font-bold text-slate-500 dark:text-slate-400">⭐️ Your identity has been verified<br /> with Worldcoin and ENS.</p>  }
+            {verificationCount == 2 && (
+              <p className="italic text-sm font-bold text-slate-500 dark:text-slate-400">
+                ⭐️ Your identity has been verified
+                <br /> with Worldcoin and ENS.
+              </p>
+            )}
             {!worldIdVerified && WorldIDWidget}
 
-            {(!ENSName && !ENSVerified) &&  <a href="https://ens.domains/" target="_blank" 
-              rel="noreferrer" className="verify-ens block w-full border-2 text-slate-700 border-sky-500 rounded-xl mt-2 px-5 py-4 pl-11 text-sm font-bold relative dark:bg-black dark:text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 absolute left-4 top-4"><path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg> Get ENS domain  <span className="absolute right-5 top-2"><Image src="/ens.svg" height="36" width="36" alt="Get ENS" /></span></a>}
+            {!ENSName && !ENSVerified && (
+              <a
+                href="https://ens.domains/"
+                target="_blank"
+                rel="noreferrer"
+                className="verify-ens block w-full border-2 text-slate-700 border-sky-500 rounded-xl mt-2 px-5 py-4 pl-11 text-sm font-bold relative dark:bg-black dark:text-white"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-5 h-5 absolute left-4 top-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"
+                  />
+                </svg>{" "}
+                Get ENS domain{" "}
+                <span className="absolute right-5 top-2">
+                  <Image src="/ens.svg" height="36" width="36" alt="Get ENS" />
+                </span>
+              </a>
+            )}
 
-            {(ENSName && !ENSVerified) && <button onClick={verifyENS} className="verify-ens block w-full border-2 text-slate-700 border-sky-500 rounded-xl mt-2 px-5 py-4 pl-11 text-sm font-bold relative dark:bg-black dark:text-white text-left">
-              {ENSVerified ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute stroke-green-500 left-3.5 top-3.5 "><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> : <span className="absolute left-4 top-4 border border-slate-700 dark:border-white rounded-full w-5 h-5"> </span>} Verify my ENS <span className="absolute right-5 top-2"><Image className="" src="/ens.svg" height="36" width="36" alt="ENS" /></span></button>}
+            {ENSName && !ENSVerified && (
+              <button
+                onClick={verifyENS}
+                className="verify-ens block w-full border-2 text-slate-700 border-sky-500 rounded-xl mt-2 px-5 py-4 pl-11 text-sm font-bold relative dark:bg-black dark:text-white text-left"
+              >
+                {ENSVerified ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-6 h-6 absolute stroke-green-500 left-3.5 top-3.5 "
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                ) : (
+                  <span className="absolute left-4 top-4 border border-slate-700 dark:border-white rounded-full w-5 h-5">
+                    {" "}
+                  </span>
+                )}{" "}
+                Verify my ENS{" "}
+                <span className="absolute right-5 top-2">
+                  <Image
+                    className=""
+                    src="/ens.svg"
+                    height="36"
+                    width="36"
+                    alt="ENS"
+                  />
+                </span>
+              </button>
+            )}
           </div>
           <hr />
           <p className="pt-3 text-sm">
-            <b>Earned Bounty:</b> <span className="text-slate-500 dark:text-slate-400">{Number(earnedBountyCount).toFixed(0)} USDC</span>
+            <b>Earned Bounty:</b>{" "}
+            <span className="text-slate-500 dark:text-slate-400">
+              {Number(earnedBountyCount).toFixed(0)} USDC
+            </span>
           </p>
           <p className="py-1 text-sm">
-            <b>Answers:</b> <span className="text-slate-500 dark:text-slate-400">{answersCount}</span>
+            <b>Answers:</b>{" "}
+            <span className="text-slate-500 dark:text-slate-400">
+              {answersCount}
+            </span>
           </p>
           <p className="pb-3 text-sm">
-            <b>Requests:</b> <span className="text-slate-500 dark:text-slate-400">{requestsCount}</span>
+            <b>Requests:</b>{" "}
+            <span className="text-slate-500 dark:text-slate-400">
+              {requestsCount}
+            </span>
           </p>
           <hr />
           <p className="pt-3 pb-1">
@@ -212,15 +295,23 @@ export default function ConnectHeader(props: any) {
           <div className="flex gap-2 justify-start">
             <b>
               <button
-                className={"text-sm text-purple-500 hover:text-purple-400 " + `${(chainId === 80001) ? "border-2" : ""}` + " border-purple-500 px-3 py-2 rounded-lg"}
-                onClick={() => (handleSwitchNetworkMumbai())}
+                className={
+                  "text-sm text-purple-500 hover:text-purple-400 " +
+                  `${chainId === 80001 ? "border-2" : ""}` +
+                  " border-purple-500 px-3 py-2 rounded-lg"
+                }
+                onClick={() => handleSwitchNetworkMumbai()}
               >
                 Polygon Mumbai
               </button>{" "}
-              &nbsp; &nbsp; 
+              &nbsp; &nbsp;
               <button
-                className={"text-sm text-red-500 hover:text-red-400 " + `${(chainId === 69) ? "border-2" : "" }` + " border-red-500 px-3 py-2 rounded-lg"}
-                onClick={() => (handleSwitchNetworkKovan())}
+                className={
+                  "text-sm text-red-500 hover:text-red-400 " +
+                  `${chainId === 69 ? "border-2" : ""}` +
+                  " border-red-500 px-3 py-2 rounded-lg"
+                }
+                onClick={() => handleSwitchNetworkKovan()}
               >
                 Optimism Kovan
               </button>

@@ -27,11 +27,11 @@ interface IUSDC {
     function approve(address spender, uint256 amount) external returns (bool);
 }
 
-contract deOracle is IUSDC, Router {
+contract deOracle is IUSDC {
     using ByteHasher for bytes;
 
     //requestIdCounter AnswerIdCounter TEMP modified TODO
-    uint256 public requestCount;npm install --save-dev @nomiclabs/hardhat-ethers ethers # peer dependencies
+    uint256 public requestCount;
     uint256 public answerCount;
     IUSDC private usdcToken = IUSDC(0xFC07D8Ab694afF02301eddBe1c308Fe4a68F6121);
 
@@ -55,11 +55,9 @@ contract deOracle is IUSDC, Router {
         uint256 downVotes;
     }
 
-    Request private blankRequest =
-        Request(0, "", address(this), 0, 0, false, 0, 0);
-    Answer private blankAnswer = Answer(0, 0, "", address(this), false, 0, 0);
+    constructor() {}
 
-    //dev accessControl
+    //TODO: accessControl
     mapping(address => bool) public addressToWorldIdVerified;
     mapping(address => bool) public addressToENSVerified;
     mapping(address => string) public addressToENSName;
@@ -78,36 +76,6 @@ contract deOracle is IUSDC, Router {
 
     Request[] public requestList;
     Answer[] public answerList;
-
-    constructor(uint32 _destinationDomain) {
-        // Transfer ownership of the contract to deployer
-        _transferOwnership(msg.sender);
-
-        destinationDomain = _destinationDomain;
-
-        //mumbai => opkovan
-        if (_destinationDomain == 0x6f702d6b) {
-            _setAbacusConnectionManager(
-                0xb636B2c65A75d41F0dBe98fB33eb563d245a241a
-            );
-            _setInterchainGasPaymaster(
-                0x9A27744C249A11f68B3B56f09D280599585DFBb8
-            );
-        }
-        //opkovan => mumbai
-        if (_destinationDomain == 80001) {
-            _setAbacusConnectionManager(
-                0x740bEd6E4eEc7c57a2818177Fba3f9E896D5DE1c
-            );
-            _setInterchainGasPaymaster(
-                0xD7D2B0f61B834D98772e938Fa64425587C0f3481
-            );
-        }
-
-        //randomize Ids
-        requestCount = _destinationDomain;
-        answerCount = _destinationDomain;
-    }
 
     function submitRequest(
         string memory _requestText,
@@ -132,7 +100,6 @@ contract deOracle is IUSDC, Router {
         requestCount++;
         requestList.push(newRequest);
         addREP(msg.sender, 10);
-        sendMessageRequest(newRequest);
     }
 
     function postAnswer(uint256 _requestId, string memory _answerText) public {
@@ -174,17 +141,14 @@ contract deOracle is IUSDC, Router {
 
         requestIdToAddressToAnswered[_requestId][msg.sender] = true;
         addREP(msg.sender, 5);
-        sendMessageAnswer(newAnswer, msg.sender);
     }
 
     function addREP(address _address, uint256 _amount) private {
         addressToREP[_address] += _amount;
-        sendMessageREP(_address, addressToREP[_address]);
     }
 
     function deductREP(address _address, uint256 _amount) private {
         addressToREP[_address] -= _amount;
-        sendMessageREP(_address, addressToREP[_address]);
     }
 
     function getRequestList() public view returns (Request[] memory) {
@@ -211,11 +175,11 @@ contract deOracle is IUSDC, Router {
         return addressToBountyEarned[msg.sender];
     }
 
-    //worldID only modifier needed ***
+    //TODO: internal?
     function setWorldIdVerified(address _address) public {
+        //TODO: testMe
+        require(msg.sender == 0xABB70f7F39035586Da57B3c8136035f87AC0d2Aa);
         addressToWorldIdVerified[_address] = true;
-        //sync worldID with Hyperlane
-        sendMessageWorldId(_address);
         addREP(_address, 100);
     }
 
@@ -226,7 +190,6 @@ contract deOracle is IUSDC, Router {
         );
         addressToENSVerified[msg.sender] = true;
         addressToENSName[msg.sender] = _ensName;
-        sendMessageENS(msg.sender, _ensName);
         addREP(msg.sender, 50);
     }
 
@@ -241,8 +204,6 @@ contract deOracle is IUSDC, Router {
                 answerList[i].upVotes += 1;
                 addREP(msg.sender, 1);
                 addREP(answerList[i].origin, 3);
-                // Answer memory answerPointer = answerList[i];
-                // sendMessageAnswer(answerPointer, msg.sender);
             }
         }
     }
@@ -258,8 +219,6 @@ contract deOracle is IUSDC, Router {
                 answerList[i].downVotes += 1;
                 addREP(msg.sender, 1);
                 deductREP(answerList[i].origin, 3);
-                // Answer memory answerPointer = answerList[i];
-                // sendMessageAnswer(answerPointer, msg.sender);
             }
         }
     }
@@ -287,261 +246,10 @@ contract deOracle is IUSDC, Router {
                     addressToBountyEarned[
                         answerPointer.origin
                     ] += requestPointer.bounty;
-                    sendMessageBounty(
-                        answerPointer.origin,
-                        requestPointer.bounty
-                    );
                     answerList[i].rewarded = true;
                 }
             }
         }
-    }
-
-    /////////////////////////HyperLane/////////////////////
-    //////////////////////CrossChain Messaging///////////////////
-    ///////////////////////////////////////////////////////////
-    // ============ Events ============
-    uint32 public destinationDomain;
-
-    enum messageType {
-        REP,
-        WorldId,
-        ENS,
-        Request,
-        Answer,
-        selectAnswer,
-        Bounty
-    }
-
-    event SentMessageREP(
-        uint32 indexed origin,
-        address indexed addr,
-        uint256 indexed rep
-    );
-    event SentMessageWorldId(uint32 indexed origin, address indexed addr);
-    event SentMessageENS(
-        uint32 indexed origin,
-        address indexed addr,
-        string indexed ensName
-    );
-    event SentMessageBounty(
-        uint32 indexed origin,
-        address indexed addr,
-        uint256 indexed bounty
-    );
-    event SentMessageRequest(uint32 indexed origin);
-    event SentMessageAnswer(uint32 indexed origin);
-    event ReceivedMessageREP(
-        uint32 indexed origin,
-        uint32 destination,
-        address indexed addr,
-        uint256 indexed rep
-    );
-    event ReceivedMessageWorldId(
-        uint32 indexed origin,
-        uint32 destination,
-        address indexed addr
-    );
-    event ReceivedMessageENS(
-        uint32 indexed origin,
-        uint32 destination,
-        address indexed addr,
-        string indexed ensName
-    );
-    event ReceivedMessageBounty(
-        uint32 indexed origin,
-        address indexed addr,
-        uint256 indexed bounty
-    );
-    event ReceivedMessageRequest(uint32 indexed origin);
-    event ReceivedMessageAnswer(uint32 indexed origin);
-
-    //sync REP change
-    function sendMessageREP(address _address, uint256 _rep) internal {
-        sent += 1;
-        sentTo[destinationDomain] += 1;
-        _dispatchWithGas(
-            destinationDomain,
-            abi.encode(
-                messageType.REP,
-                _address,
-                "",
-                _rep,
-                blankRequest,
-                blankAnswer
-            ),
-            msg.value
-        );
-        emit SentMessageREP(_localDomain(), _address, _rep);
-    }
-
-    //sync WorldID change
-    function sendMessageWorldId(address _address) internal {
-        sent += 1;
-        sentTo[destinationDomain] += 1;
-        _dispatchWithGas(
-            destinationDomain,
-            abi.encode(
-                messageType.WorldId,
-                _address,
-                "",
-                0,
-                blankRequest,
-                blankAnswer
-            ),
-            msg.value
-        );
-        emit SentMessageWorldId(_localDomain(), _address);
-    }
-
-    //TESTING with no encodedList
-    function sendMessageENS(address _address, string memory _ensName) internal {
-        sent += 1;
-        sentTo[destinationDomain] += 1;
-        _dispatchWithGas(
-            destinationDomain,
-            abi.encode(
-                messageType.ENS,
-                _address,
-                _ensName,
-                0,
-                blankRequest,
-                blankAnswer
-            ),
-            msg.value
-        );
-        emit SentMessageENS(_localDomain(), _address, _ensName);
-    }
-
-    function sendMessageBounty(address _address, uint256 _bounty) internal {
-        sent += 1;
-        sentTo[destinationDomain] += 1;
-        _dispatchWithGas(
-            destinationDomain,
-            abi.encode(
-                messageType.Bounty,
-                _address,
-                "",
-                _bounty,
-                blankRequest,
-                blankAnswer
-            ),
-            msg.value
-        );
-        emit SentMessageBounty(_localDomain(), _address, _bounty);
-    }
-
-    function sendMessageRequest(Request memory _request) internal {
-        sent += 1;
-        sentTo[destinationDomain] += 1;
-        _dispatchWithGas(
-            destinationDomain,
-            abi.encode(
-                messageType.Request,
-                address(this),
-                "",
-                0,
-                _request,
-                blankAnswer
-            ),
-            msg.value
-        );
-        emit SentMessageRequest(_localDomain());
-    }
-
-    function sendMessageAnswer(Answer memory _answer, address _votedAddress)
-        internal
-    {
-        sent += 1;
-        sentTo[destinationDomain] += 1;
-        _dispatchWithGas(
-            destinationDomain,
-            abi.encode(
-                messageType.Answer,
-                _votedAddress,
-                "",
-                0,
-                blankRequest,
-                _answer
-            ),
-            msg.value
-        );
-        emit SentMessageAnswer(_localDomain());
-    }
-
-    function _handle(
-        uint32 _origin,
-        bytes32 _sender,
-        bytes memory _message
-    ) internal override {
-        received += 1;
-        receivedFrom[_origin] += 1;
-
-        (
-            messageType _messageType,
-            address _address,
-            string memory _string,
-            uint256 _uint256,
-            Request memory _request,
-            Answer memory _answer
-        ) = abi.decode(
-                _message,
-                (messageType, address, string, uint256, Request, Answer)
-            );
-
-        //REP update
-        if (_messageType == messageType.REP) {
-            emit ReceivedMessageREP(
-                _origin,
-                _localDomain(),
-                _address,
-                _uint256
-            );
-            addressToREP[_address] = _uint256;
-        } else if (_messageType == messageType.WorldId) {
-            //WorldId update
-            emit ReceivedMessageWorldId(_origin, _localDomain(), _address);
-            addressToWorldIdVerified[_address] = true;
-        } else if (_messageType == messageType.ENS) {
-            //ENS update
-            emit ReceivedMessageENS(_origin, _localDomain(), _address, _string);
-            addressToENSVerified[_address] = true;
-            addressToENSName[_address] = _string;
-        } else if (_messageType == messageType.Request) {
-            // RequestList update
-            emit ReceivedMessageRequest(_origin);
-            for (uint i = 0; i < requestList.length; i++) {
-                if (requestList[i].id == _request.id) {
-                    requestList[i] = _request;
-                    return;
-                }
-            }
-            requestList.push(_request);
-        } else if (_messageType == messageType.Answer) {
-            // RequestList update
-            emit ReceivedMessageAnswer(_origin);
-            answerList.push(_answer);
-            requestIdToAnswerIds[_answer.requestId].push(_answer.id);
-            answerIdToRequestId[_answer.id] = _answer.requestId;
-            requestIdToAddressToAnswered[_answer.requestId][
-                _answer.origin
-            ] = true;
-            answerIdToAddressToVoted[_answer.id][_address] = true;
-        } else if (_messageType == messageType.Bounty) {
-            // RequestList update
-            emit ReceivedMessageBounty(_origin, _address, _uint256);
-            addressToBountyEarned[_address] += _uint256;
-        }
-    }
-
-    // alignment preserving cast
-    function addressToBytes32(address _addr) public pure returns (bytes32) {
-        return bytes32(uint256(uint160(_addr)));
-    }
-
-    // alignment preserving cast
-    function bytes32ToAddress(bytes32 _buf) public pure returns (address) {
-        return address(uint160(uint256(_buf)));
     }
 
     /////////////////////////////////////////////////////
@@ -612,25 +320,6 @@ contract deOracle is IUSDC, Router {
 
         ///add address to array of verified addresses
     }
-
-    // A counter of how many messages have been sent from this contract.
-    uint256 public sent;
-    // A counter of how many messages have been received by this contract.
-    uint256 public received;
-    // Keyed by domain, a counter of how many messages that have been sent
-    // from this contract to the domain.
-    mapping(uint32 => uint256) public sentTo;
-    // Keyed by domain, a counter of how many messages that have been received
-    // by this contract from the domain.
-    mapping(uint32 => uint256) public receivedFrom;
-
-    // ============ External functions ============
-
-    /**
-     * @notice Sends a message to the _destinationDomain. Any msg.value is
-     * used as interchain gas payment.
-     * @param _destinationDomain The destination domain to send the message to.
-     */
 }
 
 library ByteHasher {

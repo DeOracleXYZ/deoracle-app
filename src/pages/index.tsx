@@ -12,12 +12,12 @@ import RequestCard from "../components/RequestCard";
 import { mumbai, kovan } from "../constants/networks";
 
 declare global {
-  interface Window{
-    ethereum:any
+  interface Window {
+    ethereum: any;
   }
 }
 
-const supportedChainIds = [0x13881, 0x7a69, 69];
+const supportedChainIds = [0x13881];
 const injected = new InjectedConnector({
   supportedChainIds: supportedChainIds,
 });
@@ -34,35 +34,32 @@ export default function Home() {
     error: networkError,
     activate: activateNetwork,
     account,
-    chainId
+    chainId,
   } = useWeb3React();
-  let   { library,
-  library: active,
-  library: provider} = useWeb3React();
-  
+  let { library, library: active, library: provider } = useWeb3React();
+
   const id = useId();
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState("");
-  const [proofResponse, setProofResponse] = useState(null as VerificationResponse | null);
+  const [proofResponse, setProofResponse] = useState(
+    null as VerificationResponse | null
+  );
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  // const mumbaiAddress = "0x749eEb0Bc9C19F9A59Aa7614e0a3E973D49D863D"; //DEV
-  // const optimismAddress = "0x749eEb0Bc9C19F9A59Aa7614e0a3E973D49D863D"; //DEV
-  // const mumbaiAddress = "0xc9C58C765a5c7e5a5452c0514Df962A9898478CF"; // DEV2
-  // const optimismAddress = "0xc9C58C765a5c7e5a5452c0514Df962A9898478CF"; //DEV2
-   const mumbaiAddress = "0xF75cF3AD2c3E1c7Bf4600405F773808fb908e4a9"; // LIVE
-   const optimismAddress = "0xF75cF3AD2c3E1c7Bf4600405F773808fb908e4a9"; //LIVE
+  const mumbaiAddress = "0xC5F21a54574aA0d0d72b5B122c2B25b53417f3B6"; // LIVE
   const mumbaiProvider = new ethers.providers.AlchemyProvider(
-          0x13881,
-          "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
-        ); 
-  const [deOracleAddress, setDeOracleAddress] = useState(mumbaiAddress)
-  const [deOracleREAD, setDeOracleREAD] = useState(new ethers.Contract(
-    mumbaiAddress,
-    deOracleABI,
-    mumbaiProvider
-  ) as Contract | null);
+    0x13881,
+    "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
+  );
+  const [deOracleAddress, setDeOracleAddress] = useState(mumbaiAddress);
+  const [deOracleREAD, setDeOracleREAD] = useState(
+    new ethers.Contract(
+      mumbaiAddress,
+      deOracleABI,
+      mumbaiProvider
+    ) as Contract | null
+  );
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
   const [requestList, setRequestList] = useState([] as any[]);
   const [answerList, setAnswerList] = useState([] as any[]);
@@ -96,144 +93,124 @@ export default function Home() {
       console.log("Error while initialization World ID", error),
   };
 
-
   useEffect(() => {
     // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark')
-      setDarkMode(true)
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
+      setDarkMode(true);
     } else {
-      document.documentElement.classList.remove('dark')
-      setDarkMode(false)
+      document.documentElement.classList.remove("dark");
+      setDarkMode(false);
     }
-  })
+  });
   useEffect(() => {
-    if(sendAnswerState) {
+    if (sendAnswerState) {
       window.location.reload();
     }
-  }, [sendAnswerState])
+  }, [sendAnswerState]);
 
   useEffect(() => {
     //if connected or RPCprovider
-    if(!networkActive) {
-      setDeOracleAddress(mumbaiAddress);     
-       setDeOracleREAD( new ethers.Contract(
-              mumbaiAddress,
-              deOracleABI,
-              mumbaiProvider
-            ));
+    if (!networkActive) {
+      setDeOracleAddress(mumbaiAddress);
+      setDeOracleREAD(
+        new ethers.Contract(mumbaiAddress, deOracleABI, mumbaiProvider)
+      );
     }
-          //if OP kovan   
-    if (chainId === 69) {
-            setDeOracleAddress(optimismAddress);  
-            setDeOracleREAD( new ethers.Contract(
-              optimismAddress,
-              deOracleABI,
-              provider
-            ));
-            setDeOracleWRITE( new ethers.Contract(
-              optimismAddress,
-              deOracleABI,
-              provider.getSigner()
-            ));
-        
-        }      //if Mumbai   
+    //if Mumbai
     if (chainId === 80001) {
-        setDeOracleAddress(mumbaiAddress);
-          setDeOracleREAD( new ethers.Contract(
-            mumbaiAddress,
-            deOracleABI,
-            provider
-          ));
-          setDeOracleWRITE( new ethers.Contract(
-            mumbaiAddress,
-            deOracleABI,
-            provider.getSigner()
-          ));
-      }
-
-  }, [chainId, networkActive])
+      setDeOracleAddress(mumbaiAddress);
+      setDeOracleREAD(
+        new ethers.Contract(mumbaiAddress, deOracleABI, provider)
+      );
+      setDeOracleWRITE(
+        new ethers.Contract(mumbaiAddress, deOracleABI, provider.getSigner())
+      );
+    }
+  }, [chainId, networkActive]);
 
   useEffect(() => {
-      
-      const readContractData = async () => {
-        setRequestList(await deOracleREAD!.getRequestList());
-        setAnswerList(await deOracleREAD!.getAnswerList());
-    }
-    deOracleREAD && 
-     readContractData();
-  
+    const readContractData = async () => {
+      setRequestList(await deOracleREAD!.getRequestList());
+      setAnswerList(await deOracleREAD!.getAnswerList());
+    };
+    deOracleREAD && readContractData();
 
-      const writeContractData = async () => {
-          setREP((await deOracleWRITE!.getREP()).toNumber());
-          setWorldIdVerified(await deOracleWRITE!.addressToWorldIdVerified(account));
-          setENSVerified(await deOracleWRITE!.addressToENSVerified(account));
-          const data = await provider.getBalance(account);
-          setBalance(ethers.utils.formatEther(data));
-      };
-      const updateVerifiedCount = () => {
-        let verifCount = 0;
-        worldIdVerified && verifCount++;
-        ENSVerified && verifCount++;
-        setVerficationCount(verifCount);
-      };
-      const updateEarnedBountyCount = async () => {
-        deOracleWRITE &&
-          setEarnedBountyCount( parseInt(ethers.utils.formatUnits((await deOracleWRITE.getBountyEarned()), 18)).toFixed(2) )
-      };
-      deOracleWRITE && (
-        writeContractData(),
-        updateVerifiedCount(),
-        updateEarnedBountyCount()
-      )
-      
+    const writeContractData = async () => {
+      setREP((await deOracleWRITE!.getREP()).toNumber());
+      setWorldIdVerified(
+        await deOracleWRITE!.addressToWorldIdVerified(account)
+      );
+      setENSVerified(await deOracleWRITE!.addressToENSVerified(account));
+      const data = await provider.getBalance(account);
+      setBalance(ethers.utils.formatEther(data));
+    };
+    const updateVerifiedCount = () => {
+      let verifCount = 0;
+      worldIdVerified && verifCount++;
+      ENSVerified && verifCount++;
+      setVerficationCount(verifCount);
+    };
+    const updateEarnedBountyCount = async () => {
+      deOracleWRITE &&
+        setEarnedBountyCount(
+          parseInt(
+            ethers.utils.formatUnits(await deOracleWRITE.getBountyEarned(), 18)
+          ).toFixed(2)
+        );
+    };
+    deOracleWRITE &&
+      (writeContractData(), updateVerifiedCount(), updateEarnedBountyCount());
   }, [deOracleREAD, deOracleWRITE, worldIdVerified, ENSVerified]);
 
   useEffect(() => {
     const updateRequestsCount = () => {
       if (requestList) {
         let requestCount = 0;
-        for (let i=0; i<Object.keys(requestList!).length; i++) {
-          (requestList[i].origin === account) && requestCount++;
+        for (let i = 0; i < Object.keys(requestList!).length; i++) {
+          requestList[i].origin === account && requestCount++;
         }
-        setRequestsCount(requestCount)
+        setRequestsCount(requestCount);
       }
     };
 
     const updateAnswersCount = () => {
       if (answerList) {
         let answerCount = 0;
-        for (let i=0; i<Object.keys(answerList!).length; i++) {
-          (answerList[i].origin === account) && answerCount++;
+        for (let i = 0; i < Object.keys(answerList!).length; i++) {
+          answerList[i].origin === account && answerCount++;
         }
 
-        setAnswersCount(answerCount)
+        setAnswersCount(answerCount);
       }
     };
 
     updateRequestsCount();
     updateAnswersCount();
-
   }, [deOracleREAD, requestsCount, answersCount, earnedBountyCount]);
 
   useEffect(() => {
     proofResponse && sendProof();
     async function sendProof() {
-      let { merkle_root, nullifier_hash, proof }  = proofResponse!; 
+      let { merkle_root, nullifier_hash, proof } = proofResponse!;
       let unpackedProof = ethers.utils.defaultAbiCoder.decode(
         ["uint256[8]"],
         proof
       )[0];
       deOracleWRITE &&
-      deOracleWRITE.verifyAndExecute(
-        account,
-        merkle_root,
-        nullifier_hash,
-        unpackedProof,
-        { gasLimit: 10000000 }
-      );
+        deOracleWRITE.verifyAndExecute(
+          account,
+          merkle_root,
+          nullifier_hash,
+          unpackedProof,
+          { gasLimit: 10000000 }
+        );
     }
-  }, [proofResponse, deOracleWRITE, account])
+  }, [proofResponse, deOracleWRITE, account]);
 
   //ENSVerification
   useEffect(() => {
@@ -247,7 +224,6 @@ export default function Home() {
         try {
           const ENS = await mainNetProvider.lookupAddress(account);
           ENS && setENSName(ENS);
-
         } catch (err) {
           console.log(err);
         }
@@ -255,7 +231,6 @@ export default function Home() {
     };
     resolveAddress();
   }, [ENSName, ENSVerified, account]);
-
 
   useEffect(() => {
     injected
@@ -271,18 +246,14 @@ export default function Home() {
       });
   }, [activateNetwork, networkActive, networkError]);
 
-
   async function connect() {
-
-
-
-    if (window.ethereum.chainId && !supportedChainIds.includes(chainId!) ) {
-      library = {provider:  window.ethereum};
+    if (window.ethereum.chainId && !supportedChainIds.includes(chainId!)) {
+      library = { provider: window.ethereum };
       await switchNetwork(mumbai);
-}
-    //TODO: 
+    }
+    //TODO:
     try {
-      await activate(injected)
+      await activate(injected);
     } catch (e) {
       console.log(e);
     }
@@ -295,7 +266,7 @@ export default function Home() {
         params: [{ chainId: chain.chainId }],
       });
     } catch (switchError: any) {
-      console.log(switchError)
+      console.log(switchError);
       // 4902 error code indicates the chain is missing on the wallet
       if (switchError.code === 4902) {
         try {
@@ -318,31 +289,32 @@ export default function Home() {
       }
     }
   };
-  
+
   async function verifyENS() {
     let txReceipt;
-    if(deOracleWRITE)
+    if (deOracleWRITE)
       try {
         txReceipt = await deOracleWRITE.setENSVerified(ENSName);
-        //ENS Status loading spinner? 
+        //ENS Status loading spinner?
         txReceipt = await txReceipt.wait();
 
-        if(txReceipt.status === 1){
+        if (txReceipt.status === 1) {
           setENSVerified(true);
         } else {
-          console.log("Transaction failed, ENS not verified.")
+          console.log("Transaction failed, ENS not verified.");
         }
       } catch (err) {
         console.log(err);
       }
   }
-  
-  const requestCardList = () => {
 
-    const keysDesc: any = Object.keys(requestList!).sort((a:any, b:any) => {return b-a})
+  const requestCardList = () => {
+    const keysDesc: any = Object.keys(requestList!).sort((a: any, b: any) => {
+      return b - a;
+    });
     const requestListDesc: any = [];
 
-    for (let i=0; i<keysDesc.length; i++) {
+    for (let i = 0; i < keysDesc.length; i++) {
       const obj = requestList![keysDesc[i]];
       requestListDesc.push(obj);
     }
@@ -371,22 +343,23 @@ export default function Home() {
   };
 
   const toggleTheme = () => {
-
     if (darkMode) {
-      localStorage.theme = 'light'
-      setDarkMode(false)
-   } else {
-      localStorage.theme = 'dark'
-      setDarkMode(true)
+      localStorage.theme = "light";
+      setDarkMode(false);
+    } else {
+      localStorage.theme = "dark";
+      setDarkMode(true);
     }
-
-  }
+  };
 
   function mintUsdc() {
-    const usdcContract = new ethers.Contract("0xFC07D8Ab694afF02301eddBe1c308Fe4a68F6121", usdcABI, provider.getSigner())
-    usdcContract.mint(account, "100000000000000000000")
+    const usdcContract = new ethers.Contract(
+      "0xFC07D8Ab694afF02301eddBe1c308Fe4a68F6121",
+      usdcABI,
+      provider.getSigner()
+    );
+    usdcContract.mint(account, "100000000000000000000");
   }
-
 
   return (
     <>
@@ -405,7 +378,7 @@ export default function Home() {
         REP={REP}
         darkMode={darkMode}
         requestsCount={requestsCount}
-        answersCount={answersCount} 
+        answersCount={answersCount}
         earnedBountyCount={earnedBountyCount}
         verificationCount={verificationCount}
         handleSwitchNetworkMumbai={() => switchNetwork(mumbai)}
@@ -425,19 +398,64 @@ export default function Home() {
       </div>
 
       <footer className="container text-center py-10 px-10 mt-10">
-        <button type="button" onClick={toggleTheme} className={"fixed right-5 bottom-5 rounded-full drop-shadow-md w-18 h-18 px-5 py-5 hover:right-7 hover:bottom-7 border-4 bg-origin-border hover:border-8 border-white/60 dark:border-white/30 opacity-75 hover:opacity-100 transition-all ease-in-out duration-500 bg-gradient-to-b " + `${darkMode ? "from-blue-900 to-purple-900" : "from-blue-600 to-sky-400"}`}>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`${darkMode ? "hidden" : ""}` + " transition-all stroke-yellow-300 w-6 h-6 inline-block"}><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className={
+            "fixed right-5 bottom-5 rounded-full drop-shadow-md w-18 h-18 px-5 py-5 hover:right-7 hover:bottom-7 border-4 bg-origin-border hover:border-8 border-white/60 dark:border-white/30 opacity-75 hover:opacity-100 transition-all ease-in-out duration-500 bg-gradient-to-b " +
+            `${
+              darkMode
+                ? "from-blue-900 to-purple-900"
+                : "from-blue-600 to-sky-400"
+            }`
+          }
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className={
+              `${darkMode ? "hidden" : ""}` +
+              " transition-all stroke-yellow-300 w-6 h-6 inline-block"
+            }
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+            />
+          </svg>
 
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`${darkMode ? "" : "hidden"}` + " transition-all stroke-yellow-300 w-6 h-6 inline-block"}><path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" /></svg>
-          
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className={
+              `${darkMode ? "" : "hidden"}` +
+              " transition-all stroke-yellow-300 w-6 h-6 inline-block"
+            }
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
+            />
+          </svg>
         </button>
 
-        <br /><br />
+        <br />
+        <br />
         <hr />
-        <br /><br />
+        <br />
+        <br />
 
         <p className="mb-1 pt-2 text-slate-400">
-          &copy; {copyrightYear} deOracle.xyz. <i>
+          &copy; {copyrightYear} deOracle.xyz.{" "}
+          <i>
             Made by{" "}
             <a
               href="https://twitter.com/0xMarkeljan"
@@ -462,14 +480,42 @@ export default function Home() {
         <br />
         <br />
 
-        <p className="text-slate-600 "> <b>Faucet:</b> &nbsp;&nbsp;
-          <a className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500" onClick={() => {networkActive && mintUsdc()}}>USDC</a>&nbsp;.&nbsp; 
-          <a className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500" href="https://faucet.polygon.technology/" target="_blank" rel="noreferrer">MATIC</a> &nbsp;.&nbsp; 
-          <a className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500" href="https://kovan.optifaucet.com/" target="_blank" rel="noreferrer">oETH</a> &nbsp; | &nbsp; 
-
-
-
-          <a href="#" className="text-slate-600 underline hover:no-underline hover:text-slate-500">Back to Top</a>
+        <p className="text-slate-600 ">
+          {" "}
+          <b>Faucet:</b> &nbsp;&nbsp;
+          <a
+            className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500"
+            onClick={() => {
+              networkActive && mintUsdc();
+            }}
+          >
+            USDC
+          </a>
+          &nbsp;.&nbsp;
+          <a
+            className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500"
+            href="https://faucet.polygon.technology/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            MATIC
+          </a>{" "}
+          &nbsp;.&nbsp;
+          <a
+            className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500"
+            href="https://kovan.optifaucet.com/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            oETH
+          </a>{" "}
+          &nbsp; | &nbsp;
+          <a
+            href="#"
+            className="text-slate-600 underline hover:no-underline hover:text-slate-500"
+          >
+            Back to Top
+          </a>
         </p>
         <br />
       </footer>
