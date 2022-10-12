@@ -163,13 +163,18 @@ function RequestCard(props: any) {
     const spinner = event.target.lastChild;
 
     if (deOracleWRITE)
-      txReceipt = await deOracleWRITE.postAnswer(requestId, answerText);
+      try {
+        txReceipt = await deOracleWRITE.postAnswer(requestId, answerText);
+      } catch (err) {
+        //TODO: UI Magic
+        console.log(err);
+        return;
+      }
 
     // disable answer input & button and show loading
     input.setAttribute("disabled", "true");
     button.setAttribute("disabled", "true");
     spinner.classList.remove("hidden");
-
     txReceipt = await txReceipt.wait();
 
     if (txReceipt.status === 1) {
@@ -186,21 +191,21 @@ function RequestCard(props: any) {
     }
   }
 
-  const upVoteAnswer = (event: any) => {
+  const upVoteAnswer = async (event: any) => {
     try {
-      event.currentTarget.name &&
-        deOracleWRITE.upVote(event.currentTarget.name);
-    } catch (e) {
-      console.log(e);
+      let txReceipt = await deOracleWRITE.upVote(event.currentTarget.name);
+    } catch (err) {
+      //TODO: UI Magic
+      console.log(err);
     }
   };
 
-  const downVoteAnswer = (event: any) => {
+  const downVoteAnswer = async (event: any) => {
     try {
-      event.currentTarget.name &&
-        deOracleWRITE.downVote(event.currentTarget.name);
-    } catch (e) {
-      console.log(e);
+      let txReceipt = await deOracleWRITE.downVote(event.currentTarget.name);
+    } catch (err) {
+      //TODO: UI Magic
+      console.log(err);
     }
   };
 
@@ -286,29 +291,64 @@ function RequestCard(props: any) {
             <div className={`${!showMe ? "hidden" : ""}` + " px-5 py-5"}>
               {answerList &&
                 answerList.map(function (answer: any) {
-                  return (
-                    <div
-                      key={answer.id.toNumber()}
-                      className="border-b border-slate-200 dark:border-white/10 flex flex-wrap md:flex-nowrap gap-5 text-sm py-3 items-center"
-                    >
-                      <div className="flex-none font-bold w-full md:w-auto">
-                        <p className="">
-                          <button
-                            name={answer.id.toNumber()}
-                            onClick={upVoteAnswer}
-                            className="rounded-l-xl px-3 py-2 border-2 border-green-400 dark:border-green-400/70 dark:hover:border-green-500/70  text-green-400 hover:border-green-500 hover:text-green-500 dark:bg-slate-900"
-                          >
-                            +{answer.upVotes.toNumber()}
-                          </button>
-                          <button
-                            name={answer.id.toNumber()}
-                            onClick={acceptAnswer}
+                  if (answer.requestId.toNumber() == id.toNumber())
+                    return (
+                      <div
+                        key={answer.id.toNumber()}
+                        className="border-b border-slate-200 dark:border-white/10 flex flex-wrap md:flex-nowrap gap-5 text-sm py-3 items-center"
+                      >
+                        <div className="flex-none font-bold w-full md:w-auto">
+                          <p className="">
+                            <button
+                              name={answer.id.toNumber()}
+                              onClick={upVoteAnswer}
+                              className="rounded-l-xl px-3 py-2 border-2 border-green-400 dark:border-green-400/70 dark:hover:border-green-500/70  text-green-400 hover:border-green-500 hover:text-green-500 dark:bg-slate-900"
+                            >
+                              +{answer.upVotes.toNumber()}
+                            </button>
+                            <button
+                              name={answer.id.toNumber()}
+                              onClick={acceptAnswer}
+                              className={
+                                `${requestOwner ? " " : "hidden "}` +
+                                `${hasReward ? "hidden " : " "}` +
+                                " px-3 py-2 border-2 border-blue-400 dark:border-blue-400/70 dark:hover:border-blue-500/70 text-blue-400 hover:border-blue-500 hover:text-blue-500 dark:bg-slate-900"
+                              }
+                              title="Accept Answer"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth="2"
+                                stroke="currentColor"
+                                className="w-4 h-4 inline-block"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>
+                            </button>
+                            <button
+                              name={answer.id.toNumber()}
+                              onClick={downVoteAnswer}
+                              className="rounded-r-xl px-3 py-2 dark:bg-slate-900 border-2 border-red-400 dark:border-red-400/70 dark:hover:border-red-500/70 text-red-400 hover:border-red-500 hover:text-red-500"
+                            >
+                              -{answer.downVotes.toNumber()}
+                            </button>
+                          </p>
+                        </div>
+                        <div className="grow w-full md:w-auto dark:text-slate-300">
+                          <p className="text-base md:text-lg font-bold">
+                            {answer.answerText}
+                          </p>
+                          <p
                             className={
-                              `${requestOwner ? " " : "hidden "}` +
-                              `${hasReward ? "hidden " : " "}` +
-                              " px-3 py-2 border-2 border-blue-400 dark:border-blue-400/70 dark:hover:border-blue-500/70 text-blue-400 hover:border-blue-500 hover:text-blue-500 dark:bg-slate-900"
+                              `${answer.rewarded ? "" : "hidden"}` +
+                              " mt-2 text-blue-500 text-xs text-left"
                             }
-                            title="Accept Answer"
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -316,75 +356,38 @@ function RequestCard(props: any) {
                               viewBox="0 0 24 24"
                               strokeWidth="2"
                               stroke="currentColor"
-                              className="w-4 h-4 inline-block"
+                              className="w-4 h-4 inline-block align-middle"
+                              style={{ marginTop: "-1.5px" }}
                             >
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                                 d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                               />
-                            </svg>
-                          </button>
-                          <button
-                            name={answer.id.toNumber()}
-                            onClick={downVoteAnswer}
-                            className="rounded-r-xl px-3 py-2 dark:bg-slate-900 border-2 border-red-400 dark:border-red-400/70 dark:hover:border-red-500/70 text-red-400 hover:border-red-500 hover:text-red-500"
+                            </svg>{" "}
+                            Accepted Answer
+                          </p>
+                        </div>
+                        <p className="text-xs text-slate-400 text-left md:text-right w-full md:w-auto">
+                          <b>Answered by:</b>{" "}
+                          <a
+                            href={
+                              "https://mumbai.polygonscan.com/address/" +
+                              answer.origin
+                            }
+                            className="underline hover:no-underline hover:text-slate-500"
+                            target="_blank"
+                            rel="noreferrer"
                           >
-                            -{answer.downVotes.toNumber()}
-                          </button>
+                            {ENSFetched && answerOriginToENS[answer.origin]
+                              ? answerOriginToENS[answer.origin]
+                              : answer.origin.substring(0, 6) +
+                                "..." +
+                                answer.origin.slice(-4)}
+                          </a>
                         </p>
                       </div>
-                      <div className="grow w-full md:w-auto dark:text-slate-300">
-                        <p className="text-base md:text-lg font-bold">
-                          {answer.answerText}
-                        </p>
-                        <p
-                          className={
-                            `${answer.rewarded ? "" : "hidden"}` +
-                            " mt-2 text-blue-500 text-xs text-left"
-                          }
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth="2"
-                            stroke="currentColor"
-                            className="w-4 h-4 inline-block align-middle"
-                            style={{ marginTop: "-1.5px" }}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>{" "}
-                          Accepted Answer
-                        </p>
-                      </div>
-                      <p className="text-xs text-slate-400 text-left md:text-right w-full md:w-auto">
-                        <b>Answered by:</b>{" "}
-                        <a
-                          href={
-                            chainId === 69
-                              ? "https://kovan-optimistic.etherscan.io/address/" +
-                                `${answer.origin}`
-                              : "https://mumbai.polygonscan.com/address/" +
-                                `${answer.origin}`
-                          }
-                          className="underline hover:no-underline hover:text-slate-500"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {ENSFetched && answerOriginToENS[answer.origin]
-                            ? answerOriginToENS[answer.origin]
-                            : answer.origin.substring(0, 6) +
-                              "..." +
-                              answer.origin.slice(-4)}
-                        </a>
-                      </p>
-                    </div>
-                  );
+                    );
                 })}
               <form onSubmit={handleSubmit}>
                 <div className="flex gap-0 justify-between text-purple-500 py-3 relative">
@@ -436,50 +439,26 @@ function RequestCard(props: any) {
 
             <div className="text-center">
               {
-                (chainId && chainOrigin && chainOrigin.chainId == chainId) ||
-                !chainId ? (
-                  <button
-                    className={
-                      "w-full py-5 px-5 text-sm text-black font-semibold underline-offset-4 underline decoration-1 hover:text-slate-700 border-t border-transparent hover:no-underline bg-slate-100/50 hover:bg-slate-50/25 dark:bg-slate-800/50 dark:hover:bg-slate-800/25 dark:text-slate-500 dark:hover:text-slate-400" +
-                      `${
-                        showMe
-                          ? " hover:border-slate-200 dark:hover:border-slate-700"
-                          : ""
-                      }`
-                    }
-                    style={{ borderRadius: "0 0 15px 15px" }}
-                    onClick={toggle}
-                  >
-                    <>
-                      <span className={`${showMe ? "hidden" : ""}`}>Show </span>
-                      <span className={`${!showMe ? "hidden" : ""}`}>
-                        Hide{" "}
-                      </span>
-                      answers ({answerIds.length})
-                    </>
-                  </button>
-                ) : (
-                  <button
-                    className={
-                      "w-full py-5 px-5 text-sm text-black font-semibold underline-offset-4 underline decoration-1 hover:text-slate-700 border-t border-transparent hover:no-underline bg-slate-100/50 hover:bg-slate-50/25 dark:bg-slate-800/50 dark:hover:bg-slate-800/25 dark:text-slate-500 dark:hover:text-slate-400" +
-                      `${
-                        showMe
-                          ? " hover:border-slate-200 dark:hover:border-slate-700"
-                          : ""
-                      }`
-                    }
-                    style={{ borderRadius: "0 0 15px 15px" }}
-                    onClick={toggle}
-                  >
-                    <>
-                      <span className={`${showMe ? "hidden" : ""}`}>Show </span>
-                      <span className={`${!showMe ? "hidden" : ""}`}>
-                        Hide{" "}
-                      </span>
-                      answers ({answerIds.length})
-                    </>
-                  </button>
-                )
+                <button
+                  className={
+                    "w-full py-5 px-5 text-sm text-black font-semibold underline-offset-4 underline decoration-1 hover:text-slate-700 border-t border-transparent hover:no-underline bg-slate-100/50 hover:bg-slate-50/25 dark:bg-slate-800/50 dark:hover:bg-slate-800/25 dark:text-slate-500 dark:hover:text-slate-400" +
+                    `${
+                      showMe
+                        ? " hover:border-slate-200 dark:hover:border-slate-700"
+                        : ""
+                    }`
+                  }
+                  style={{ borderRadius: "0 0 15px 15px" }}
+                  onClick={toggle}
+                >
+                  <>
+                    <span className={`${showMe ? "hidden" : ""}`}>Show </span>
+                    <span className={`${!showMe ? "hidden" : ""}`}>Hide </span>
+                    answers ({answerIds.length})
+                  </>
+                </button>
+
+                //commented out optimism switch
                 //   <button
                 //   className={
                 //     "w-full py-5 px-5 text-sm text-black font-semibold underline-offset-4 underline decoration-1 hover:text-slate-700 border-t border-transparent hover:no-underline bg-slate-100/50 hover:bg-slate-50/25 dark:bg-slate-800/50 dark:hover:bg-slate-800/25 dark:text-slate-500 dark:hover:text-slate-400" +
