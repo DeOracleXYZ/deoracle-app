@@ -193,9 +193,13 @@ contract deOracle is IUSDC {
     function upVote(uint256 _answerId) public {
         for (uint i = 0; i < answerList.length; i++) {
             if (answerList[i].id == _answerId) {
-                require(msg.sender != answerList[i].origin);
                 require(
-                    answerIdToAddressToVoted[_answerId][msg.sender] == false
+                    msg.sender != answerList[i].origin,
+                    "Can't vote on your own Answer!"
+                );
+                require(
+                    answerIdToAddressToVoted[_answerId][msg.sender] == false,
+                    "Already voted."
                 );
                 answerIdToAddressToVoted[_answerId][msg.sender] = true;
                 answerList[i].upVotes += 1;
@@ -208,9 +212,13 @@ contract deOracle is IUSDC {
     function downVote(uint256 _answerId) public {
         for (uint i = 0; i < answerList.length; i++) {
             if (answerList[i].id == _answerId) {
-                require(msg.sender != answerList[i].origin);
                 require(
-                    answerIdToAddressToVoted[_answerId][msg.sender] == false
+                    msg.sender != answerList[i].origin,
+                    "Can't vote on your own Answer!"
+                );
+                require(
+                    answerIdToAddressToVoted[_answerId][msg.sender] == false,
+                    "Already voted."
                 );
                 answerIdToAddressToVoted[_answerId][msg.sender] = true;
                 answerList[i].downVotes += 1;
@@ -232,8 +240,14 @@ contract deOracle is IUSDC {
         for (uint i = 0; i < requestList.length; i++) {
             if (requestList[i].id == answerIdToRequestId[_answerId]) {
                 requestPointer = requestList[i];
-                require(requestPointer.active == true);
-                require(msg.sender == requestPointer.origin);
+                require(
+                    requestPointer.active == true,
+                    "Request is no longer active."
+                );
+                require(
+                    msg.sender == requestPointer.origin,
+                    "Only request author can accept an answer."
+                );
                 requestList[i].active = false;
                 if (requestPointer.bounty > 0) {
                     usdcToken.transfer(

@@ -373,6 +373,7 @@ export default function Home() {
       <Head>
         <title>deOracle.xyz</title>
       </Head>
+
       {displayNotification && (
         <Notification
           notificationError={notificationError}
