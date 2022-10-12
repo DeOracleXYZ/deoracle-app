@@ -5,7 +5,15 @@ import { BigNumber, Contract, ethers } from "ethers";
 import Spline from "@splinetool/react-spline";
 
 function RequestCreate(props: any) {
-  const { account, provider, deOracleAddress, deOracleWRITE } = props;
+  const {
+    account,
+    provider,
+    deOracleAddress,
+    deOracleWRITE,
+    setNotificationMessage,
+    setNotificationError,
+    setDisplayNotification,
+  } = props;
   const [showMe, setShowMe] = useState(false);
   const daysAfterDueDate = 5;
   const [dueDate, setDueDate] = useState(
@@ -49,14 +57,18 @@ function RequestCreate(props: any) {
         formData.bounty.toString(),
         18
       );
-
-      let txReceipt = await usdcContract.approve(deOracleAddress, bountyInWei);
-      setShowLoading(true);
-      txReceipt = await txReceipt.wait();
-
-      if (txReceipt.status === 1) {
+      let txReceipt;
+      try {
+        txReceipt = await usdcContract.approve(deOracleAddress, bountyInWei);
+        setShowLoading(true);
+        txReceipt = await txReceipt.wait();
+      } catch (err: any) {
+        setNotificationError(true);
+        setNotificationMessage(err.reason);
+        setDisplayNotification(true);
+      }
+      if (txReceipt && txReceipt.status === 1) {
         setShowLoading(false);
-        // show Create Request button
         setShowApprove(false);
         setApproved(true);
       } else {

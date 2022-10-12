@@ -18,6 +18,9 @@ function RequestCard(props: any) {
     account,
     switchNetworkKovan,
     switchNetworkMumbai,
+    setNotificationMessage,
+    setNotificationError,
+    setDisplayNotification,
   } = props;
 
   const {
@@ -165,9 +168,10 @@ function RequestCard(props: any) {
     if (deOracleWRITE)
       try {
         txReceipt = await deOracleWRITE.postAnswer(requestId, answerText);
-      } catch (err) {
-        //TODO: UI Magic
-        console.log(err);
+      } catch (err: any) {
+        setNotificationError(true);
+        setNotificationMessage(err.reason);
+        setDisplayNotification(true);
         return;
       }
 
@@ -194,18 +198,20 @@ function RequestCard(props: any) {
   const upVoteAnswer = async (event: any) => {
     try {
       let txReceipt = await deOracleWRITE.upVote(event.currentTarget.name);
-    } catch (err) {
-      //TODO: UI Magic
-      console.log(err);
+    } catch (err: any) {
+      setNotificationError(true);
+      setNotificationMessage(err.reason);
+      setDisplayNotification(true);
     }
   };
 
   const downVoteAnswer = async (event: any) => {
     try {
       let txReceipt = await deOracleWRITE.downVote(event.currentTarget.name);
-    } catch (err) {
-      //TODO: UI Magic
-      console.log(err);
+    } catch (err: any) {
+      setNotificationError(true);
+      setNotificationMessage(err.reason);
+      setDisplayNotification(true);
     }
   };
 

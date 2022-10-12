@@ -10,6 +10,7 @@ import Head from "next/head";
 import RequestCreate from "../components/RequestCreate";
 import RequestCard from "../components/RequestCard";
 import { mumbai, kovan } from "../constants/networks";
+import Notification from "../components/Notification";
 
 declare global {
   interface Window {
@@ -47,7 +48,7 @@ export default function Home() {
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
-  const mumbaiAddress = "0x45Fc8fAC2E806A1AD4CbC9EcC125478897c7A100"; // LIVE
+  const mumbaiAddress = "0xf73dA1dDFf414de60ee043F18ED5D68B062d7203"; // LIVE
   const mumbaiProvider = new ethers.providers.AlchemyProvider(
     0x13881,
     "vd1ojdJ9UmyBbiKOxpWVnGhDpoFVVxBY"
@@ -74,8 +75,9 @@ export default function Home() {
     answerText: "",
     requestId: -1,
   });
-  const [notification, setNotification] = useState(true);
-  const [notificationError, setNotificationError] = useState(true);
+  const [notificationError, setNotificationError] = useState();
+  const [notificationMessage, setNotificationMessage] = useState();
+  const [displayNotification, setDisplayNotification] = useState();
 
   const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
 
@@ -338,6 +340,9 @@ export default function Home() {
           chainId={chainId}
           switchNetworkMumbai={() => switchNetwork(mumbai)}
           switchNetworkKovan={() => switchNetwork(kovan)}
+          setNotificationMessage={setNotificationMessage}
+          setNotificationError={setNotificationError}
+          setDisplayNotification={setDisplayNotification}
         />
       );
     });
@@ -368,29 +373,13 @@ export default function Home() {
       <Head>
         <title>deOracle.xyz</title>
       </Head>
-
-      <div className={`${notificationError 
-          ? "bg-red-400/90" : "bg-green-400/90" }` + " fixed max-w-lg border border-white/20 px-1 py-1 top-3 left-3 rounded-lg drop-shadow-xl flex items-stretch items-center " + `${notification ? "" : "hidden"}`} style={{zIndex: 999999}}>
-        <div className="inline px-5 py-1 flex items-center justify-center">
-          {notificationError 
-          ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
-
-          : <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> }
-        </div>
-        <div className="inline pr-5 pl-2 py-1">
-        {notificationError 
-          ?  <div>
-          <p className="font-bold">Error!</p>
-          <p>This is an error message! This is an error message! This is an error message! This is an error message! This is an error message! </p>
-          </div>
-          : <div><p className="font-bold">Success!</p>
-          <p>This is an success message! This is an success message! This is an success message! This is an success message! This is an success message!</p></div>
-          }
-
-        </div>
-        <button type="button" className={`${notificationError 
-          ? "hover:bg-red-300/40 active:bg-red-300/20" : "hover:bg-green-300/40 active:bg-green-300/20" }` + " inline px-5 py-5 border-l border-black/20 rounded-r-md opacity-70 hover:opacity-100"} onClick={() => setNotification(false)}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
-      </div>
+      {displayNotification && (
+        <Notification
+          notificationError={notificationError}
+          notificationMessage={notificationMessage}
+          setDisplayNotification={setDisplayNotification}
+        />
+      )}
 
       <ConnectHeader
         data={useWeb3React()}
@@ -410,18 +399,19 @@ export default function Home() {
         handleSwitchNetworkKovan={() => switchNetwork(kovan)}
         handleClickConnect={() => connect()}
       />
-
       <div className="flex flex-col my-6 mx-3 md:m-10 justify-center">
         <RequestCreate
           account={account}
           deOracleWRITE={deOracleWRITE}
           provider={provider}
           deOracleAddress={deOracleAddress}
+          setNotificationMessage={setNotificationMessage}
+          setNotificationError={setNotificationError}
+          setDisplayNotification={setDisplayNotification}
         />
 
         <div>{requestList && requestCardList()}</div>
       </div>
-
       <footer className="container text-center py-10 px-10 mt-10">
         <button
           type="button"
