@@ -305,7 +305,7 @@ export default function ConnectHeader(props: any) {
                 Polygon Mumbai
               </button>{" "}
               &nbsp; &nbsp;
-              <button
+              {/* <button
                 className={
                   "text-sm text-red-500 hover:text-red-400 " +
                   `${chainId === 69 ? "border-2" : ""}` +
@@ -314,7 +314,7 @@ export default function ConnectHeader(props: any) {
                 onClick={() => handleSwitchNetworkKovan()}
               >
                 Optimism Kovan
-              </button>
+              </button> */}
             </b>
           </div>
         </div>
