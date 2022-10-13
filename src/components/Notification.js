@@ -1,6 +1,18 @@
+import { useEffect } from "react";
+
 export default function Notification(props) {
   const { notificationError, notificationMessage, setDisplayNotification } =
     props;
+
+  //if setDisplayNotification is true, then start a timer to set it to false after 3 seconds
+  useEffect(() => {
+    if (setDisplayNotification) {
+      setTimeout(() => {
+        setDisplayNotification(false);
+      }, 3000);
+    }
+  }, [setDisplayNotification]);
+
   return (
     <div
       className={

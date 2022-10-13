@@ -75,9 +75,10 @@ export default function Home() {
     answerText: "",
     requestId: -1,
   });
-  const [notificationError, setNotificationError] = useState();
-  const [notificationMessage, setNotificationMessage] = useState();
-  const [displayNotification, setDisplayNotification] = useState();
+  const [notificationError, setNotificationError] = useState<any>();
+  const [notificationMessage, setNotificationMessage] = useState<any>();
+  const [displayNotification, setDisplayNotification] = useState<any>();
+  const [requestCreated, setRequestCreated] = useState(false);
 
   const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
 
@@ -112,10 +113,15 @@ export default function Home() {
     }
   });
   useEffect(() => {
-    if (sendAnswerState) {
-      window.location.reload();
+    if (sendAnswerState || requestCreated) {
+      //delay for 4 seconds then reload page
+      setTimeout(() => {
+        setSendAnswerState(false);
+        setRequestCreated(false);
+        window.location.reload();
+      }, 3000);
     }
-  }, [sendAnswerState]);
+  }, [sendAnswerState, requestCreated]);
 
   useEffect(() => {
     //if connected or RPCprovider
@@ -312,6 +318,14 @@ export default function Home() {
       }
   }
 
+  //if requestCreated is true, run requestCardList() then set requestCreated to false
+  useEffect(() => {
+    if (requestCreated) {
+      requestCardList();
+      setRequestCreated(false);
+    }
+  }, [requestCreated]);
+
   const requestCardList = () => {
     const keysDesc: any = Object.keys(requestList!).sort((a: any, b: any) => {
       return b - a;
@@ -409,6 +423,7 @@ export default function Home() {
           setNotificationMessage={setNotificationMessage}
           setNotificationError={setNotificationError}
           setDisplayNotification={setDisplayNotification}
+          setRequestCreated={setRequestCreated}
         />
 
         <div>{requestList && requestCardList()}</div>
