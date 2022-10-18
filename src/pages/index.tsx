@@ -513,7 +513,7 @@ export default function Home() {
         <p className="text-slate-600">
           <a
             className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500"
-            href="http://github.com/deOracleXYZ/deoracle-docs"
+            href="http://github.com/deOracleXYZ"
             target="_blank"
             rel="noreferrer"
           >
