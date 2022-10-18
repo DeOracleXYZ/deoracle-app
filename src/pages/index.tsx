@@ -485,7 +485,7 @@ export default function Home() {
         <br />
 
         <p className="mb-1 pt-2 text-slate-400">
-          &copy; {copyrightYear} deOracle.xyz.{" "}
+          &copy; {copyrightYear} DeOracle.xyz.{" "}
           <i>
             Made by{" "}
             <a

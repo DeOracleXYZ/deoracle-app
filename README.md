@@ -1,8 +1,8 @@
-# deOracle.xyz
+# DeOracle.xyz
 
-deOracle.xyz is a decentralised P2P oracle platform with a cross-chain reputation system for digital identities. Our goal is to bring reliable real-world data of any kind on-chain.
+DeOracle.xyz is a decentralised P2P oracle platform with a cross-chain reputation system for digital identities. Our goal is to bring reliable real-world data of any kind on-chain.
 
-deOracle is useful for Smart Contract and dApp developers who are looking for wide scope data feeds not supported by mainstream oracles. Use cases: prediction markets, betting, lotteries, raffles, etc.
+DeOracle is useful for Smart Contract and dApp developers who are looking for wide scope data feeds not supported by mainstream oracles. Use cases: prediction markets, betting, lotteries, raffles, etc.
 
 
 ### 1. Post Requests (wide scope data)
@@ -17,7 +17,7 @@ Oracles browse through requests and post verified answers to earn bounties and b
 
 ### 3. Cross-Chain Reputation
 
-Verify your identity with Worldcoin and ENS on Polygon. Build up your reputation by posting valid answers. Hop chains to Optimism and your reputation points follow you. deOracle Reputation can be implemented by other on-chain protocols.
+Verify your identity with Worldcoin and ENS on Polygon. Build up your reputation by posting valid answers. Hop chains to Optimism and your reputation points follow you. DeOracle Reputation can be implemented by other on-chain protocols.
 
 ---------
 
@@ -28,7 +28,7 @@ Current implementation is openended, future implementations will include type fo
 
 Use cases include prediction markets, insurance arbitration, legal mediation, on-chain disputes, DAO voting / governance, blockchain trivia and play to earn.
 
-Your on-chain identity and deOracle REP is accesible across multiple blockchains. Secured and transmited by Hyperlane (Abacus).
+Your on-chain identity and DeOracle REP is accesible across multiple blockchains. Secured and transmited by Hyperlane (Abacus).
 
 ---------
 
