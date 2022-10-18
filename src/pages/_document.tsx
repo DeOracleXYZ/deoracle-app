@@ -18,6 +18,7 @@ class MyDocument extends Document {
           <link rel="shortcut icon" href="/favicon.svg" />
         </Head>
         <body className="dark:bg-slate-900">
+          <div className="top-0 fixed w-full py-2 bg-red-500 text-center"><b>Testnet Demo</b> - v0.2.0</div>
           <div className="fixed w-1/2 h-1/2 top-0 right-0 oracle-gradient"></div>
           <div className="fixed w-1/2 h-1/2 top-0 left-0 oracle-gradient-2"></div>
           <Main />

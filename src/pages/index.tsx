@@ -507,6 +507,53 @@ export default function Home() {
             </a>
           </i>
         </p>
+        <br />
+        <br />
+
+        <p className="text-slate-600">
+          <a
+            className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500"
+            href="http://github.com/deOracleXYZ/deoracle-docs"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Github
+          </a>
+          &nbsp;.&nbsp;
+          <a
+            href="https://docs.deoracle.xyz"
+            className="text-slate-600 underline hover:no-underline hover:text-slate-500"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Docs
+          </a>
+          &nbsp;.&nbsp;
+          <a
+            className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500"
+            href="https://twitter.com/DeOracleXYZ"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Twitter
+          </a>{" "}
+          &nbsp;.&nbsp;
+          <a
+            className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500"
+            href="#"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Telegram (TBD)
+          </a>{" "}
+          &nbsp;.&nbsp;
+          <a
+            href="https://deoracle.xyz"
+            className="text-slate-600 underline hover:no-underline hover:text-slate-500"
+          >
+            Website
+          </a>
+        </p>
 
         <br />
         <br />

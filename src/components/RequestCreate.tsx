@@ -180,7 +180,7 @@ function RequestCreate(props: any) {
   }
 
   return (
-    <div className="w-full rounded-2xl mb-3 border-2 border-purple-300 text-black hover:border-purple-400 dark:border-purple-300/50 dark:hover:border-purple-400/50">
+    <div className="w-full rounded-2xl mt-5 mb-3 border-2 border-purple-300 text-black hover:border-purple-400 dark:border-purple-300/50 dark:hover:border-purple-400/50">
       <button
         className={
           `${showMe ? "hidden" : ""}` +
