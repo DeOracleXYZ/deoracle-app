@@ -385,7 +385,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>deOracle.xyz</title>
+        <title>DeOracle.xyz dApp</title>
       </Head>
 
       {displayNotification && (
