@@ -75,9 +75,10 @@ export default function Home() {
     answerText: "",
     requestId: -1,
   });
-  const [notificationError, setNotificationError] = useState();
-  const [notificationMessage, setNotificationMessage] = useState();
-  const [displayNotification, setDisplayNotification] = useState();
+  const [notificationError, setNotificationError] = useState<any>();
+  const [notificationMessage, setNotificationMessage] = useState<any>();
+  const [displayNotification, setDisplayNotification] = useState<any>();
+  const [requestCreated, setRequestCreated] = useState(false);
 
   const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
 
@@ -112,10 +113,15 @@ export default function Home() {
     }
   });
   useEffect(() => {
-    if (sendAnswerState) {
-      window.location.reload();
+    if (sendAnswerState || requestCreated) {
+      //delay for 4 seconds then reload page
+      setTimeout(() => {
+        setSendAnswerState(false);
+        setRequestCreated(false);
+        window.location.reload();
+      }, 3000);
     }
-  }, [sendAnswerState]);
+  }, [sendAnswerState, requestCreated]);
 
   useEffect(() => {
     //if connected or RPCprovider
@@ -312,6 +318,14 @@ export default function Home() {
       }
   }
 
+  //if requestCreated is true, run requestCardList() then set requestCreated to false
+  useEffect(() => {
+    if (requestCreated) {
+      requestCardList();
+      setRequestCreated(false);
+    }
+  }, [requestCreated]);
+
   const requestCardList = () => {
     const keysDesc: any = Object.keys(requestList!).sort((a: any, b: any) => {
       return b - a;
@@ -371,7 +385,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>deOracle.xyz</title>
+        <title>DeOracle.xyz dApp</title>
       </Head>
 
       {displayNotification && (
@@ -409,6 +423,7 @@ export default function Home() {
           setNotificationMessage={setNotificationMessage}
           setNotificationError={setNotificationError}
           setDisplayNotification={setDisplayNotification}
+          setRequestCreated={setRequestCreated}
         />
 
         <div>{requestList && requestCardList()}</div>
@@ -470,7 +485,7 @@ export default function Home() {
         <br />
 
         <p className="mb-1 pt-2 text-slate-400">
-          &copy; {copyrightYear} deOracle.xyz.{" "}
+          &copy; {copyrightYear} DeOracle.xyz.{" "}
           <i>
             Made by{" "}
             <a
@@ -491,6 +506,53 @@ export default function Home() {
               @Alex
             </a>
           </i>
+        </p>
+        <br />
+        <br />
+
+        <p className="text-slate-600">
+          <a
+            className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500"
+            href="http://github.com/deOracleXYZ"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Github
+          </a>
+          &nbsp;.&nbsp;
+          <a
+            href="https://docs.deoracle.xyz"
+            className="text-slate-600 underline hover:no-underline hover:text-slate-500"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Docs
+          </a>
+          &nbsp;.&nbsp;
+          <a
+            className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500"
+            href="https://twitter.com/DeOracleXYZ"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Twitter
+          </a>{" "}
+          &nbsp;.&nbsp;
+          <a
+            className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500"
+            href="#"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Telegram (TBD)
+          </a>{" "}
+          &nbsp;.&nbsp;
+          <a
+            href="https://deoracle.xyz"
+            className="text-slate-600 underline hover:no-underline hover:text-slate-500"
+          >
+            Website
+          </a>
         </p>
 
         <br />

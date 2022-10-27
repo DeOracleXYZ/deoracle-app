@@ -3,6 +3,7 @@ import Image from "next/image";
 import { usdcABI } from "../constants/abis";
 import { BigNumber, Contract, ethers } from "ethers";
 import Spline from "@splinetool/react-spline";
+import { setRequestMeta } from "next/dist/server/request-meta";
 
 function RequestCreate(props: any) {
   const {
@@ -13,6 +14,7 @@ function RequestCreate(props: any) {
     setNotificationMessage,
     setNotificationError,
     setDisplayNotification,
+    setRequestCreated,
   } = props;
   const [showMe, setShowMe] = useState(false);
   const daysAfterDueDate = 5;
@@ -68,6 +70,9 @@ function RequestCreate(props: any) {
         setDisplayNotification(true);
       }
       if (txReceipt && txReceipt.status === 1) {
+        setNotificationError(false);
+        setNotificationMessage("Approved USDC");
+        setDisplayNotification(true);
         setShowLoading(false);
         setShowApprove(false);
         setApproved(true);
@@ -114,23 +119,35 @@ function RequestCreate(props: any) {
 
   async function sendRequest() {
     const { requestText, reputation, dueDateUnix, bounty } = formData;
-    let txReceipt;
+    let txReceipt: any;
     let bountyInWei = ethers.utils.parseUnits(bounty.toString(), 18);
-
+    // setNotificationError(false);
+    // setNotificationMessage("Approved USDC");
+    // setDisplayNotification(true);
     if (deOracleWRITE)
-      txReceipt = await deOracleWRITE.submitRequest(
-        requestText,
-        bountyInWei,
-        reputation,
-        dueDateUnix
-      );
-    setShowLoading(true);
-    setDisableSubmit(true);
-    txReceipt = await txReceipt.wait();
+      try {
+        txReceipt = await deOracleWRITE.submitRequest(
+          requestText,
+          bountyInWei,
+          reputation,
+          dueDateUnix
+        );
+        setShowLoading(true);
+        setDisableSubmit(true);
+        txReceipt = await txReceipt.wait();
+      } catch (err: any) {
+        setNotificationError(true);
+        setNotificationMessage(err.reason);
+        setDisplayNotification(true);
+        return;
+      }
 
     if (txReceipt.status === 1) {
       setShowLoading(false);
       setDisableSubmit(false);
+      setNotificationError(false);
+      setNotificationMessage("Request Submitted");
+      setDisplayNotification(true);
 
       setShowMe(false);
       setFormData({
@@ -142,8 +159,7 @@ function RequestCreate(props: any) {
       });
 
       toggle();
-
-      refreshPage();
+      setRequestCreated(true);
     } else {
       console.log("Approve tx Failed, check Metamask and try again.");
     }
@@ -164,7 +180,7 @@ function RequestCreate(props: any) {
   }
 
   return (
-    <div className="w-full rounded-2xl mb-3 border-2 border-purple-300 text-black hover:border-purple-400 dark:border-purple-300/50 dark:hover:border-purple-400/50">
+    <div className="w-full rounded-2xl mt-5 mb-3 border-2 border-purple-300 text-black hover:border-purple-400 dark:border-purple-300/50 dark:hover:border-purple-400/50">
       <button
         className={
           `${showMe ? "hidden" : ""}` +

@@ -183,6 +183,9 @@ function RequestCard(props: any) {
 
     if (txReceipt.status === 1) {
       // enable answer input & button and hide loading
+      setNotificationError(false);
+      setNotificationMessage("Answer posted successfully!");
+      setDisplayNotification(true);
       input.removeAttribute("disabled");
       button.removeAttribute("disabled");
       spinner.classList.add("hidden");
@@ -196,22 +199,40 @@ function RequestCard(props: any) {
   }
 
   const upVoteAnswer = async (event: any) => {
+    let txReceipt;
     try {
-      let txReceipt = await deOracleWRITE.upVote(event.currentTarget.name);
+      txReceipt = await deOracleWRITE.upVote(event.currentTarget.name);
     } catch (err: any) {
       setNotificationError(true);
       setNotificationMessage(err.reason);
       setDisplayNotification(true);
+      return;
+    }
+    txReceipt = await txReceipt.wait();
+    if (txReceipt.status === 1) {
+      setNotificationError(false);
+      setNotificationMessage("Upvote successful!");
+      setDisplayNotification(true);
+      setSendAnswerState(true);
     }
   };
 
   const downVoteAnswer = async (event: any) => {
+    let txReceipt;
     try {
-      let txReceipt = await deOracleWRITE.downVote(event.currentTarget.name);
+      txReceipt = await deOracleWRITE.downVote(event.currentTarget.name);
     } catch (err: any) {
       setNotificationError(true);
       setNotificationMessage(err.reason);
       setDisplayNotification(true);
+      return;
+    }
+    txReceipt = await txReceipt.wait();
+    if (txReceipt.status === 1) {
+      setNotificationError(false);
+      setNotificationMessage("Answer downVoted successfully!");
+      setDisplayNotification(true);
+      setSendAnswerState(true);
     }
   };
 

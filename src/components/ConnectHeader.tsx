@@ -53,7 +53,7 @@ export default function ConnectHeader(props: any) {
   return (
     <>
       <header
-        className="sticky top-3 py-1 px-1 grid grid-flow-col auto-cols-max bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 dark:bg-white/10 nav-border grid justify-items-stretch grid-cols-2 gap-4"
+        className="sticky top-12 py-1 px-1 grid grid-flow-col auto-cols-max bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 dark:bg-white/10 nav-border grid justify-items-stretch grid-cols-2 gap-4"
         style={{ borderRadius: 16 + "px", zIndex: 999 }}
       >
         <div className="justify-self-start h-24 pt-4">
