@@ -42,9 +42,7 @@ export default function Home() {
   const id = useId();
   const [loaded, setLoaded] = useState(false);
   const [balance, setBalance] = useState("");
-  const [proofResponse, setProofResponse] = useState(
-    null as VerificationResponse | null
-  );
+  const [proofResponse, setProofResponse] = useState(null as VerificationResponse | null);
   const [worldIdVerified, setWorldIdVerified] = useState(false);
   const [ENSVerified, setENSVerified] = useState(false);
   const [ENSName, setENSName] = useState("");
@@ -55,11 +53,7 @@ export default function Home() {
   );
   const [deOracleAddress, setDeOracleAddress] = useState(mumbaiAddress);
   const [deOracleREAD, setDeOracleREAD] = useState(
-    new ethers.Contract(
-      mumbaiAddress,
-      deOracleABI,
-      mumbaiProvider
-    ) as Contract | null
+    new ethers.Contract(mumbaiAddress, deOracleABI, mumbaiProvider) as Contract | null
   );
   const [deOracleWRITE, setDeOracleWRITE] = useState(null as Contract | null);
   const [requestList, setRequestList] = useState([] as any[]);
@@ -79,7 +73,7 @@ export default function Home() {
   const [notificationMessage, setNotificationMessage] = useState<any>();
   const [displayNotification, setDisplayNotification] = useState<any>();
   const [requestCreated, setRequestCreated] = useState(false);
-
+  //devtest
   const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
 
   const widgetProps: WidgetProps = {
@@ -94,16 +88,14 @@ export default function Home() {
     },
     onError: ({ code, detail }) => console.log({ code, detail }),
     onInitSuccess: () => console.log("Init successful"),
-    onInitError: (error) =>
-      console.log("Error while initialization World ID", error),
+    onInitError: (error) => console.log("Error while initialization World ID", error),
   };
 
   useEffect(() => {
     // On page load or when changing themes, best to add inline in `head` to avoid FOUC
     if (
       localStorage.theme === "dark" ||
-      (!("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
+      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
       document.documentElement.classList.add("dark");
       setDarkMode(true);
@@ -127,19 +119,13 @@ export default function Home() {
     //if connected or RPCprovider
     if (!networkActive) {
       setDeOracleAddress(mumbaiAddress);
-      setDeOracleREAD(
-        new ethers.Contract(mumbaiAddress, deOracleABI, mumbaiProvider)
-      );
+      setDeOracleREAD(new ethers.Contract(mumbaiAddress, deOracleABI, mumbaiProvider));
     }
     //if Mumbai
     if (chainId === 80001) {
       setDeOracleAddress(mumbaiAddress);
-      setDeOracleREAD(
-        new ethers.Contract(mumbaiAddress, deOracleABI, provider)
-      );
-      setDeOracleWRITE(
-        new ethers.Contract(mumbaiAddress, deOracleABI, provider.getSigner())
-      );
+      setDeOracleREAD(new ethers.Contract(mumbaiAddress, deOracleABI, provider));
+      setDeOracleWRITE(new ethers.Contract(mumbaiAddress, deOracleABI, provider.getSigner()));
     }
   }, [chainId, networkActive]);
 
@@ -152,9 +138,7 @@ export default function Home() {
 
     const writeContractData = async () => {
       setREP((await deOracleWRITE!.getREP()).toNumber());
-      setWorldIdVerified(
-        await deOracleWRITE!.addressToWorldIdVerified(account)
-      );
+      setWorldIdVerified(await deOracleWRITE!.addressToWorldIdVerified(account));
       setENSVerified(await deOracleWRITE!.addressToENSVerified(account));
       const data = await provider.getBalance(account);
       setBalance(ethers.utils.formatEther(data));
@@ -168,13 +152,10 @@ export default function Home() {
     const updateEarnedBountyCount = async () => {
       deOracleWRITE &&
         setEarnedBountyCount(
-          parseInt(
-            ethers.utils.formatUnits(await deOracleWRITE.getBountyEarned(), 18)
-          ).toFixed(2)
+          parseInt(ethers.utils.formatUnits(await deOracleWRITE.getBountyEarned(), 18)).toFixed(2)
         );
     };
-    deOracleWRITE &&
-      (writeContractData(), updateVerifiedCount(), updateEarnedBountyCount());
+    deOracleWRITE && (writeContractData(), updateVerifiedCount(), updateEarnedBountyCount());
   }, [deOracleREAD, deOracleWRITE, worldIdVerified, ENSVerified]);
 
   useEffect(() => {
@@ -207,18 +188,11 @@ export default function Home() {
     proofResponse && sendProof();
     async function sendProof() {
       let { merkle_root, nullifier_hash, proof } = proofResponse!;
-      let unpackedProof = ethers.utils.defaultAbiCoder.decode(
-        ["uint256[8]"],
-        proof
-      )[0];
+      let unpackedProof = ethers.utils.defaultAbiCoder.decode(["uint256[8]"], proof)[0];
       deOracleWRITE &&
-        deOracleWRITE.verifyAndExecute(
-          account,
-          merkle_root,
-          nullifier_hash,
-          unpackedProof,
-          { gasLimit: 10000000 }
-        );
+        deOracleWRITE.verifyAndExecute(account, merkle_root, nullifier_hash, unpackedProof, {
+          gasLimit: 10000000,
+        });
     }
   }, [proofResponse, deOracleWRITE, account]);
 
@@ -434,11 +408,7 @@ export default function Home() {
           onClick={toggleTheme}
           className={
             "fixed right-5 bottom-5 rounded-full drop-shadow-md w-18 h-18 px-5 py-5 hover:right-7 hover:bottom-7 border-4 bg-origin-border hover:border-8 border-white/60 dark:border-white/30 opacity-75 hover:opacity-100 transition-all ease-in-out duration-500 bg-gradient-to-b " +
-            `${
-              darkMode
-                ? "from-blue-900 to-purple-900"
-                : "from-blue-600 to-sky-400"
-            }`
+            `${darkMode ? "from-blue-900 to-purple-900" : "from-blue-600 to-sky-400"}`
           }
         >
           <svg
@@ -588,10 +558,7 @@ export default function Home() {
             oETH
           </a>{" "}
           &nbsp; | &nbsp;
-          <a
-            href="#"
-            className="text-slate-600 underline hover:no-underline hover:text-slate-500"
-          >
+          <a href="#" className="text-slate-600 underline hover:no-underline hover:text-slate-500">
             Back to Top
           </a>
         </p>
