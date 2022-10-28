@@ -540,11 +540,11 @@ export default function Home() {
           &nbsp;.&nbsp;
           <a
             className="text-slate-600 underline hover:cursor-pointer hover:no-underline hover:text-slate-500"
-            href="#"
+            href="https://t.me/DeOracleXYZ"
             target="_blank"
             rel="noreferrer"
           >
-            Telegram (TBD)
+            Telegram
           </a>{" "}
           &nbsp;.&nbsp;
           <a
