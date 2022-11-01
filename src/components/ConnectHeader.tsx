@@ -170,8 +170,8 @@ export default function ConnectHeader(props: any) {
       </header>
 
       <div
-        className="container mx-auto mt-3 px-4"
-        style={{ position: "fixed", zIndex: 99999 }}
+        className="container mx-auto px-4"
+        style={{ position: "fixed", marginTop: "50px", zIndex: 99999 }}
       >
         <div
           className="nav-dropdown p-5 bg-neutral-100 rounded-xl shadow-xl backdrop-blur-md bg-white/30 dark:bg-white/10 nav-border dark:text-slate-300"
