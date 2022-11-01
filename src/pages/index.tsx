@@ -73,7 +73,6 @@ export default function Home() {
   const [notificationMessage, setNotificationMessage] = useState<any>();
   const [displayNotification, setDisplayNotification] = useState<any>();
   const [requestCreated, setRequestCreated] = useState(false);
-  //devtest
   const copyrightYear = eval(/\d{4}/.exec(Date())![0]);
 
   const widgetProps: WidgetProps = {
